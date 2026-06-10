@@ -1,53 +1,83 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { Inject, Injectable, NotFoundException } from '@nestjs/common'
 import { User } from './types'
+import { DRIZZLE_PROVIDER } from 'src/database/database.provider'
+import { NodePgDatabase } from 'drizzle-orm/node-postgres'
+import * as schema from '../db/schema'
+import { eq } from 'drizzle-orm'
+import { CreateUserDto } from './create-user.dto'
 
 @Injectable()
 export class UsersService {
-	private users: User[] = []
-	private idCounter: number = 0
+	constructor(
+		@Inject(DRIZZLE_PROVIDER)
+		private readonly db: NodePgDatabase<typeof schema>,
+	) {}
 
-	findAll(): User[] {
-		return this.users
+	async findAll() {
+		return await this.db.select().from(schema.users)
 	}
 
-	create({ email, name, password }: Omit<User, 'id'>): User {
-		const newUser: User = {
-			id: this.idCounter++,
-			name,
-			email,
-			password,
+	async findOne(id: User['id']) {
+		const [user] = await this.db
+			.select()
+			.from(schema.users)
+			.where(eq(schema.users.id, id))
+
+		if (!user) {
+			throw new NotFoundException(`User with ID ${id} not found`)
 		}
 
-		this.users.push(newUser)
+		return user
+	}
+
+	async create(createUserDto: CreateUserDto) {
+		const [newUser] = await this.db
+			.insert(schema.users)
+			.values(createUserDto)
+			.returning()
 
 		return newUser
 	}
 
-	remove(id: User['id']) {
-		const userExists = this.users.find((user) => user.id !== id)
+	async remove(id: User['id']) {
+		const userExists = await this.db
+			.select({
+				userId: schema.users.id,
+			})
+			.from(schema.users)
+			.where(eq(schema.users.id, id))
 
 		if (!userExists) {
 			throw new NotFoundException(`User with ID ${id} not found`)
 		}
 
-		this.users = this.users.filter((user) => user.id !== id)
+		const [removedUser] = await this.db
+			.delete(schema.users)
+			.where(eq(schema.users.id, id))
+			.returning()
 
-		return { message: `User with id ${id} successfully removed!` }
+		return { message: `User with id ${removedUser.id} successfully removed!` }
 	}
 
-	update(id: User['id'], updateData: Pick<User, 'email' | 'name'>): User {
-		const currentUser = this.users.find((user) => user.id === id)
+	async update(id: User['id'], updateData: Pick<User, 'email' | 'name'>) {
+		const currentUser = await this.db
+			.select({
+				userId: schema.users.id,
+			})
+			.from(schema.users)
+			.where(eq(schema.users.id, id))
 
 		if (!currentUser) {
 			throw new NotFoundException(`User with ID ${id} not found`)
 		}
 
-		const updatedUser = {
-			...currentUser,
-			...updateData,
-		}
-
-		this.users.map((user) => (user.id === id ? updatedUser : user))
+		const [updatedUser] = await this.db
+			.update(schema.users)
+			.set({
+				...updateData,
+			})
+			.where(eq(schema.users.id, id))
+			.returning()
 
 		return updatedUser
 	}
