@@ -5,6 +5,7 @@ import { NodePgDatabase } from 'drizzle-orm/node-postgres'
 import * as schema from '../db/schema'
 import { eq } from 'drizzle-orm'
 import { CreateUserDto } from './create-user.dto'
+import { hashSync } from 'bcryptjs'
 
 @Injectable()
 export class UsersService {
@@ -31,9 +32,11 @@ export class UsersService {
 	}
 
 	async create(createUserDto: CreateUserDto) {
+		const password = hashSync(createUserDto.password, 10)
+
 		const [newUser] = await this.db
 			.insert(schema.users)
-			.values(createUserDto)
+			.values({ ...createUserDto, password })
 			.returning()
 
 		return newUser
