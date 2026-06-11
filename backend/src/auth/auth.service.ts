@@ -6,6 +6,8 @@ import { eq } from 'drizzle-orm'
 import { compareSync } from 'bcryptjs'
 import { LoginUserDto } from './login-user.dto'
 import { JwtService } from '@nestjs/jwt'
+import { ConfigService } from '@nestjs/config'
+import { CookieOptions } from 'express'
 
 @Injectable()
 export class AuthService {
@@ -13,6 +15,7 @@ export class AuthService {
 		@Inject(DRIZZLE_PROVIDER)
 		private readonly db: NodePgDatabase<typeof schema>,
 		private readonly jwtService: JwtService,
+		private readonly configService: ConfigService,
 	) {}
 
 	async validateUser({ email, password }: LoginUserDto) {
@@ -31,8 +34,23 @@ export class AuthService {
 			throw new UnauthorizedException('Invalid email or password')
 		}
 
-		const { password: pw, ...result } = user
+		const jwtPayload = {
+			sub: user.id,
+			name: user.name,
+		}
 
-		return result
+		const isProduction =
+			this.configService.get<string>('ENVIRONMENT') === 'production'
+
+		return {
+			accessToken: await this.jwtService.signAsync(jwtPayload),
+			cookieOptions: {
+				httpOnly: true,
+				sameSite: isProduction ? 'strict' : 'lax',
+				secure: isProduction,
+				maxAge: 5 * 60 * 1000,
+				path: '/',
+			} as CookieOptions,
+		}
 	}
 }
