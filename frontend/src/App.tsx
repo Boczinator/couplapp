@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import './App.css'
+import { authenticateUser } from './api/auth'
+import { client } from './api/client'
 
 function App() {
 	const [email, setEmail] = useState('')
@@ -9,24 +11,20 @@ function App() {
 	const handleSubmit = async (event: SubmitEvent) => {
 		event.preventDefault()
 
-		console.log(email)
 		try {
-			const response = await fetch('http://localhost:3000/auth/login', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-					email: email,
-					password: password,
-				}),
-				credentials: 'include',
-			})
+			const response = await authenticateUser(email, password)
+			console.log(response)
 		} catch (error: any) {
-			console.log(error.response.data)
+			console.log(error)
 			setError(error)
 		}
-	}
+  }
+  
+  const handleTestClick = () => {
+    try {
+      await client.get('me')
+    }
+  }
 	return (
 		<>
 			<form onSubmit={handleSubmit}>
@@ -50,7 +48,9 @@ function App() {
 				{error && <p>{error}</p>}
 
 				<button type="submit">Submit</button>
-			</form>
+      </form>
+      
+      <button onClick={handleTestClick}>Test </button>
 		</>
 	)
 }
