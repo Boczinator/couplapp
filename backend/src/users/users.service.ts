@@ -4,8 +4,9 @@ import { DRIZZLE_PROVIDER } from 'src/database/database.provider'
 import { NodePgDatabase } from 'drizzle-orm/node-postgres'
 import * as schema from '../db/schema'
 import { eq } from 'drizzle-orm'
-import { CreateUserDto } from './create-user.dto'
+import { CreateUserDto } from './dtos/create-user.dto'
 import { hashSync } from 'bcryptjs'
+import { UpdateUserDto } from './dtos/update-user.dto'
 
 @Injectable()
 export class UsersService {
@@ -18,7 +19,7 @@ export class UsersService {
 		return await this.db.select().from(schema.users)
 	}
 
-	async findOne(id: User['id']) {
+	async findOne(id: number) {
 		const [user] = await this.db
 			.select()
 			.from(schema.users)
@@ -62,7 +63,7 @@ export class UsersService {
 		return { message: `User with id ${removedUser.id} successfully removed!` }
 	}
 
-	async update(id: User['id'], updateData: Pick<User, 'email' | 'name'>) {
+	async update(id: User['id'], updateData: Partial<UpdateUserDto>) {
 		const currentUser = await this.db
 			.select({
 				userId: schema.users.id,
