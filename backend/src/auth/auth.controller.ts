@@ -10,8 +10,6 @@ import {
 import { AuthService } from './auth.service'
 import { LoginUserDto } from './login-user.dto'
 import { type Response } from 'express'
-import { AuthGuard } from './auth.guard'
-import { LocalAuthGuard } from './guards/local-auth-guard'
 import { JwtRefreshGuard } from './guards/jwt-refresh-guard'
 import { JwtAuthGuard } from './guards/jwt-auth-guard'
 
@@ -20,7 +18,6 @@ export class AuthController {
 	constructor(private readonly authService: AuthService) {}
 
 	@Post('login')
-	@UseGuards(LocalAuthGuard)
 	async login(
 		@Body() { email, password }: LoginUserDto,
 		@Res({ passthrough: true }) res: Response,
@@ -47,7 +44,7 @@ export class AuthController {
 
 	@UseGuards(JwtRefreshGuard)
 	@Post('refresh')
-	async refresh(@Req() req: any, @Res({ passThrough: true }) res: Response) {
+	async refresh(@Req() req: any, @Res({ passthrough: true }) res: Response) {
 		const tokens = await this.authService.refreshTokens(
 			req.user.userId,
 			req.user.refreshToken,
@@ -76,7 +73,6 @@ export class AuthController {
 		}
 	}
 
-	@UseGuards(AuthGuard)
 	@Get('me')
 	getProfile() {
 		return 'profile'
