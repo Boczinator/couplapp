@@ -1,4 +1,9 @@
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common'
+import {
+	HttpException,
+	Inject,
+	Injectable,
+	UnauthorizedException,
+} from '@nestjs/common'
 import { DRIZZLE_PROVIDER } from 'src/database/database.provider'
 import * as schema from '../db/schema'
 import { NodePgDatabase } from 'drizzle-orm/node-postgres'
@@ -21,8 +26,12 @@ export class AuthService {
 	) {}
 
 	async validateUser({ email, password }: LoginUserDto) {
+		if (!email) {
+			throw new UnauthorizedException('Email or password missing')
+		}
+
 		const [user] = await this.db
-			.select()
+			.select()       
 			.from(schema.users)
 			.where(eq(schema.users.email, email))
 

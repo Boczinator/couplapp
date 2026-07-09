@@ -29,7 +29,9 @@ export class UsersService {
 			throw new NotFoundException(`User with ID ${id} not found`)
 		}
 
-		return user
+		const { password, ...result } = user
+
+		return result
 	}
 
 	async create(createUserDto: CreateUserDto) {

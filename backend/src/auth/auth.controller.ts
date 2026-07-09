@@ -12,10 +12,14 @@ import { LoginUserDto } from './login-user.dto'
 import { type Response } from 'express'
 import { JwtRefreshGuard } from './guards/jwt-refresh-guard'
 import { JwtAuthGuard } from './guards/jwt-auth-guard'
+import { UsersService } from 'src/users/users.service'
 
 @Controller('auth')
 export class AuthController {
-	constructor(private readonly authService: AuthService) {}
+	constructor(
+		private readonly authService: AuthService,
+		private readonly userService: UsersService,
+	) {}
 
 	@Post('login')
 	async login(
@@ -73,8 +77,9 @@ export class AuthController {
 		}
 	}
 
+	@UseGuards(JwtAuthGuard)
 	@Get('me')
-	getProfile() {
-		return 'profile'
+	getProfile(@Req() req: any) {
+		return req.user
 	}
 }

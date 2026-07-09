@@ -8,9 +8,17 @@ const baseClient = ky.extend({
 export const client = baseClient.extend({
 	hooks: {
 		afterResponse: [
-			async ({ response }) => {
-				if (response.status === 401) {
+			async ({ response, retryCount }) => {
+				if (response.status === 401 && retryCount === 0) {
 					await baseClient.post('/auth/refresh')
+
+					baseClient.retry()
+				}
+
+				if (response.status === 429 && retryCount < 3) {
+					baseClient.retry({
+						delay: 1000,
+					})
 				}
 			},
 		],
