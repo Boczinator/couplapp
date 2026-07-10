@@ -1,4 +1,9 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common'
+import {
+	ConflictException,
+	Inject,
+	Injectable,
+	NotFoundException,
+} from '@nestjs/common'
 import { User } from './types'
 import { DRIZZLE_PROVIDER } from 'src/database/database.provider'
 import { NodePgDatabase } from 'drizzle-orm/node-postgres'
@@ -35,6 +40,15 @@ export class UsersService {
 	}
 
 	async create(createUserDto: CreateUserDto) {
+		const [user] = await this.db
+			.select()
+			.from(schema.users)
+			.where(eq(schema.users.email, createUserDto.email))
+
+		if (user) {
+			throw new ConflictException('Email is already taken')
+		}
+
 		const password = hashSync(createUserDto.password, 10)
 
 		const [newUser] = await this.db
@@ -42,7 +56,9 @@ export class UsersService {
 			.values({ ...createUserDto, password })
 			.returning()
 
-		return newUser
+		const { refreshToken, password: _, isVerified, ...rest } = newUser
+
+		return rest
 	}
 
 	async remove(id: User['id']) {

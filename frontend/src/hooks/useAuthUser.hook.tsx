@@ -1,10 +1,20 @@
-import { queryOptions } from '@tanstack/react-query'
-import { client } from '../api/client'
+import { queryOptions, useQuery } from '@tanstack/react-query'
+import { getUserMe } from '../api/auth'
 
-export const useAuthUser = queryOptions({
+export const useAuthUserOptions = queryOptions({
 	queryKey: ['auth-user'],
 	queryFn: () => {
-		return client.get('/auth/me').json()
+		return getUserMe()
 	},
 	staleTime: Infinity,
 })
+
+export const useAuthUser = () => {
+	const { data: user, isLoading, error } = useQuery(useAuthUserOptions)
+
+	return {
+		user,
+		isLoading,
+		error,
+	}
+}

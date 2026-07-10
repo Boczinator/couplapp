@@ -1,11 +1,14 @@
 import { useState } from 'react'
 import { loginUser, getUserMe } from '../api/auth'
+import { useNavigate } from '@tanstack/react-router'
 
 function App() {
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
 	const [error, setError] = useState(null)
 	const [isLoading, setIsLoading] = useState(false)
+
+	const navigate = useNavigate()
 
 	const handleSubmit = async (event: SubmitEvent) => {
 		event.preventDefault()
@@ -45,7 +48,7 @@ function App() {
 				<div>
 					<label htmlFor="password">Password</label>
 					<input
-						type="text"
+						type="password"
 						id="password"
 						onChange={(e) => setPassword(e.target.value)}
 					></input>
@@ -59,6 +62,10 @@ function App() {
 			</form>
 
 			<button onClick={handleTestClick}>Test </button>
+
+			<div>
+				No account yet? <a href="/register">Create an account!</a>
+			</div>
 		</>
 	)
 }

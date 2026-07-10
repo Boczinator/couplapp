@@ -1,14 +1,29 @@
 import { useMutation } from '@tanstack/react-query'
 import { logoutUser } from '../api/auth'
-import { queryClient } from '../App'
+import { queryClient } from '../api/queryClient'
+import { useNavigate } from '@tanstack/react-router'
 
 export const useLogout = () => {
-	return useMutation({
-		mutationFn: () => {
-			return logoutUser()
-		},
+	const navigate = useNavigate()
+
+	const {
+		mutate: logout,
+		isPending,
+		isSuccess,
+	} = useMutation({
+		mutationFn: () => logoutUser(),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['user-auth'] })
+
+			navigate({
+				to: '/login',
+			})
 		},
 	})
+
+	return {
+		logout,
+		isPending,
+		isSuccess,
+	}
 }
