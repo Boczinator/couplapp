@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { registerUser } from '../api/register'
-import { useNavigate } from '@tanstack/react-router'
+import { useRegister } from '../hooks/useRegister.hook'
 
 export const RegistrationView = () => {
 	const [email, setEmail] = useState('')
@@ -9,7 +8,7 @@ export const RegistrationView = () => {
 	const [passwordVerify, setPasswordVerify] = useState('')
 	const [error, setError] = useState('')
 
-	const navigate = useNavigate()
+	const { register, isPending } = useRegister()
 
 	const handleSubmit = async (event: SubmitEvent) => {
 		event.preventDefault()
@@ -21,19 +20,11 @@ export const RegistrationView = () => {
 			return
 		}
 
-		const user = await registerUser({
+		register({
 			email,
 			name,
 			password,
 		})
-
-		if (user) {
-			navigate({
-				to: '/register-verify',
-			})
-
-			return
-		}
 	}
 
 	return (

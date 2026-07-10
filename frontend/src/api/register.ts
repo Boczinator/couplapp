@@ -1,6 +1,6 @@
 import { client } from './client'
 
-type CreateUserInput = {
+export type CreateUserInput = {
 	email: string
 	name: string
 	password: string
@@ -12,9 +12,8 @@ export const registerUser = async (input: CreateUserInput) => {
 			json: input,
 		})
 
-		console.log(user)
 		if (user) {
-			return user.json()
+			return await user.json()
 		}
 	} catch (error) {
 		return error
