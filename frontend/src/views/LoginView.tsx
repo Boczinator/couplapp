@@ -1,73 +1,85 @@
 import { useState } from 'react'
-import { loginUser, getUserMe } from '../api/auth'
-import { useNavigate } from '@tanstack/react-router'
+import { loginUser } from '../api/auth'
+import { FormikProvider, useFormik } from 'formik'
+import { TextField } from '../components/input/TextField'
 
-function App() {
-	const [email, setEmail] = useState('')
-	const [password, setPassword] = useState('')
-	const [error, setError] = useState(null)
+type LoginFormValues = {
+	email: string
+	password: string
+}
+
+export const LoginView = () => {
 	const [isLoading, setIsLoading] = useState(false)
 
-	const navigate = useNavigate()
+	const formik = useFormik({
+		initialValues: {
+			email: '',
+			password: '',
+		},
+		onSubmit: async ({ email, password }) => {
+			setIsLoading(true)
 
-	const handleSubmit = async (event: SubmitEvent) => {
-		event.preventDefault()
+			try {
+				await loginUser(email, password)
 
-		setIsLoading(true)
+				window.location.href = '/profile'
+			} catch (error: any) {
+				console.log(error)
+			} finally {
+				setIsLoading(false)
+			}
+		},
+		validate: (values) => {
+			const errors: Partial<LoginFormValues> = {}
 
-		try {
-			await loginUser(email, password)
+			if (!values.email) {
+				errors.email = 'Required field'
+			}
 
-			window.location.href = '/profile'
-		} catch (error: any) {
-			console.log(error)
-		} finally {
-			setIsLoading(false)
-		}
-	}
+			if (!values.password) {
+				errors.password = 'Required field'
+			}
 
-	const handleTestClick = async () => {
-		try {
-			await getUserMe()
-		} catch (error) {
-			console.log(error)
-		}
-	}
+			return errors
+		},
+	})
 
 	return (
 		<>
-			<form onSubmit={handleSubmit}>
-				<div style={{ marginBottom: '20px' }}>
-					<label htmlFor="email">Email</label>
-					<input
-						type="text"
-						id="email"
-						onChange={(e) => setEmail(e.target.value)}
-					></input>
-				</div>
-				<div>
-					<label htmlFor="password">Password</label>
-					<input
-						type="password"
-						id="password"
-						onChange={(e) => setPassword(e.target.value)}
-					></input>
-				</div>
+			<FormikProvider value={formik}>
+				<form onSubmit={formik.handleSubmit}>
+					<div>
+						<TextField
+							id="email"
+							name="email"
+							placeholder="Email"
+							type="email"
+							label="Email"
+							className="mb-2"
+						/>
+					</div>
+					<div>
+						<TextField
+							id="password"
+							name="password"
+							placeholder="Password"
+							type="password"
+							label="Password"
+						/>
+					</div>
 
-				{error && <p>{error}</p>}
-
-				<button disabled={isLoading} type="submit">
-					Submit
-				</button>
-			</form>
-
-			<button onClick={handleTestClick}>Test </button>
+					<button disabled={isLoading} type="submit">
+						Submit
+					</button>
+				</form>
+			</FormikProvider>
 
 			<div>
-				No account yet? <a href="/register">Create an account!</a>
+				No account yet?{' '}
+				<a className="underline text-blue-500" href="/register">
+					Create an account!
+				</a>
 			</div>
 		</>
 	)
 }
-
-export default App

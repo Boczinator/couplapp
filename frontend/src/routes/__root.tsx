@@ -12,10 +12,10 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 
 function RootComponent() {
 	return (
-		<>
+		<div class="text-base">
 			<div>test</div>
 			<Outlet />
 			<TanStackRouterDevtools />
-		</>
+		</div>
 	)
 }
