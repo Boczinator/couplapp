@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useRegister } from '../hooks/useRegister.hook'
 import { FormikProvider, useFormik } from 'formik'
 import { TextField } from '../components/input/TextField'
@@ -49,6 +48,8 @@ export const RegistrationView = () => {
 			if (values.password !== values.passwordVerify) {
 				errors.password = 'Passwords do not match'
 			}
+
+			return errors
 		},
 	})
 
