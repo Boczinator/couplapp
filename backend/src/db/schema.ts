@@ -10,7 +10,10 @@ export const users = pgTable('users', {
 	email: text('email').notNull().unique(),
 	password: text('password').notNull(),
 	refreshToken: text('refresh_token'),
-	isVerified: boolean().default(false),
+	isVerified: boolean('is_verified').default(false),
+	optInToken: text('opt_in_token'),
 	createdAt: timestamp('created_at').notNull().defaultNow(),
 	updatedAt: timestamp('updated_at').notNull().defaultNow(),
 })
+
+export type User = typeof users.$inferSelect

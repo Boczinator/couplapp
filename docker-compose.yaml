@@ -1,4 +1,4 @@
-# 
+#
 #   frontend:
 #     build: ./frontend
 #     ports:
@@ -19,12 +19,25 @@ services:
     image: postgres:17
     restart: always
     ports:
-      - "5432:5432" # Exposes PostgreSQL to your host machine
+      - '5432:5432'
     environment:
       POSTGRES_PASSWORD: foobar1234
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
+      test: ['CMD-SHELL', 'pg_isready']
       interval: 1s
       timeout: 5s
       retries: 10
- 
+  mailpit:
+    image: axllent/mailpit
+    container_name: mailpit
+    restart: unless-stopped
+    volumes:
+      - ./data:/data
+    ports:
+      - 8025:8025
+      - 1025:1025
+    environment:
+      MP_MAX_MESSAGES: 5000
+      MP_DATABASE: /data/mailpit.db
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1

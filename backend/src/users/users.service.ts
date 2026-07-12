@@ -2,6 +2,7 @@ import {
 	ConflictException,
 	Inject,
 	Injectable,
+	InternalServerErrorException,
 	NotFoundException,
 } from '@nestjs/common'
 import { User } from './types'
@@ -12,12 +13,14 @@ import { eq } from 'drizzle-orm'
 import { CreateUserDto } from './dtos/create-user.dto'
 import { hashSync } from 'bcryptjs'
 import { UpdateUserDto } from './dtos/update-user.dto'
+import { MailService } from 'src/mail/mail.service'
 
 @Injectable()
 export class UsersService {
 	constructor(
 		@Inject(DRIZZLE_PROVIDER)
 		private readonly db: NodePgDatabase<typeof schema>,
+		private readonly mailService: MailService,
 	) {}
 
 	async findAll() {
@@ -55,6 +58,14 @@ export class UsersService {
 			.insert(schema.users)
 			.values({ ...createUserDto, password })
 			.returning()
+
+		try {
+			await this.mailService.sendVerificationMail(newUser)
+		} catch (error) {
+			throw new InternalServerErrorException({
+				cause: error,
+			})
+		}
 
 		const { refreshToken, password: _, isVerified, ...rest } = newUser
 

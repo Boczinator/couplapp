@@ -8,6 +8,7 @@ import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy'
 import { JwtStrategy } from './strategies/jwt.strategy'
 import { PassportModule } from '@nestjs/passport'
 import { UsersService } from 'src/users/users.service'
+import { MailModule } from 'src/mail/mail.module'
 
 @Module({
 	imports: [
@@ -15,6 +16,7 @@ import { UsersService } from 'src/users/users.service'
 		JwtModule.register({}),
 		DatabaseModule,
 		UsersModule,
+		MailModule,
 	],
 	controllers: [AuthController],
 	providers: [AuthService, JwtRefreshStrategy, JwtStrategy, UsersService],

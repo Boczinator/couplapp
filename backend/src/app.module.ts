@@ -5,6 +5,10 @@ import { AuthModule } from './auth/auth.module'
 import { DatabaseModule } from './database/database.module'
 import { UsersModule } from './users/users.module'
 import { ConfigModule } from '@nestjs/config'
+import { MailModule } from './mail/mail.module'
+import { MailerModule } from '@nestjs-modules/mailer'
+import { join } from 'path'
+import { PugAdapter } from '@nestjs-modules/mailer/adapters/pug.adapter'
 
 @Module({
 	imports: [
@@ -12,6 +16,26 @@ import { ConfigModule } from '@nestjs/config'
 		AuthModule,
 		DatabaseModule,
 		UsersModule,
+		MailModule,
+		MailerModule.forRoot({
+			transport: {
+				host: 'localhost',
+				port: 1025,
+				ignoreTLS: true,
+				logger: true, // <-- Logs SMTP transactions directly to your terminal console
+				debug: true,
+			},
+			defaults: {
+				from: '"No Reply": <noreply@couplapp.com',
+			},
+			template: {
+				dir: join(process.cwd(), 'dist', 'views', 'mail'),
+				adapter: new PugAdapter(),
+				options: {
+					strict: true,
+				},
+			},
+		}),
 	],
 	controllers: [AppController],
 	providers: [AppService],
