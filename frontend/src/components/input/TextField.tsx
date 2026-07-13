@@ -1,5 +1,5 @@
 import { useField } from 'formik'
-import type { HTMLInputTypeAttribute } from 'react'
+import { useState, type HTMLInputTypeAttribute } from 'react'
 import { twMerge } from 'tailwind-merge'
 
 type TextField = {
@@ -11,25 +11,44 @@ type TextField = {
 	className?: string
 }
 
-export const TextField = ({ label, className, ...props }: TextField) => {
+export const TextField = ({
+	label,
+	className,
+	//placeholder,
+	...props
+}: TextField) => {
 	const [field, meta] = useField(props)
+	const [isFocused, setIsFocused] = useState(meta.touched)
+
+	const handleFocus = () => {
+		setIsFocused(!!field.value)
+	}
 
 	return (
-		<>
-			<label className="mr-2" htmlFor={field.name}>
-				{label}
+		<div className="mb-6 relative w-full">
+			<label
+				className={twMerge(
+					'mr-2 top-1/2 left-0 absolute -translate-y-1/2 px-1 transform transition-transform scale-100 hidden',
+					isFocused ? 'scale-50' : '',
+				)}
+				htmlFor={field.name}
+			>
+				{label || placeholder}
 			</label>
 			<input
 				className={twMerge(
-					'text-sm text-black border-2 border-black',
+					'text-sm text-black bg-white border-black py-1.5 px-1 border w-full',
 					className,
 				)}
+				onFocus={handleFocus}
 				{...field}
 				{...props}
 			/>
 			{meta.touched && meta.error ? (
-				<div className="text-red-500">{meta.error}</div>
+				<div className="text-red-500 absolute bottom-0 translate-y-full">
+					{meta.error}
+				</div>
 			) : null}
-		</>
+		</div>
 	)
 }

@@ -73,30 +73,35 @@ export const LoginView = ({}) => {
 	}, [])
 
 	return (
-		<>
+		<div className="px-40 max-w-200 mx-auto">
 			<FormikProvider value={formik}>
 				<form onSubmit={formik.handleSubmit}>
-					<div>
-						<TextField
-							id="email"
-							name="email"
-							placeholder="Email"
-							type="email"
-							label="Email"
-							className="mb-2"
-						/>
-					</div>
-					<div>
-						<TextField
-							id="password"
-							name="password"
-							placeholder="Password"
-							type="password"
-							label="Password"
-						/>
+					<div className="mb-7.5">
+						<div>
+							<TextField
+								id="email"
+								name="email"
+								placeholder="Email"
+								type="email"
+								label="Email"
+							/>
+						</div>
+						<div>
+							<TextField
+								id="password"
+								name="password"
+								placeholder="Password"
+								type="password"
+								label="Password"
+							/>
+						</div>
 					</div>
 
-					<button disabled={isLoading} type="submit">
+					<button
+						className="bg-[#7AE2CF] text-[#06202B] px-1.5 py-2 w-full text-bold cursor-pointer mb-10"
+						disabled={isLoading}
+						type="submit"
+					>
 						Submit
 					</button>
 				</form>
@@ -104,10 +109,10 @@ export const LoginView = ({}) => {
 
 			<div>
 				No account yet?{' '}
-				<a className="underline text-blue-500" href="/register">
+				<a className="underline text-[#077A7D] text-" href="/register">
 					Create an account!
 				</a>
 			</div>
-		</>
+		</div>
 	)
 }
