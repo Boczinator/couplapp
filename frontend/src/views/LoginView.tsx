@@ -1,15 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { loginUser } from '../api/auth'
 import { FormikProvider, useFormik } from 'formik'
 import { TextField } from '../components/input/TextField'
 import { ToastTypes, useToast } from '../components/toast/ToastContext'
-import {
-	getRouteApi,
-	useNavigate,
-	useParams,
-	useRouter,
-	useSearch,
-} from '@tanstack/react-router'
+import { useNavigate, useSearch } from '@tanstack/react-router'
 
 type LoginFormValues = {
 	email: string
@@ -19,8 +13,7 @@ type LoginFormValues = {
 export const LoginView = ({}) => {
 	const [isLoading, setIsLoading] = useState(false)
 	const navigate = useNavigate()
-
-	const search = useSearch({ from: '/verify-mail' })
+	const search = useSearch({ from: '/login' })
 
 	const { addToast } = useToast()
 
@@ -68,6 +61,16 @@ export const LoginView = ({}) => {
 			return errors
 		},
 	})
+
+	useEffect(() => {
+		if (search.status === 'ready_to_login') {
+			addToast({
+				id: `${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+				message: 'You´re set up to login!',
+				type: ToastTypes.Success,
+			})
+		}
+	}, [])
 
 	return (
 		<>
