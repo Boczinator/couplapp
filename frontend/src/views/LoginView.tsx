@@ -2,14 +2,27 @@ import { useState } from 'react'
 import { loginUser } from '../api/auth'
 import { FormikProvider, useFormik } from 'formik'
 import { TextField } from '../components/input/TextField'
+import { ToastTypes, useToast } from '../components/toast/ToastContext'
+import {
+	getRouteApi,
+	useNavigate,
+	useParams,
+	useRouter,
+	useSearch,
+} from '@tanstack/react-router'
 
 type LoginFormValues = {
 	email: string
 	password: string
 }
 
-export const LoginView = () => {
+export const LoginView = ({}) => {
 	const [isLoading, setIsLoading] = useState(false)
+	const navigate = useNavigate()
+
+	const search = useSearch({ from: '/verify-mail' })
+
+	const { addToast } = useToast()
 
 	const formik = useFormik({
 		initialValues: {
@@ -22,9 +35,21 @@ export const LoginView = () => {
 			try {
 				await loginUser(email, password)
 
-				window.location.href = '/profile'
+				navigate({ to: '/profile', from: '/login' })
+
+				addToast({
+					id: `${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+					message: 'Success Login!',
+					type: ToastTypes.Success,
+				})
 			} catch (error: any) {
 				console.log(error)
+
+				addToast({
+					id: `${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+					message: error.message,
+					type: ToastTypes.Error,
+				})
 			} finally {
 				setIsLoading(false)
 			}
