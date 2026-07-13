@@ -1,4 +1,6 @@
 import {
+	BadRequestException,
+	ForbiddenException,
 	HttpException,
 	Inject,
 	Injectable,
@@ -31,7 +33,7 @@ export class AuthService {
 		}
 
 		const [user] = await this.db
-			.select()       
+			.select()
 			.from(schema.users)
 			.where(eq(schema.users.email, email))
 
@@ -43,6 +45,13 @@ export class AuthService {
 
 		if (!passwordMatches) {
 			throw new UnauthorizedException('Invalid email or password')
+		}
+
+		if (!user.isVerified) {
+			throw new ForbiddenException({
+				message: 'Email verification required.',
+				errorCode: 'EMAIL_NOT_VERIFIED',
+			})
 		}
 
 		const { password: pw, refreshToken, ...result } = user
@@ -116,5 +125,31 @@ export class AuthService {
 			maxAge: 604800000, // 7 days
 			path: '/',
 		})
+	}
+
+	async verifyEmailToken(token: string) {
+		if (!token) {
+			throw new BadRequestException('Missing verification token!')
+		}
+
+		const [user] = await this.db
+			.update(schema.users)
+			.set({ isVerified: true })
+			.where(eq(schema.users.optInToken, token))
+			.returning()
+
+		if (user && user.isVerified) {
+			return {
+				success: true,
+				message: 'User successfully verified',
+			}
+		}
+
+		if (!user) {
+			return {
+				success: false,
+				message: 'Token either expired or not found',
+			}
+		}
 	}
 }

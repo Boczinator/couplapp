@@ -19,3 +19,19 @@ export const registerUser = async (input: CreateUserInput) => {
 		throw new Error('Problem with registration')
 	}
 }
+
+export const verifyRegisterToken = async (token: string) => {
+	try {
+		const response = await client.post('auth/verify-registration-token', {
+			json: {
+				token,
+			},
+		})
+
+		if (response) {
+			return await response.json()
+		}
+	} catch (error) {
+		console.log(error)
+	}
+}

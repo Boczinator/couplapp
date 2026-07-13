@@ -9,15 +9,21 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as RegisterVerifyRouteImport } from './routes/register-verify'
+import { Route as VerifyMailSentRouteImport } from './routes/verify-mail-sent'
+import { Route as VerifyMailRouteImport } from './routes/verify-mail'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 
-const RegisterVerifyRoute = RegisterVerifyRouteImport.update({
-  id: '/register-verify',
-  path: '/register-verify',
+const VerifyMailSentRoute = VerifyMailSentRouteImport.update({
+  id: '/verify-mail-sent',
+  path: '/verify-mail-sent',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VerifyMailRoute = VerifyMailRouteImport.update({
+  id: '/verify-mail',
+  path: '/verify-mail',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RegisterRoute = RegisterRouteImport.update({
@@ -44,14 +50,16 @@ export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedRouteWithChildren
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
-  '/register-verify': typeof RegisterVerifyRoute
+  '/verify-mail': typeof VerifyMailRoute
+  '/verify-mail-sent': typeof VerifyMailSentRoute
   '/profile': typeof AuthenticatedProfileRoute
 }
 export interface FileRoutesByTo {
   '/': typeof AuthenticatedRouteWithChildren
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
-  '/register-verify': typeof RegisterVerifyRoute
+  '/verify-mail': typeof VerifyMailRoute
+  '/verify-mail-sent': typeof VerifyMailSentRoute
   '/profile': typeof AuthenticatedProfileRoute
 }
 export interface FileRoutesById {
@@ -59,20 +67,34 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
-  '/register-verify': typeof RegisterVerifyRoute
+  '/verify-mail': typeof VerifyMailRoute
+  '/verify-mail-sent': typeof VerifyMailSentRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/register' | '/register-verify' | '/profile'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/register'
+    | '/verify-mail'
+    | '/verify-mail-sent'
+    | '/profile'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/register' | '/register-verify' | '/profile'
+  to:
+    | '/'
+    | '/login'
+    | '/register'
+    | '/verify-mail'
+    | '/verify-mail-sent'
+    | '/profile'
   id:
     | '__root__'
     | '/_authenticated'
     | '/login'
     | '/register'
-    | '/register-verify'
+    | '/verify-mail'
+    | '/verify-mail-sent'
     | '/_authenticated/profile'
   fileRoutesById: FileRoutesById
 }
@@ -80,16 +102,24 @@ export interface RootRouteChildren {
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
-  RegisterVerifyRoute: typeof RegisterVerifyRoute
+  VerifyMailRoute: typeof VerifyMailRoute
+  VerifyMailSentRoute: typeof VerifyMailSentRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/register-verify': {
-      id: '/register-verify'
-      path: '/register-verify'
-      fullPath: '/register-verify'
-      preLoaderRoute: typeof RegisterVerifyRouteImport
+    '/verify-mail-sent': {
+      id: '/verify-mail-sent'
+      path: '/verify-mail-sent'
+      fullPath: '/verify-mail-sent'
+      preLoaderRoute: typeof VerifyMailSentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/verify-mail': {
+      id: '/verify-mail'
+      path: '/verify-mail'
+      fullPath: '/verify-mail'
+      preLoaderRoute: typeof VerifyMailRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/register': {
@@ -139,7 +169,8 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
-  RegisterVerifyRoute: RegisterVerifyRoute,
+  VerifyMailRoute: VerifyMailRoute,
+  VerifyMailSentRoute: VerifyMailSentRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

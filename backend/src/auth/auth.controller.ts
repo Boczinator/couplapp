@@ -46,6 +46,13 @@ export class AuthController {
 		}
 	}
 
+	@Post('verify-registration-token')
+	async verifyRegistrationToken(@Body() { token }: { token: string }) {
+		const data = await this.authService.verifyEmailToken(token)
+
+		return data
+	}
+
 	@UseGuards(JwtRefreshGuard)
 	@Post('refresh')
 	async refresh(@Req() req: any, @Res({ passthrough: true }) res: Response) {

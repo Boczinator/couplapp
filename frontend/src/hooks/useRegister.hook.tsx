@@ -14,7 +14,7 @@ export const useRegister = () => {
 		mutationFn: (input: CreateUserInput) => registerUser(input),
 		onSuccess: () => {
 			navigate({
-				to: '/register-verify',
+				to: '/verify-mail-sent',
 			})
 		},
 	})

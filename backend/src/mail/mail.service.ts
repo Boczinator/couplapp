@@ -31,7 +31,7 @@ export class MailService {
 	async sendVerificationMail(user: schema.User) {
 		const token = await this.createOptInToken(user.id)
 
-		const verificationUrl = `${this.configService.get('FRONTEND_URL')}/verify-registration?${token}`
+		const verificationUrl = `${this.configService.get('FRONTEND_URL')}/verify-mail?token=${token}`
 
 		try {
 			const response = await this.mailerService.sendMail({
