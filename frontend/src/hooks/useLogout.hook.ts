@@ -13,7 +13,7 @@ export const useLogout = () => {
 	} = useMutation({
 		mutationFn: () => logoutUser(),
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ['user-auth'] })
+			queryClient.resetQueries({ queryKey: ['user-auth', ] })
 
 			navigate({
 				to: '/login',

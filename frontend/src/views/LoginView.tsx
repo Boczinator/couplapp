@@ -31,7 +31,6 @@ export const LoginView = ({}) => {
 				navigate({ to: '/profile', from: '/login' })
 
 				addToast({
-					id: `${Date.now()}-${Math.floor(Math.random() * 1000)}`,
 					message: 'Success Login!',
 					type: ToastTypes.Success,
 				})
@@ -39,7 +38,6 @@ export const LoginView = ({}) => {
 				console.log(error)
 
 				addToast({
-					id: `${Date.now()}-${Math.floor(Math.random() * 1000)}`,
 					message: error.message,
 					type: ToastTypes.Error,
 				})
@@ -65,7 +63,6 @@ export const LoginView = ({}) => {
 	useEffect(() => {
 		if (search.status === 'ready_to_login') {
 			addToast({
-				id: `${Date.now()}-${Math.floor(Math.random() * 1000)}`,
 				message: 'You´re set up to login!',
 				type: ToastTypes.Success,
 			})

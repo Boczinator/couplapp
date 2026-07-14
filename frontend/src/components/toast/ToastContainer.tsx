@@ -5,24 +5,26 @@ export const ToastContainer = () => {
 	const { toastItems, removeToast } = useToast()
 
 	return (
-		<div className="fixed right-5 bottom-5">
+		<div className="fixed right-5 bottom-5 flex flex-col gap-2 max-h-full overflow-y-auto">
 			{toastItems.map((toast) => (
 				<div
 					key={toast.id}
 					className={clsx(
-						'text-sm font-bold px-5 py-4',
-						toast.type === ToastTypes.Error && 'bg-red-200 text-red-500',
-						toast.type === ToastTypes.Success && 'bg-green-200 text-green-500',
+						'text-sm font-bold px-5 py-4 rounded-xl sm:w-100 relative',
+						toast.type === ToastTypes.Error &&
+							'bg-red-200 text-red-500 hover:bg-red-100',
+						toast.type === ToastTypes.Success &&
+							'border border-green-500 bg-green-100 text-green-500 hover:bg-green-100',
 						toast.type === ToastTypes.Info && 'bg-yellow-200 text-yellow-500',
 					)}
 				>
 					<p>{toast.message}</p>
 					<button
 						className={clsx(
-							toast.type === ToastTypes.Error && 'bg-red-200 text-red-500',
-							toast.type === ToastTypes.Success &&
-								'bg-green-200 text-green-500',
-							toast.type === ToastTypes.Info && 'bg-yellow-200 text-yellow-500',
+							'absolute right-4 top-4 cursor-pointer',
+							toast.type === ToastTypes.Error && ' text-red-500',
+							toast.type === ToastTypes.Success && ' text-green-500',
+							toast.type === ToastTypes.Info && ' text-yellow-500',
 						)}
 						onClick={() => removeToast(toast.id)}
 					>

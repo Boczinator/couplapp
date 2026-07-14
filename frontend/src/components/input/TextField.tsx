@@ -45,7 +45,7 @@ export const TextField = ({
 				{...props}
 			/>
 			{meta.touched && meta.error ? (
-				<div className="text-red-500 absolute bottom-0 translate-y-full">
+				<div className="text-red-500 absolute bottom-0 translate-y-full text-xs">
 					{meta.error}
 				</div>
 			) : null}

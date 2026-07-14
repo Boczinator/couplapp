@@ -16,6 +16,7 @@ export const registerUser = async (input: CreateUserInput) => {
 			return await user.json()
 		}
 	} catch (error) {
+		console.log(error)
 		throw new Error('Problem with registration')
 	}
 }

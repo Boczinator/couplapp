@@ -1,7 +1,6 @@
 import { useRegister } from '../hooks/useRegister.hook'
 import { FormikProvider, useFormik } from 'formik'
 import { TextField } from '../components/input/TextField'
-import { ToastTypes, useToast } from '../components/toast/ToastContext'
 
 type RegistrationFormValues = {
 	email: string
@@ -11,8 +10,7 @@ type RegistrationFormValues = {
 }
 
 export const RegistrationView = () => {
-	const { register } = useRegister()
-	const { addToast } = useToast()
+	const { register, error, isError } = useRegister()
 
 	const formik = useFormik({
 		initialValues: {
@@ -21,12 +19,17 @@ export const RegistrationView = () => {
 			password: '',
 			passwordVerify: '',
 		},
-		onSubmit: async ({ email, name, password }) => {
-			register({
-				email,
-				name,
-				password,
-			})
+		onSubmit: async ({ email, name, password }, { setSubmitting }) => {
+			register(
+				{
+					email,
+					name,
+					password,
+				},
+				{
+					onSettled: () => setSubmitting(false),
+				},
+			)
 		},
 		validate: (values) => {
 			const errors: Partial<RegistrationFormValues> = {}

@@ -21,9 +21,11 @@ export type Toast = {
 	duration?: number
 }
 
+type AddToast = Pick<Toast, 'message' | 'type'>
+
 export type ToastContextProps = {
 	toastItems: Toast[]
-	addToast: (toast: Toast) => void
+	addToast: (toast: AddToast) => void
 	removeToast: (id: string) => void
 }
 
@@ -48,8 +50,13 @@ export const useToast = (): ToastContextProps => {
 export const ToastProvider = ({ children }: ToastProviderProps) => {
 	const [toastItems, setToastItems] = useState<Toast[]>([])
 
-	const addToast = (toast: Toast) => {
-		setToastItems((prevToastItems) => [...prevToastItems, toast])
+	const addToast = (toast: AddToast) => {
+		const toastWithId = {
+			...toast,
+			id: `${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+		}
+
+		setToastItems((prevToastItems) => [...prevToastItems, toastWithId])
 	}
 
 	const removeToast = (id: string) => {

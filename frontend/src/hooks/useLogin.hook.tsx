@@ -6,9 +6,9 @@ export const useLogin = () => {
 	return useMutation({
 		mutationFn: (data) => {
 			return loginUser(data.email, data.password)
-        },
+		},
 		onSuccess: (user) => {
-			queryClient.setQueryData(['auth-user'], user)
+			queryClient.setQueryData(['user-auth'], user)
 		},
 	})
 }
