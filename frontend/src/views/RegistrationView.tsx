@@ -1,6 +1,7 @@
 import { useRegister } from '../hooks/useRegister.hook'
 import { FormikProvider, useFormik } from 'formik'
 import { TextField } from '../components/input/TextField'
+import { Button } from '../components/button/Button'
 
 type RegistrationFormValues = {
 	email: string
@@ -104,12 +105,9 @@ export const RegistrationView = () => {
 						/>
 					</fieldset>
 
-					<button
-						className="bg-[#7AE2CF] text-[#06202B] px-1.5 py-2 w-full text-bold cursor-pointer mb-10"
-						type="submit"
-					>
+					<Button className="mb-10" type="submit">
 						Register
-					</button>
+					</Button>
 				</form>
 			</FormikProvider>
 		</div>

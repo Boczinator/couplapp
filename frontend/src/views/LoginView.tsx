@@ -4,6 +4,7 @@ import { FormikProvider, useFormik } from 'formik'
 import { TextField } from '../components/input/TextField'
 import { ToastTypes, useToast } from '../components/toast/ToastContext'
 import { useNavigate, useSearch } from '@tanstack/react-router'
+import { Button } from '../components/button/Button'
 
 type LoginFormValues = {
 	email: string
@@ -94,13 +95,9 @@ export const LoginView = ({}) => {
 						</div>
 					</div>
 
-					<button
-						className="bg-[#7AE2CF] text-[#06202B] px-1.5 py-2 w-full text-bold cursor-pointer mb-10"
-						disabled={isLoading}
-						type="submit"
-					>
+					<Button className="mb-10" type="submit" disabled={isLoading}>
 						Submit
-					</button>
+					</Button>
 				</form>
 			</FormikProvider>
 

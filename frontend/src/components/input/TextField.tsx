@@ -37,7 +37,7 @@ export const TextField = ({
 			</label>
 			<input
 				className={twMerge(
-					'text-sm text-black bg-white border-black py-1.5 px-1 border w-full',
+					'text-sm text-black bg-white border-black py-1.5 px-1 border w-full rounded-sm',
 					className,
 				)}
 				onFocus={handleFocus}
