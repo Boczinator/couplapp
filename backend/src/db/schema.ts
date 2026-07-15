@@ -9,7 +9,6 @@ export const users = pgTable('users', {
 	id: serial('id').primaryKey(),
 	firstName: varchar('first_name', { length: 255 }).notNull(),
 	lastName: varchar('last_name', { length: 255 }).notNull(),
-	name: varchar('name', { length: 255 }).notNull(),
 	email: text('email').notNull().unique(),
 	password: text('password').notNull(),
 	refreshToken: text('refresh_token'),

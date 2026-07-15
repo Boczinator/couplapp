@@ -2,7 +2,8 @@ import { client } from './client'
 
 export type CreateUserInput = {
 	email: string
-	name: string
+	firstName: string
+	lastName: string
 	password: string
 }
 

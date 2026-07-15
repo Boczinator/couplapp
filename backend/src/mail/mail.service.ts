@@ -39,7 +39,7 @@ export class MailService {
 				subject: 'Welcome! Please Confirm your Email',
 				template: './verify-email',
 				context: {
-					name: user.name,
+					name: `${user.firstName} ${user.lastName}`,
 					verificationUrl,
 				},
 			})

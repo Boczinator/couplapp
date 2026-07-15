@@ -5,7 +5,8 @@ export const ProfileView = () => {
 
 	return (
 		<>
-			<div>Name: {user.name}</div>
+			<div>First Name: {user.firstName}</div>
+			<div>Last Name: {user.lastName}</div>
 			<div>Id: {user.id}</div>
 		</>
 	)

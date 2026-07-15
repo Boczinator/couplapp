@@ -5,7 +5,8 @@ import { Button } from '../components/button/Button'
 
 type RegistrationFormValues = {
 	email: string
-	name: string
+	firstName: string
+	lastName: string
 	password: string
 	passwordVerify: string
 }
@@ -16,15 +17,20 @@ export const RegistrationView = () => {
 	const formik = useFormik({
 		initialValues: {
 			email: '',
-			name: '',
+			firstName: '',
+			lastName: '',
 			password: '',
 			passwordVerify: '',
 		},
-		onSubmit: async ({ email, name, password }, { setSubmitting }) => {
+		onSubmit: async (
+			{ email, firstName, lastName, password },
+			{ setSubmitting },
+		) => {
 			register(
 				{
 					email,
-					name,
+					firstName,
+					lastName,
 					password,
 				},
 				{
@@ -43,8 +49,12 @@ export const RegistrationView = () => {
 				errors.email = 'Required field'
 			}
 
-			if (!values.name) {
-				errors.name = 'Required field'
+			if (!values.firstName) {
+				errors.firstName = 'Required field'
+			}
+
+			if (!values.lastName) {
+				errors.lastName = 'Required field'
 			}
 
 			if (!values.passwordVerify) {
@@ -80,11 +90,20 @@ export const RegistrationView = () => {
 					</div>
 					<div>
 						<TextField
-							name="name"
+							name="firstName"
 							type="text"
-							id="name"
-							label="Name"
-							placeholder="Name"
+							id="firstName"
+							label="First name"
+							placeholder="First name"
+						/>
+					</div>
+					<div>
+						<TextField
+							name="lastName"
+							type="text"
+							id="lastName"
+							label="Last name"
+							placeholder="Last name"
 						/>
 					</div>
 					<fieldset className="flex flex-col">
