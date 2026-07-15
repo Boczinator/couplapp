@@ -5,6 +5,7 @@ import { TextField } from '../components/input/TextField'
 import { ToastTypes, useToast } from '../components/toast/ToastContext'
 import { useNavigate, useSearch } from '@tanstack/react-router'
 import { Button } from '../components/button/Button'
+import { Route } from '../routes/_public/login'
 
 type LoginFormValues = {
 	email: string
@@ -14,7 +15,7 @@ type LoginFormValues = {
 export const LoginView = ({}) => {
 	const [isLoading, setIsLoading] = useState(false)
 	const navigate = useNavigate()
-	const search = useSearch({ from: '/login' })
+	const search = useSearch({ from: Route.id })
 
 	const { addToast } = useToast()
 
@@ -71,7 +72,7 @@ export const LoginView = ({}) => {
 	}, [])
 
 	return (
-		<div className="px-40 max-w-200 mx-auto">
+		<div>
 			<FormikProvider value={formik}>
 				<form onSubmit={formik.handleSubmit}>
 					<div className="mb-7.5">

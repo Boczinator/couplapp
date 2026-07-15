@@ -5,12 +5,12 @@ export const ToastContainer = () => {
 	const { toastItems, removeToast } = useToast()
 
 	return (
-		<div className="fixed right-5 bottom-5 flex flex-col gap-2 max-h-full overflow-y-auto">
+		<div className="fixed px-5 w-full sm:w-auto sm:px-0 sm:right-5 bottom-5 flex flex-col gap-2 max-h-full overflow-y-auto">
 			{toastItems.map((toast) => (
 				<div
 					key={toast.id}
 					className={clsx(
-						'text-sm font-bold px-5 py-4 rounded-xl sm:w-100 relative',
+						'text-sm font-bold px-5 py-4 rounded-xl w-full sm:w-100 relative',
 						toast.type === ToastTypes.Error &&
 							'bg-red-200 text-red-500 hover:bg-red-100',
 						toast.type === ToastTypes.Success &&

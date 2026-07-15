@@ -66,7 +66,7 @@ export const RegistrationView = () => {
 	})
 
 	return (
-		<div className="px-40 max-w-200 mx-auto">
+		<div>
 			<FormikProvider value={formik}>
 				<form onSubmit={formik.handleSubmit}>
 					<div>

@@ -1,12 +1,12 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
 import z from 'zod'
-import { verifyRegisterToken } from '../api/register'
+import { verifyRegisterToken } from '../../api/register'
 
 const verifySearchTokenSchema = z.object({
 	token: z.string().catch(''),
 })
 
-export const Route = createFileRoute('/verify-mail')({
+export const Route = createFileRoute('/_public/verify-mail')({
 	validateSearch: (search) => verifySearchTokenSchema.parse(search),
 	beforeLoad: async ({ search }) => {
 		const { token } = search
