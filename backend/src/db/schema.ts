@@ -3,10 +3,10 @@ import { boolean } from 'drizzle-orm/pg-core'
 import { integer } from 'drizzle-orm/pg-core'
 import { timestamp } from 'drizzle-orm/pg-core'
 import { text } from 'drizzle-orm/pg-core'
-import { pgTable, serial } from 'drizzle-orm/pg-core'
+import { pgTable, uuid } from 'drizzle-orm/pg-core'
 
 export const users = pgTable('users', {
-	id: serial('id').primaryKey(),
+	id: uuid('id').defaultRandom().primaryKey(),
 	firstName: varchar('first_name', { length: 255 }).notNull(),
 	lastName: varchar('last_name', { length: 255 }).notNull(),
 	email: text('email').notNull().unique(),
@@ -19,8 +19,10 @@ export const users = pgTable('users', {
 })
 
 export const profiles = pgTable('profiles', {
-	id: serial('id').primaryKey(),
-	userId: integer('user_id').references(() => users.id),
+	id: uuid('id').defaultRandom().primaryKey(),
+	userId: uuid('user_id').references(() => users.id, {
+		onDelete: 'cascade',
+	}),
 	picture: text('picture'),
 	bannerPicture: text('banner'),
 	bio: text('bio'),

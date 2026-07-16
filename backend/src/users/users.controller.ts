@@ -7,10 +7,10 @@ import {
 	Post,
 	UseGuards,
 } from '@nestjs/common'
-import type { User } from './types'
 import { UsersService } from './users.service'
 import { CreateUserDto } from './dtos/create-user.dto'
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth-guard'
+import { User } from 'src/db/schema'
 
 @Controller('users')
 export class UsersController {
@@ -28,7 +28,7 @@ export class UsersController {
 	}
 
 	@Delete()
-	async removeUser(@Param('id') id: number) {
+	async removeUser(@Param('id') id: User['id']) {
 		await this.usersService.remove(id)
 	}
 

@@ -5,7 +5,6 @@ import {
 	InternalServerErrorException,
 	NotFoundException,
 } from '@nestjs/common'
-import { User } from './types'
 import { DRIZZLE_PROVIDER } from 'src/database/database.provider'
 import { NodePgDatabase } from 'drizzle-orm/node-postgres'
 import * as schema from '../db/schema'
@@ -14,6 +13,7 @@ import { CreateUserDto } from './dtos/create-user.dto'
 import { hashSync } from 'bcryptjs'
 import { UpdateUserDto } from './dtos/update-user.dto'
 import { MailService } from 'src/mail/mail.service'
+import { ProfilesService } from 'src/profiles/profiles.service'
 
 @Injectable()
 export class UsersService {
@@ -21,13 +21,14 @@ export class UsersService {
 		@Inject(DRIZZLE_PROVIDER)
 		private readonly db: NodePgDatabase<typeof schema>,
 		private readonly mailService: MailService,
+		private readonly profileService: ProfilesService,
 	) {}
 
 	async findAll() {
 		return await this.db.select().from(schema.users)
 	}
 
-	async findOne(id: number) {
+	async findOne(id: schema.User['id']) {
 		const [user] = await this.db
 			.select()
 			.from(schema.users)
@@ -67,12 +68,28 @@ export class UsersService {
 			})
 		}
 
+		try {
+			await this.profileService.create(
+				{
+					bio: null,
+					picture: null,
+					bannerPicture: null,
+					location: null,
+				},
+				newUser.id,
+			)
+		} catch (error) {
+			throw new InternalServerErrorException({
+				cause: error,
+			})
+		}
+
 		const { refreshToken, password: _, isVerified, ...rest } = newUser
 
 		return rest
 	}
 
-	async remove(id: User['id']) {
+	async remove(id: schema.User['id']) {
 		const userExists = await this.db
 			.select({
 				userId: schema.users.id,
@@ -92,7 +109,7 @@ export class UsersService {
 		return { message: `User with id ${removedUser.id} successfully removed!` }
 	}
 
-	async update(id: User['id'], updateData: Partial<UpdateUserDto>) {
+	async update(id: schema.User['id'], updateData: Partial<UpdateUserDto>) {
 		const currentUser = await this.db
 			.select({
 				userId: schema.users.id,

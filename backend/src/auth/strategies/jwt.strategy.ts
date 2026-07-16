@@ -4,6 +4,7 @@ import { Request } from 'express'
 import { ExtractJwt, Strategy } from 'passport-jwt'
 import { Injectable } from '@nestjs/common'
 import { UsersService } from 'src/users/users.service'
+import { User } from 'src/db/schema'
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
@@ -19,7 +20,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
 		})
 	}
 
-	async validate(payload: { sub: number }) {
+	async validate(payload: { sub: User['id'] }) {
 		const { refreshToken, ...rest } = await this.usersService.findOne(
 			payload.sub,
 		)

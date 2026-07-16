@@ -16,7 +16,7 @@ export class MailService {
 		private readonly mailerService: MailerService,
 	) {}
 
-	async createOptInToken(userId: number) {
+	async createOptInToken(userId: schema.User['id']) {
 		const token = crypto.randomBytes(32).toString('hex')
 
 		const [{ optInToken }] = await this.db

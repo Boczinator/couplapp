@@ -3,10 +3,11 @@ import { UsersController } from './users.controller'
 import { UsersService } from './users.service'
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth-guard'
 import { MailService } from 'src/mail/mail.service'
+import { ProfilesService } from 'src/profiles/profiles.service'
 
 @Module({
 	controllers: [UsersController],
-	providers: [UsersService, JwtAuthGuard, MailService],
+	providers: [UsersService, JwtAuthGuard, MailService, ProfilesService],
 	exports: [UsersService],
 })
 export class UsersModule {}

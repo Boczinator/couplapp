@@ -13,7 +13,7 @@ export const AuthenticatedHeader = () => {
 		logout()
 	}
 	return (
-		<header className="flex flex-col border-r-2 border-[#06202B] h-dvh w-1/4 overflow-y-auto pb-5">
+		<header className="flex flex-col shadow-xl h-dvh w-1/5 overflow-y-auto pb-5">
 			<div className="flex sticky top-0 w-full bg-white">
 				<img src={logo} className="w-60 h-20 object-cover object-center" />
 			</div>
@@ -24,7 +24,9 @@ export const AuthenticatedHeader = () => {
 			</nav>
 
 			<div className="flex justify-between px-5 py-5 border-t border-[#06202B] items-center">
-				<div>{user.name}</div>
+				<div>
+					{user.firstName} {user.lastName}
+				</div>
 				<button className="cursor-pointer" onClick={handleLogoutClick}>
 					{/* <SvgIcon /> */}
 					Logout

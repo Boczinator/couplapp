@@ -59,7 +59,7 @@ export class AuthService {
 		return result
 	}
 
-	async generateTokens(userId: number, userEmail: string) {
+	async generateTokens(userId: schema.User['id'], userEmail: string) {
 		const jwtPayload = {
 			sub: userId,
 			email: userEmail,
@@ -79,7 +79,7 @@ export class AuthService {
 		return { accessToken, refreshToken }
 	}
 
-	async refreshTokens(userId: number, refreshToken: string) {
+	async refreshTokens(userId: schema.User['id'], refreshToken: string) {
 		const user = await this.userService.findOne(userId)
 
 		if (!user || !user.refreshToken) {
@@ -96,13 +96,13 @@ export class AuthService {
 		return tokens
 	}
 
-	async updateRefreshToken(userId: number, refreshToken: string) {
+	async updateRefreshToken(userId: schema.User['id'], refreshToken: string) {
 		await this.userService.update(userId, {
 			refreshToken: await hash(refreshToken, 10),
 		})
 	}
 
-	async logout(userId: number) {
+	async logout(userId: schema.User['id']) {
 		await this.userService.update(userId, { refreshToken: null })
 	}
 
