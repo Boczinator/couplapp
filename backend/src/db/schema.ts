@@ -23,6 +23,7 @@ export const profiles = pgTable('profiles', {
 	userId: uuid('user_id').references(() => users.id, {
 		onDelete: 'cascade',
 	}),
+	name: text('name'),
 	picture: text('picture'),
 	bannerPicture: text('banner'),
 	bio: text('bio'),
@@ -33,3 +34,4 @@ export const profiles = pgTable('profiles', {
 })
 
 export type User = typeof users.$inferSelect
+export type Profile = typeof profiles.$inferSelect

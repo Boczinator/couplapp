@@ -15,6 +15,7 @@ import { Route as PublicVerifyMailSentRouteImport } from './routes/_public/verif
 import { Route as PublicVerifyMailRouteImport } from './routes/_public/verify-mail'
 import { Route as PublicRegisterRouteImport } from './routes/_public/register'
 import { Route as PublicLoginRouteImport } from './routes/_public/login'
+import { Route as AuthenticatedProfileSelectionRouteImport } from './routes/_authenticated/profile-selection'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedFriendsRouteImport } from './routes/_authenticated/friends'
 import { Route as AuthenticatedFeedRouteImport } from './routes/_authenticated/feed'
@@ -47,6 +48,12 @@ const PublicLoginRoute = PublicLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => PublicRoute,
 } as any)
+const AuthenticatedProfileSelectionRoute =
+  AuthenticatedProfileSelectionRouteImport.update({
+    id: '/profile-selection',
+    path: '/profile-selection',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -68,6 +75,7 @@ export interface FileRoutesByFullPath {
   '/feed': typeof AuthenticatedFeedRoute
   '/friends': typeof AuthenticatedFriendsRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/profile-selection': typeof AuthenticatedProfileSelectionRoute
   '/login': typeof PublicLoginRoute
   '/register': typeof PublicRegisterRoute
   '/verify-mail': typeof PublicVerifyMailRoute
@@ -78,6 +86,7 @@ export interface FileRoutesByTo {
   '/feed': typeof AuthenticatedFeedRoute
   '/friends': typeof AuthenticatedFriendsRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/profile-selection': typeof AuthenticatedProfileSelectionRoute
   '/login': typeof PublicLoginRoute
   '/register': typeof PublicRegisterRoute
   '/verify-mail': typeof PublicVerifyMailRoute
@@ -90,6 +99,7 @@ export interface FileRoutesById {
   '/_authenticated/feed': typeof AuthenticatedFeedRoute
   '/_authenticated/friends': typeof AuthenticatedFriendsRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
+  '/_authenticated/profile-selection': typeof AuthenticatedProfileSelectionRoute
   '/_public/login': typeof PublicLoginRoute
   '/_public/register': typeof PublicRegisterRoute
   '/_public/verify-mail': typeof PublicVerifyMailRoute
@@ -102,6 +112,7 @@ export interface FileRouteTypes {
     | '/feed'
     | '/friends'
     | '/profile'
+    | '/profile-selection'
     | '/login'
     | '/register'
     | '/verify-mail'
@@ -112,6 +123,7 @@ export interface FileRouteTypes {
     | '/feed'
     | '/friends'
     | '/profile'
+    | '/profile-selection'
     | '/login'
     | '/register'
     | '/verify-mail'
@@ -123,6 +135,7 @@ export interface FileRouteTypes {
     | '/_authenticated/feed'
     | '/_authenticated/friends'
     | '/_authenticated/profile'
+    | '/_authenticated/profile-selection'
     | '/_public/login'
     | '/_public/register'
     | '/_public/verify-mail'
@@ -178,6 +191,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicLoginRouteImport
       parentRoute: typeof PublicRoute
     }
+    '/_authenticated/profile-selection': {
+      id: '/_authenticated/profile-selection'
+      path: '/profile-selection'
+      fullPath: '/profile-selection'
+      preLoaderRoute: typeof AuthenticatedProfileSelectionRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/profile': {
       id: '/_authenticated/profile'
       path: '/profile'
@@ -206,12 +226,14 @@ interface AuthenticatedRouteChildren {
   AuthenticatedFeedRoute: typeof AuthenticatedFeedRoute
   AuthenticatedFriendsRoute: typeof AuthenticatedFriendsRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
+  AuthenticatedProfileSelectionRoute: typeof AuthenticatedProfileSelectionRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedFeedRoute: AuthenticatedFeedRoute,
   AuthenticatedFriendsRoute: AuthenticatedFriendsRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
+  AuthenticatedProfileSelectionRoute: AuthenticatedProfileSelectionRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(

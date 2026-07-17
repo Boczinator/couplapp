@@ -3,6 +3,7 @@ import { getRouteApi } from '@tanstack/react-router'
 export const ProfileView = () => {
 	const { user } = getRouteApi('/_authenticated')?.useRouteContext()
 
+	
 	return (
 		<>
 			<div>First Name: {user.firstName}</div>

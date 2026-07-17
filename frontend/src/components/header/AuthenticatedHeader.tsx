@@ -1,7 +1,7 @@
 import { HeaderLink } from '../link/HeaderLink'
 import logo from '../../assets/couplapp-logo-inline.png'
 import { useLogout } from '../../hooks/useLogout.hook'
-import { getRouteApi } from '@tanstack/react-router'
+import { getRouteApi, Link } from '@tanstack/react-router'
 //import { ReactComponent as SvgIcon } from '../../assets/icons/logout-svgrepo-com.svg?react'
 
 export const AuthenticatedHeader = () => {
@@ -24,9 +24,9 @@ export const AuthenticatedHeader = () => {
 			</nav>
 
 			<div className="flex justify-between px-5 py-5 border-t border-[#06202B] items-center">
-				<div>
+				<Link to="/profile">
 					{user.firstName} {user.lastName}
-				</div>
+				</Link>
 				<button className="cursor-pointer" onClick={handleLogoutClick}>
 					{/* <SvgIcon /> */}
 					Logout

@@ -1,6 +1,9 @@
-import { IsNotEmpty, IsString } from 'class-validator'
+import { IsString } from 'class-validator'
 
 export class CreateProfileDto {
+	@IsString()
+	name!: string | null
+
 	@IsString()
 	picture!: string | null
 

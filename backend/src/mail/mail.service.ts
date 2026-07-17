@@ -6,6 +6,7 @@ import { ConfigService } from '@nestjs/config'
 import { eq } from 'drizzle-orm'
 import { MailerService } from '@nestjs-modules/mailer'
 import * as crypto from 'crypto'
+import { DbTransaction } from 'src/db/db.types'
 
 @Injectable()
 export class MailService {
@@ -16,10 +17,11 @@ export class MailService {
 		private readonly mailerService: MailerService,
 	) {}
 
-	async createOptInToken(userId: schema.User['id']) {
+	async createOptInToken(userId: schema.User['id'], tx?: DbTransaction) {
+		const client = tx || this.db
 		const token = crypto.randomBytes(32).toString('hex')
 
-		const [{ optInToken }] = await this.db
+		const [{ optInToken }] = await client
 			.update(schema.users)
 			.set({ optInToken: token })
 			.where(eq(schema.users.id, userId))
@@ -28,8 +30,8 @@ export class MailService {
 		return optInToken
 	}
 
-	async sendVerificationMail(user: schema.User) {
-		const token = await this.createOptInToken(user.id)
+	async sendVerificationMail(user: schema.User, tx?: DbTransaction) {
+		const token = await this.createOptInToken(user.id, tx)
 
 		const verificationUrl = `${this.configService.get('FRONTEND_URL')}/verify-mail?token=${token}`
 

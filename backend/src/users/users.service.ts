@@ -44,49 +44,42 @@ export class UsersService {
 	}
 
 	async create(createUserDto: CreateUserDto) {
-		const [user] = await this.db
+		const [existingUser] = await this.db
 			.select()
 			.from(schema.users)
 			.where(eq(schema.users.email, createUserDto.email))
 
-		if (user) {
+		if (existingUser) {
 			throw new ConflictException('Email is already taken')
 		}
 
 		const password = hashSync(createUserDto.password, 10)
 
-		const [newUser] = await this.db
-			.insert(schema.users)
-			.values({ ...createUserDto, password })
-			.returning()
+		return await this.db.transaction(async (tx) => {
+			const [newUser] = await tx
+				.insert(schema.users)
+				.values({ ...createUserDto, password })
+				.returning()
 
-		try {
-			await this.mailService.sendVerificationMail(newUser)
-		} catch (error) {
-			throw new InternalServerErrorException({
-				cause: error,
-			})
-		}
+			await this.mailService.sendVerificationMail(newUser, tx)
 
-		try {
+			console.log(newUser)
 			await this.profileService.create(
 				{
+					name: `${newUser.firstName} ${newUser.lastName}`,
 					bio: null,
 					picture: null,
 					bannerPicture: null,
 					location: null,
 				},
 				newUser.id,
+				tx,
 			)
-		} catch (error) {
-			throw new InternalServerErrorException({
-				cause: error,
-			})
-		}
 
-		const { refreshToken, password: _, isVerified, ...rest } = newUser
+			const { refreshToken, password: _, isVerified, ...rest } = newUser
 
-		return rest
+			return rest
+		})
 	}
 
 	async remove(id: schema.User['id']) {
