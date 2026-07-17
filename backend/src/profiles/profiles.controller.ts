@@ -47,9 +47,17 @@ export class ProfilesController {
 	}
 
 	@UseGuards(JwtAuthGuard)
-	@Patch()
-	async update(@Body() profile: UpdateProfileDto) {
-		const updatedProfile = await this.profileService.update(profile)
+	@Patch(':id')
+	async update(
+		@Param('id') id: string,
+		@Req() req: Request & { user: { id: string } },
+		@Body() profile: UpdateProfileDto,
+	) {
+		const updatedProfile = await this.profileService.update(
+			id,
+			req.user.id,
+			profile,
+		)
 
 		return updatedProfile
 	}

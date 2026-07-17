@@ -21,6 +21,7 @@ export const AuthenticatedHeader = () => {
 				<HeaderLink href="/profile">Home</HeaderLink>
 				<HeaderLink href="/feed">Feed</HeaderLink>
 				<HeaderLink href="/friends">Friends</HeaderLink>
+				<HeaderLink href="/profiles-selection">Profiles Overview</HeaderLink>
 			</nav>
 
 			<div className="flex justify-between px-5 py-5 border-t border-[#06202B] items-center">

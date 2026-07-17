@@ -30,7 +30,7 @@ export const LoginView = ({}) => {
 			try {
 				await loginUser(email, password)
 
-				navigate({ to: '/profile', from: '/login' })
+				navigate({ to: '/profiles-selection', from: '/login' })
 
 				addToast({
 					message: 'Success Login!',

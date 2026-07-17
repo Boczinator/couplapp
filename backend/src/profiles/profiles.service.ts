@@ -11,6 +11,7 @@ import { CreateProfileDto } from './dtos/create-profile.dto'
 import { UpdateProfileDto } from './dtos/update-profile.dto'
 import { eq } from 'drizzle-orm'
 import { DbTransaction } from 'src/db/db.types'
+import { and } from 'drizzle-orm'
 
 @Injectable()
 export class ProfilesService {
@@ -83,18 +84,18 @@ export class ProfilesService {
 		}
 	}
 
-	async update(profile: UpdateProfileDto) {
+	async update(id: string, userId: string, profile: UpdateProfileDto) {
 		let updatedProfile
 
 		try {
-			const { id, ...updateData } = profile
-
 			;[updatedProfile] = await this.db
 				.update(schema.profiles)
 				.set({
-					...updateData,
+					...profile,
 				})
-				.where(eq(schema.profiles.id, id))
+				.where(
+					and(eq(schema.profiles.id, id), eq(schema.profiles.userId, userId)),
+				)
 				.returning()
 		} catch (error) {
 			throw new InternalServerErrorException({
@@ -103,7 +104,7 @@ export class ProfilesService {
 		}
 
 		if (!updatedProfile) {
-			throw new NotFoundException(`User profile ${profile.id} not found!`)
+			throw new NotFoundException(`User profile with Id ${id} not found!`)
 		}
 
 		return updatedProfile
