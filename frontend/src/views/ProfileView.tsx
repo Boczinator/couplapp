@@ -1,14 +1,20 @@
-import { getRouteApi } from '@tanstack/react-router'
+import { useParams } from '@tanstack/react-router'
+import { useCurrentProfile } from '../hooks/useProfile.hook'
 
 export const ProfileView = () => {
-	const { user } = getRouteApi('/_authenticated')?.useRouteContext()
+	const { profileId } = useParams({
+		from: '/_authenticated/profile/$profileId',
+	})
 
-	
+	const { profile, isLoading } = useCurrentProfile(profileId)
+
+	if (isLoading) return <div>Is Loading...</div>
+
 	return (
 		<>
-			<div>First Name: {user.firstName}</div>
-			<div>Last Name: {user.lastName}</div>
-			<div>Id: {user.id}</div>
+			<div>Name: {profile.name}</div>
+			<div>Profile Id: {profile.id}</div>
+			<div>User Id: {profile.userId}</div>
 		</>
 	)
 }

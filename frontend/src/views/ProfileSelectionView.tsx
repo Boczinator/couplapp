@@ -14,7 +14,7 @@ export const ProfileSelectionView = () => {
 			</div>
 			{profiles?.map((profile) => (
 				<button
-					className="cursor-pointer text-[#06202B] bg-gray-200 font-medium text-3xl hover:bg-[#7AE2CF] transition-colors px-5 py-3 flex gap-3 rounded-2xl items-center "
+					className="cursor-pointer text-[#06202B] bg-gray-200 font-medium text-2xl hover:bg-[#7AE2CF] transition-colors px-5 py-3 flex gap-3 rounded-2xl items-center "
 					onClick={() =>
 						navigate({
 							to: '/profile/$profileId',

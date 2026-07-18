@@ -18,7 +18,7 @@ import { Route as PublicLoginRouteImport } from './routes/_public/login'
 import { Route as AuthenticatedGatewayRouteImport } from './routes/_authenticated/_gateway'
 import { Route as AuthenticatedProfileProfileIdRouteImport } from './routes/_authenticated/profile.$profileId'
 import { Route as AuthenticatedGatewayProfilesSelectionRouteImport } from './routes/_authenticated/_gateway/profiles-selection'
-import { Route as AuthenticatedProfileProfileIdMeRouteImport } from './routes/_authenticated/profile.$profileId/me'
+import { Route as AuthenticatedProfileProfileIdIndexRouteImport } from './routes/_authenticated/profile.$profileId/index'
 import { Route as AuthenticatedProfileProfileIdFriendsRouteImport } from './routes/_authenticated/profile.$profileId/friends'
 import { Route as AuthenticatedProfileProfileIdFeedRouteImport } from './routes/_authenticated/profile.$profileId/feed'
 
@@ -66,10 +66,10 @@ const AuthenticatedGatewayProfilesSelectionRoute =
     path: '/profiles-selection',
     getParentRoute: () => AuthenticatedGatewayRoute,
   } as any)
-const AuthenticatedProfileProfileIdMeRoute =
-  AuthenticatedProfileProfileIdMeRouteImport.update({
-    id: '/me',
-    path: '/me',
+const AuthenticatedProfileProfileIdIndexRoute =
+  AuthenticatedProfileProfileIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
     getParentRoute: () => AuthenticatedProfileProfileIdRoute,
   } as any)
 const AuthenticatedProfileProfileIdFriendsRoute =
@@ -95,7 +95,7 @@ export interface FileRoutesByFullPath {
   '/profile/$profileId': typeof AuthenticatedProfileProfileIdRouteWithChildren
   '/profile/$profileId/feed': typeof AuthenticatedProfileProfileIdFeedRoute
   '/profile/$profileId/friends': typeof AuthenticatedProfileProfileIdFriendsRoute
-  '/profile/$profileId/me': typeof AuthenticatedProfileProfileIdMeRoute
+  '/profile/$profileId/': typeof AuthenticatedProfileProfileIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof AuthenticatedGatewayRouteWithChildren
@@ -104,10 +104,9 @@ export interface FileRoutesByTo {
   '/verify-mail': typeof PublicVerifyMailRoute
   '/verify-mail-sent': typeof PublicVerifyMailSentRoute
   '/profiles-selection': typeof AuthenticatedGatewayProfilesSelectionRoute
-  '/profile/$profileId': typeof AuthenticatedProfileProfileIdRouteWithChildren
   '/profile/$profileId/feed': typeof AuthenticatedProfileProfileIdFeedRoute
   '/profile/$profileId/friends': typeof AuthenticatedProfileProfileIdFriendsRoute
-  '/profile/$profileId/me': typeof AuthenticatedProfileProfileIdMeRoute
+  '/profile/$profileId': typeof AuthenticatedProfileProfileIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -122,7 +121,7 @@ export interface FileRoutesById {
   '/_authenticated/profile/$profileId': typeof AuthenticatedProfileProfileIdRouteWithChildren
   '/_authenticated/profile/$profileId/feed': typeof AuthenticatedProfileProfileIdFeedRoute
   '/_authenticated/profile/$profileId/friends': typeof AuthenticatedProfileProfileIdFriendsRoute
-  '/_authenticated/profile/$profileId/me': typeof AuthenticatedProfileProfileIdMeRoute
+  '/_authenticated/profile/$profileId/': typeof AuthenticatedProfileProfileIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -136,7 +135,7 @@ export interface FileRouteTypes {
     | '/profile/$profileId'
     | '/profile/$profileId/feed'
     | '/profile/$profileId/friends'
-    | '/profile/$profileId/me'
+    | '/profile/$profileId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -145,10 +144,9 @@ export interface FileRouteTypes {
     | '/verify-mail'
     | '/verify-mail-sent'
     | '/profiles-selection'
-    | '/profile/$profileId'
     | '/profile/$profileId/feed'
     | '/profile/$profileId/friends'
-    | '/profile/$profileId/me'
+    | '/profile/$profileId'
   id:
     | '__root__'
     | '/_authenticated'
@@ -162,7 +160,7 @@ export interface FileRouteTypes {
     | '/_authenticated/profile/$profileId'
     | '/_authenticated/profile/$profileId/feed'
     | '/_authenticated/profile/$profileId/friends'
-    | '/_authenticated/profile/$profileId/me'
+    | '/_authenticated/profile/$profileId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -235,11 +233,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedGatewayProfilesSelectionRouteImport
       parentRoute: typeof AuthenticatedGatewayRoute
     }
-    '/_authenticated/profile/$profileId/me': {
-      id: '/_authenticated/profile/$profileId/me'
-      path: '/me'
-      fullPath: '/profile/$profileId/me'
-      preLoaderRoute: typeof AuthenticatedProfileProfileIdMeRouteImport
+    '/_authenticated/profile/$profileId/': {
+      id: '/_authenticated/profile/$profileId/'
+      path: '/'
+      fullPath: '/profile/$profileId/'
+      preLoaderRoute: typeof AuthenticatedProfileProfileIdIndexRouteImport
       parentRoute: typeof AuthenticatedProfileProfileIdRoute
     }
     '/_authenticated/profile/$profileId/friends': {
@@ -274,7 +272,7 @@ const AuthenticatedGatewayRouteWithChildren =
 interface AuthenticatedProfileProfileIdRouteChildren {
   AuthenticatedProfileProfileIdFeedRoute: typeof AuthenticatedProfileProfileIdFeedRoute
   AuthenticatedProfileProfileIdFriendsRoute: typeof AuthenticatedProfileProfileIdFriendsRoute
-  AuthenticatedProfileProfileIdMeRoute: typeof AuthenticatedProfileProfileIdMeRoute
+  AuthenticatedProfileProfileIdIndexRoute: typeof AuthenticatedProfileProfileIdIndexRoute
 }
 
 const AuthenticatedProfileProfileIdRouteChildren: AuthenticatedProfileProfileIdRouteChildren =
@@ -283,7 +281,8 @@ const AuthenticatedProfileProfileIdRouteChildren: AuthenticatedProfileProfileIdR
       AuthenticatedProfileProfileIdFeedRoute,
     AuthenticatedProfileProfileIdFriendsRoute:
       AuthenticatedProfileProfileIdFriendsRoute,
-    AuthenticatedProfileProfileIdMeRoute: AuthenticatedProfileProfileIdMeRoute,
+    AuthenticatedProfileProfileIdIndexRoute:
+      AuthenticatedProfileProfileIdIndexRoute,
   }
 
 const AuthenticatedProfileProfileIdRouteWithChildren =

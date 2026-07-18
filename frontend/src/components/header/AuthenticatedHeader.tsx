@@ -18,9 +18,9 @@ export const AuthenticatedHeader = () => {
 				<img src={logo} className="w-60 h-20 object-cover object-center" />
 			</div>
 			<nav className="flex flex-1 flex-col py-5 px-5">
-				<HeaderLink href="/profile/$profileId/me">Home</HeaderLink>
-				<HeaderLink href="/profile/$profileId/feed">Feed</HeaderLink>
-				<HeaderLink href="/profile/$profileId/friends">Friends</HeaderLink>
+				<HeaderLink href="/profile/$profileId">Home</HeaderLink>
+				<HeaderLink href="/profile/$profileId/feed">My Feed</HeaderLink>
+				<HeaderLink href="/profile/$profileId/friends">My Friends</HeaderLink>
 				<HeaderLink href="/profiles-selection">Profiles Overview</HeaderLink>
 			</nav>
 

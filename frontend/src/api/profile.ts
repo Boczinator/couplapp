@@ -23,3 +23,13 @@ export const getProfileOverview = async () => {
 		console.log(error)
 	}
 }
+
+export const getProfile = async (profileId: string) => {
+	try {
+		const profile = await client.get(`profiles/${profileId}`)
+
+		return await profile.json()
+	} catch (error) {
+		console.log(error)
+	}
+}
