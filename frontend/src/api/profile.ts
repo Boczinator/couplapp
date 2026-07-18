@@ -4,11 +4,11 @@ import { client } from './client'
  * Update profile information.
  * @param {string} id - Id of profile
  */
-export const updateProfile = async (profile) => {
+export const updateProfile = async (profileId: string) => {
 	try {
-		const profile = await client.patch('profiles/')
+		const updatedProfile = await client.patch(`profiles/${profileId}`)
 
-		return await profile.json()
+		return await updatedProfile.json()
 	} catch (error) {
 		console.log(error)
 	}

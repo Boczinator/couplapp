@@ -41,7 +41,7 @@ export class ProfilesService {
 		}
 	}
 
-	async findOne(id: schema.Profile['id']) {
+	async findOne(id: schema.Profile['id'], currentUserId: string) {
 		let userProfile: schema.Profile
 
 		try {
@@ -59,7 +59,12 @@ export class ProfilesService {
 			throw new NotFoundException(`User profile with given Id ${id} not found`)
 		}
 
-		return userProfile
+		const isOwner = userProfile.userId === currentUserId
+
+		return {
+			...userProfile,
+			isOwner,
+		}
 	}
 
 	async create(

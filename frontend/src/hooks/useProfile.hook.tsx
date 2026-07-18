@@ -4,7 +4,7 @@ import { getProfileOverview } from '../api/profile'
 export const useProfileOverview = () => {
 	const { data, isLoading } = useQuery({
 		queryKey: ['profile-overview'],
-		queryFn: () => {
+		queryFn: async () => {
 			return getProfileOverview()
 		},
 	})

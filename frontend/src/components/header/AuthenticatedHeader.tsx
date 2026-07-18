@@ -18,14 +18,14 @@ export const AuthenticatedHeader = () => {
 				<img src={logo} className="w-60 h-20 object-cover object-center" />
 			</div>
 			<nav className="flex flex-1 flex-col py-5 px-5">
-				<HeaderLink href="/profile">Home</HeaderLink>
-				<HeaderLink href="/feed">Feed</HeaderLink>
-				<HeaderLink href="/friends">Friends</HeaderLink>
+				<HeaderLink href="/profile/$profileId/me">Home</HeaderLink>
+				<HeaderLink href="/profile/$profileId/feed">Feed</HeaderLink>
+				<HeaderLink href="/profile/$profileId/friends">Friends</HeaderLink>
 				<HeaderLink href="/profiles-selection">Profiles Overview</HeaderLink>
 			</nav>
 
 			<div className="flex justify-between px-5 py-5 border-t border-[#06202B] items-center">
-				<Link to="/profile">
+				<Link to="/profiles-selection">
 					{user.firstName} {user.lastName}
 				</Link>
 				<button className="cursor-pointer" onClick={handleLogoutClick}>

@@ -14,11 +14,11 @@ import * as schema from 'src/db/schema'
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth-guard'
 import { UpdateProfileDto } from './dtos/update-profile.dto'
 
+@UseGuards(JwtAuthGuard)
 @Controller('profiles')
 export class ProfilesController {
 	constructor(private readonly profileService: ProfilesService) {}
 
-	@UseGuards(JwtAuthGuard)
 	@Get('overview')
 	async getLight(@Req() req: Request & { user: { id: string } }) {
 		const updatedProfile = await this.profileService.findAllLight(req.user.id)
@@ -26,15 +26,16 @@ export class ProfilesController {
 		return updatedProfile
 	}
 
-	@UseGuards(JwtAuthGuard)
 	@Get(':id')
-	async getById(@Param('id') id: schema.Profile['id']) {
-		const profile = await this.profileService.findOne(id)
+	async getById(
+		@Param('id') id: schema.Profile['id'],
+		@Req() req: Request & { user: { id: string } },
+	) {
+		const profile = await this.profileService.findOne(id, req.user.id)
 
 		return profile
 	}
 
-	@UseGuards(JwtAuthGuard)
 	@Post()
 	async create(
 		@Req() req: Request & { user: { id: string } },
@@ -46,7 +47,6 @@ export class ProfilesController {
 		return newProfile
 	}
 
-	@UseGuards(JwtAuthGuard)
 	@Patch(':id')
 	async update(
 		@Param('id') id: string,

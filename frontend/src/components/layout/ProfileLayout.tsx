@@ -1,7 +1,7 @@
 import { Outlet } from '@tanstack/react-router'
 import { AuthenticatedHeader } from '../header/AuthenticatedHeader'
 
-export const AuthenticatedLayout = () => {
+export const ProfileLayout = () => {
 	return (
 		<div className="flex">
 			<AuthenticatedHeader />
