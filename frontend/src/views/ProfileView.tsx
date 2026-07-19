@@ -1,7 +1,7 @@
 import { useParams } from '@tanstack/react-router'
 import { useCurrentProfile } from '../hooks/useProfile.hook'
 
-export const ProfileView = () => {
+export const ProfileView = () => {	
 	const { profileId } = useParams({
 		from: '/_authenticated/profile/$profileId',
 	})

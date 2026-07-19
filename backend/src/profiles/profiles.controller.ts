@@ -2,6 +2,7 @@ import {
 	Body,
 	Controller,
 	Get,
+	NotFoundException,
 	Param,
 	Patch,
 	Post,
@@ -58,6 +59,23 @@ export class ProfilesController {
 			req.user.id,
 			profile,
 		)
+
+		return updatedProfile
+	}
+
+	@Patch('switch/:id')
+	async switchProfile(
+		@Param('id') id: string,
+		@Req() req: Request & { user: { id: string } },
+	) {
+		const updatedProfile = await this.profileService.switchActiveProfile(
+			req.user.id,
+			id,
+		)
+
+		if (!updatedProfile) {
+			throw new NotFoundException('Profile not found or access denied')
+		}
 
 		return updatedProfile
 	}

@@ -1,4 +1,5 @@
 import { client } from './client'
+import type { Profile } from './types'
 
 /**
  * Update profile information.
@@ -29,6 +30,28 @@ export const getProfile = async (profileId: string) => {
 		const profile = await client.get(`profiles/${profileId}`)
 
 		return await profile.json()
+	} catch (error) {
+		console.log(error)
+	}
+}
+
+export const switchProfile = async (profileId: string) => {
+	try {
+		const profile = await client.patch(`profiles/switch/${profileId}`)
+
+		return await profile.json()
+	} catch (error) {
+		console.log(error)
+	}
+}
+
+export const createProfile = async (profile: Profile) => {
+	try {
+		const createdProfile = await client.post('profiles', {
+			json: profile,
+		})
+
+		return await createdProfile.json()
 	} catch (error) {
 		console.log(error)
 	}

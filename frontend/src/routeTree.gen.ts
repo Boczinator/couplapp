@@ -18,6 +18,7 @@ import { Route as PublicLoginRouteImport } from './routes/_public/login'
 import { Route as AuthenticatedGatewayRouteImport } from './routes/_authenticated/_gateway'
 import { Route as AuthenticatedProfileProfileIdRouteImport } from './routes/_authenticated/profile.$profileId'
 import { Route as AuthenticatedGatewayProfilesSelectionRouteImport } from './routes/_authenticated/_gateway/profiles-selection'
+import { Route as AuthenticatedGatewayCreateProfileRouteImport } from './routes/_authenticated/_gateway/create-profile'
 import { Route as AuthenticatedProfileProfileIdIndexRouteImport } from './routes/_authenticated/profile.$profileId/index'
 import { Route as AuthenticatedProfileProfileIdFriendsRouteImport } from './routes/_authenticated/profile.$profileId/friends'
 import { Route as AuthenticatedProfileProfileIdFeedRouteImport } from './routes/_authenticated/profile.$profileId/feed'
@@ -66,6 +67,12 @@ const AuthenticatedGatewayProfilesSelectionRoute =
     path: '/profiles-selection',
     getParentRoute: () => AuthenticatedGatewayRoute,
   } as any)
+const AuthenticatedGatewayCreateProfileRoute =
+  AuthenticatedGatewayCreateProfileRouteImport.update({
+    id: '/create-profile',
+    path: '/create-profile',
+    getParentRoute: () => AuthenticatedGatewayRoute,
+  } as any)
 const AuthenticatedProfileProfileIdIndexRoute =
   AuthenticatedProfileProfileIdIndexRouteImport.update({
     id: '/',
@@ -91,6 +98,7 @@ export interface FileRoutesByFullPath {
   '/register': typeof PublicRegisterRoute
   '/verify-mail': typeof PublicVerifyMailRoute
   '/verify-mail-sent': typeof PublicVerifyMailSentRoute
+  '/create-profile': typeof AuthenticatedGatewayCreateProfileRoute
   '/profiles-selection': typeof AuthenticatedGatewayProfilesSelectionRoute
   '/profile/$profileId': typeof AuthenticatedProfileProfileIdRouteWithChildren
   '/profile/$profileId/feed': typeof AuthenticatedProfileProfileIdFeedRoute
@@ -103,6 +111,7 @@ export interface FileRoutesByTo {
   '/register': typeof PublicRegisterRoute
   '/verify-mail': typeof PublicVerifyMailRoute
   '/verify-mail-sent': typeof PublicVerifyMailSentRoute
+  '/create-profile': typeof AuthenticatedGatewayCreateProfileRoute
   '/profiles-selection': typeof AuthenticatedGatewayProfilesSelectionRoute
   '/profile/$profileId/feed': typeof AuthenticatedProfileProfileIdFeedRoute
   '/profile/$profileId/friends': typeof AuthenticatedProfileProfileIdFriendsRoute
@@ -117,6 +126,7 @@ export interface FileRoutesById {
   '/_public/register': typeof PublicRegisterRoute
   '/_public/verify-mail': typeof PublicVerifyMailRoute
   '/_public/verify-mail-sent': typeof PublicVerifyMailSentRoute
+  '/_authenticated/_gateway/create-profile': typeof AuthenticatedGatewayCreateProfileRoute
   '/_authenticated/_gateway/profiles-selection': typeof AuthenticatedGatewayProfilesSelectionRoute
   '/_authenticated/profile/$profileId': typeof AuthenticatedProfileProfileIdRouteWithChildren
   '/_authenticated/profile/$profileId/feed': typeof AuthenticatedProfileProfileIdFeedRoute
@@ -131,6 +141,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/verify-mail'
     | '/verify-mail-sent'
+    | '/create-profile'
     | '/profiles-selection'
     | '/profile/$profileId'
     | '/profile/$profileId/feed'
@@ -143,6 +154,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/verify-mail'
     | '/verify-mail-sent'
+    | '/create-profile'
     | '/profiles-selection'
     | '/profile/$profileId/feed'
     | '/profile/$profileId/friends'
@@ -156,6 +168,7 @@ export interface FileRouteTypes {
     | '/_public/register'
     | '/_public/verify-mail'
     | '/_public/verify-mail-sent'
+    | '/_authenticated/_gateway/create-profile'
     | '/_authenticated/_gateway/profiles-selection'
     | '/_authenticated/profile/$profileId'
     | '/_authenticated/profile/$profileId/feed'
@@ -233,6 +246,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedGatewayProfilesSelectionRouteImport
       parentRoute: typeof AuthenticatedGatewayRoute
     }
+    '/_authenticated/_gateway/create-profile': {
+      id: '/_authenticated/_gateway/create-profile'
+      path: '/create-profile'
+      fullPath: '/create-profile'
+      preLoaderRoute: typeof AuthenticatedGatewayCreateProfileRouteImport
+      parentRoute: typeof AuthenticatedGatewayRoute
+    }
     '/_authenticated/profile/$profileId/': {
       id: '/_authenticated/profile/$profileId/'
       path: '/'
@@ -258,10 +278,13 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedGatewayRouteChildren {
+  AuthenticatedGatewayCreateProfileRoute: typeof AuthenticatedGatewayCreateProfileRoute
   AuthenticatedGatewayProfilesSelectionRoute: typeof AuthenticatedGatewayProfilesSelectionRoute
 }
 
 const AuthenticatedGatewayRouteChildren: AuthenticatedGatewayRouteChildren = {
+  AuthenticatedGatewayCreateProfileRoute:
+    AuthenticatedGatewayCreateProfileRoute,
   AuthenticatedGatewayProfilesSelectionRoute:
     AuthenticatedGatewayProfilesSelectionRoute,
 }

@@ -1,6 +1,5 @@
 import { varchar } from 'drizzle-orm/pg-core'
 import { boolean } from 'drizzle-orm/pg-core'
-import { integer } from 'drizzle-orm/pg-core'
 import { timestamp } from 'drizzle-orm/pg-core'
 import { text } from 'drizzle-orm/pg-core'
 import { pgTable, uuid } from 'drizzle-orm/pg-core'
@@ -29,6 +28,7 @@ export const profiles = pgTable('profiles', {
 	bio: text('bio'),
 	location: text('location'),
 	isPrivate: boolean('is_private'),
+	isActive: boolean('is_active').default(false),
 	createdAt: timestamp('created_at').notNull().defaultNow(),
 	updatedAt: timestamp('updated_at').notNull().defaultNow(),
 })

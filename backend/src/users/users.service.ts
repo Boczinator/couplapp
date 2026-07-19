@@ -38,7 +38,7 @@ export class UsersService {
 			throw new NotFoundException(`User with ID ${id} not found`)
 		}
 
-		const { password, ...result } = user
+		const { password, optInToken, ...result } = user
 
 		return result
 	}
@@ -63,7 +63,6 @@ export class UsersService {
 
 			await this.mailService.sendVerificationMail(newUser, tx)
 
-			console.log(newUser)
 			await this.profileService.create(
 				{
 					name: `${newUser.firstName} ${newUser.lastName}`,

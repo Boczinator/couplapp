@@ -34,6 +34,7 @@ export class ProfilesService {
 				})
 				.from(schema.profiles)
 				.where(eq(schema.profiles.userId, userId))
+				.orderBy(schema.profiles.createdAt)
 
 			return profiles
 		} catch (error) {
@@ -113,5 +114,46 @@ export class ProfilesService {
 		}
 
 		return updatedProfile
+	}
+
+	async getLastActiveProfileId(userId: string) {
+		const profileId = await this.db
+			.select({ id: schema.profiles.id })
+			.from(schema.profiles)
+			.where(
+				and(
+					eq(schema.profiles.userId, userId),
+					eq(schema.profiles.isActive, true),
+				),
+			)
+
+		return profileId
+	}
+
+	async switchActiveProfile(userId: string, profileId: string) {
+		return await this.db.transaction(async (tx) => {
+			await tx
+				.update(schema.profiles)
+				.set({ isActive: false })
+				.where(
+					and(
+						eq(schema.profiles.userId, userId),
+						eq(schema.profiles.isActive, true),
+					),
+				)
+
+			const [activeProfile] = await tx
+				.update(schema.profiles)
+				.set({ isActive: true })
+				.where(
+					and(
+						eq(schema.profiles.userId, userId),
+						eq(schema.profiles.id, profileId),
+					),
+				)
+				.returning()
+
+			return activeProfile
+		})
 	}
 }

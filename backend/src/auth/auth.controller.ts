@@ -12,13 +12,13 @@ import { LoginUserDto } from './login-user.dto'
 import { type Response } from 'express'
 import { JwtRefreshGuard } from './guards/jwt-refresh-guard'
 import { JwtAuthGuard } from './guards/jwt-auth-guard'
-import { UsersService } from 'src/users/users.service'
+import { ProfilesService } from 'src/profiles/profiles.service'
 
 @Controller('auth')
 export class AuthController {
 	constructor(
 		private readonly authService: AuthService,
-		private readonly userService: UsersService,
+		private readonly profileService: ProfilesService,
 	) {}
 
 	@Post('login')
@@ -86,7 +86,14 @@ export class AuthController {
 
 	@UseGuards(JwtAuthGuard)
 	@Get('me')
-	getProfile(@Req() req: any) {
-		return req.user
+	async getProfile(@Req() req: any) {
+		const activeProfileId = await this.profileService.getLastActiveProfileId(
+			req.user.id,
+		)
+
+		return {
+			...req.user,
+			activeProfileId,
+		}
 	}
 }

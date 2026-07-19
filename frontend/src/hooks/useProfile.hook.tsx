@@ -1,5 +1,12 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { getProfile, getProfileOverview } from '../api/profile'
+import {
+	getProfile,
+	getProfileOverview,
+	switchProfile,
+	createProfile as createNewProfile,
+} from '../api/profile'
+import { useNavigate } from '@tanstack/react-router'
+import type { Profile } from '../api/types'
 
 export const useProfileOverview = () => {
 	const { data, isLoading } = useQuery({
@@ -42,5 +49,59 @@ export const useFriendProfile = (profileId: string) => {
 	return {
 		profile,
 		isLoading,
+	}
+}
+
+export const useSwitchActiveProfile = () => {
+	const navigate = useNavigate()
+
+	const { mutate: switchActiveProfile, isPending } = useMutation({
+		mutationKey: ['switch-profile'],
+		mutationFn: (profileId: string) => {
+			return switchProfile(profileId)
+		},
+		onSuccess: (data) => {
+			console.log(data)
+			navigate({
+				to: '/profile/$profileId',
+				params: {
+					profileId: data.id,
+				},
+			})
+		},
+	})
+
+	return {
+		switchActiveProfile,
+		isPending,
+	}
+}
+
+export const useCreateProfile = () => {
+	const navigate = useNavigate()
+
+	const {
+		mutate: createProfile,
+		isPending,
+		isSuccess,
+	} = useMutation({
+		mutationKey: ['create-profile'],
+		mutationFn: (profile: Profile) => {
+			return createNewProfile(profile)
+		},
+		onSuccess: (data) => {
+			navigate({
+				to: '/profile/$profileId',
+				params: {
+					profileId: data.id,
+				},
+			})
+		},
+	})
+
+	return {
+		createProfile,
+		isPending,
+		isSuccess,
 	}
 }
