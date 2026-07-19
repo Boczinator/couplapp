@@ -84,6 +84,7 @@ export class ProfilesService {
 				})
 				.returning()
 
+			// TODO: Set created Profile always as isActive, build function to reuse in switchProfile and here.
 			return newProfile
 		} catch (error) {
 			throw new InternalServerErrorException({ cause: error })

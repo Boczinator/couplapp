@@ -61,7 +61,6 @@ export const useSwitchActiveProfile = () => {
 			return switchProfile(profileId)
 		},
 		onSuccess: (data) => {
-			console.log(data)
 			navigate({
 				to: '/profile/$profileId',
 				params: {

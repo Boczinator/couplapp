@@ -44,7 +44,6 @@ export class ProfilesController {
 	) {
 		const newProfile = await this.profileService.create(profile, req.user.id)
 
-		console.log(newProfile)
 		return newProfile
 	}
 
