@@ -118,7 +118,7 @@ export class ProfilesService {
 	}
 
 	async getLastActiveProfileId(userId: string) {
-		const profileId = await this.db
+		const [{ id: profileId }] = await this.db
 			.select({ id: schema.profiles.id })
 			.from(schema.profiles)
 			.where(

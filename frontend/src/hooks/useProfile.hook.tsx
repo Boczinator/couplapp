@@ -7,6 +7,7 @@ import {
 } from '../api/profile'
 import { useNavigate } from '@tanstack/react-router'
 import type { Profile } from '../api/types'
+import { queryClient } from '../api/queryClient'
 
 export const useProfileOverview = () => {
 	const { data, isLoading } = useQuery({
@@ -61,6 +62,7 @@ export const useSwitchActiveProfile = () => {
 			return switchProfile(profileId)
 		},
 		onSuccess: (data) => {
+			queryClient.invalidateQueries({ queryKey: ['user-auth'] })
 			navigate({
 				to: '/profile/$profileId',
 				params: {
