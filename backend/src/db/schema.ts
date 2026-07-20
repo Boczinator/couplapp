@@ -1,5 +1,7 @@
+import { sql } from 'drizzle-orm'
 import { varchar } from 'drizzle-orm/pg-core'
 import { boolean } from 'drizzle-orm/pg-core'
+import { index } from 'drizzle-orm/pg-core'
 import { timestamp } from 'drizzle-orm/pg-core'
 import { text } from 'drizzle-orm/pg-core'
 import { pgTable, uuid } from 'drizzle-orm/pg-core'
@@ -17,21 +19,30 @@ export const users = pgTable('users', {
 	updatedAt: timestamp('updated_at').notNull().defaultNow(),
 })
 
-export const profiles = pgTable('profiles', {
-	id: uuid('id').defaultRandom().primaryKey(),
-	userId: uuid('user_id').references(() => users.id, {
-		onDelete: 'cascade',
-	}),
-	name: text('name'),
-	picture: text('picture'),
-	bannerPicture: text('banner'),
-	bio: text('bio'),
-	location: text('location'),
-	isPrivate: boolean('is_private'),
-	isActive: boolean('is_active').default(false),
-	createdAt: timestamp('created_at').notNull().defaultNow(),
-	updatedAt: timestamp('updated_at').notNull().defaultNow(),
-})
+export const profiles = pgTable(
+	'profiles',
+	{
+		id: uuid('id').defaultRandom().primaryKey(),
+		userId: uuid('user_id').references(() => users.id, {
+			onDelete: 'cascade',
+		}),
+		name: text('name'),
+		picture: text('picture'),
+		bannerPicture: text('banner'),
+		bio: text('bio'),
+		location: text('location'),
+		isPrivate: boolean('is_private'),
+		isActive: boolean('is_active').default(false),
+		createdAt: timestamp('created_at').notNull().defaultNow(),
+		updatedAt: timestamp('updated_at').notNull().defaultNow(),
+	},
+	(table) => [
+		index('name_search_index').using(
+			'gin',
+			sql`to_tsvector('english', ${table.name})`,
+		),
+	],
+)
 
 export type User = typeof users.$inferSelect
 export type Profile = typeof profiles.$inferSelect

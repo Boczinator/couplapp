@@ -6,7 +6,6 @@ export const Route = createFileRoute('/_authenticated')({
 		try {
 			const user = await queryClient.ensureQueryData(authUserOptions)
 
-			console.log(user)
 			return { user }
 		} catch (error) {
 			throw redirect({

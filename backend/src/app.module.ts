@@ -9,7 +9,7 @@ import { MailModule } from './mail/mail.module'
 import { MailerModule } from '@nestjs-modules/mailer'
 import { join } from 'path'
 import { PugAdapter } from '@nestjs-modules/mailer/adapters/pug.adapter'
-import { ProfilesModule } from './profiles/profiles.module';
+import { ProfilesModule } from './profiles/profiles.module'
 
 @Module({
 	imports: [
@@ -23,7 +23,7 @@ import { ProfilesModule } from './profiles/profiles.module';
 				host: 'localhost',
 				port: 1025,
 				ignoreTLS: true,
-				logger: true, // <-- Logs SMTP transactions directly to your terminal console
+				logger: true,
 				debug: true,
 			},
 			defaults: {

@@ -9,7 +9,7 @@ export const router = createRouter({
 	context: {
 		queryClient: queryClient,
 	},
-	defaultViewTransition: false,
+	defaultViewTransition: true,
 	scrollRestoration: true,
 })
 

@@ -25,7 +25,7 @@ export const TextField = ({
 	}
 
 	return (
-		<div className="mb-6 relative w-full">
+		<div className={twMerge('mb-6 relative w-full', className)}>
 			<label
 				className={twMerge(
 					'mr-2 top-1/2 left-0 absolute -translate-y-1/2 px-1 transform transition-transform scale-100 hidden',
@@ -36,10 +36,7 @@ export const TextField = ({
 				{label || placeholder}
 			</label>
 			<input
-				className={twMerge(
-					'text-sm text-black bg-white border-black py-1.5 px-1 border w-full rounded-sm',
-					className,
-				)}
+				className="text-sm text-black bg-white border-black py-1.5 px-1 border w-full rounded-sm"
 				onFocus={handleFocus}
 				{...field}
 				{...props}

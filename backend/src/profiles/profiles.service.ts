@@ -9,7 +9,7 @@ import { DRIZZLE_PROVIDER } from 'src/database/database.provider'
 import * as schema from 'src/db/schema'
 import { CreateProfileDto } from './dtos/create-profile.dto'
 import { UpdateProfileDto } from './dtos/update-profile.dto'
-import { eq } from 'drizzle-orm'
+import { eq, sql } from 'drizzle-orm'
 import { DbTransaction } from 'src/db/db.types'
 import { and } from 'drizzle-orm'
 
@@ -156,5 +156,25 @@ export class ProfilesService {
 
 			return activeProfile
 		})
+	}
+
+	async search(query: string) {
+		console.log(query)
+		if (query === '') {
+			return
+		}
+
+		const results = await this.db
+			.select({
+				id: schema.profiles.id,
+				name: schema.profiles.name,
+				picture: schema.profiles.picture,
+			})
+			.from(schema.profiles)
+			.where(
+				sql`to_tsvector('english', ${schema.profiles.name}) @@ websearch_to_tsquery('english', ${query})`,
+			)
+
+		return results
 	}
 }

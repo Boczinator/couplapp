@@ -6,6 +6,7 @@ import {
 	Param,
 	Patch,
 	Post,
+	Query,
 	Req,
 	UseGuards,
 } from '@nestjs/common'
@@ -19,6 +20,13 @@ import { UpdateProfileDto } from './dtos/update-profile.dto'
 @Controller('profiles')
 export class ProfilesController {
 	constructor(private readonly profileService: ProfilesService) {}
+
+	@Get('search')
+	async search(@Query('query') query: string) {
+		const result = await this.profileService.search(query)
+
+		return result
+	}
 
 	@Get('overview')
 	async getLight(@Req() req: Request & { user: { id: string } }) {
