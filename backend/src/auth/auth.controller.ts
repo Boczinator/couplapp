@@ -30,7 +30,9 @@ export class AuthController {
 			email,
 			password,
 		})
-		const tokens = await this.authService.generateTokens(user.id, user.email)
+
+		// TODO: set everything regarding tokens in one service function for better reusability
+		const tokens = await this.authService.generateTokens(user.id)
 
 		await this.authService.updateRefreshToken(user.id, tokens.refreshToken)
 

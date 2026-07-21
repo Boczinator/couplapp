@@ -59,10 +59,9 @@ export class AuthService {
 		return result
 	}
 
-	async generateTokens(userId: schema.User['id'], userEmail: string) {
+	async generateTokens(userId: schema.User['id']) {
 		const jwtPayload = {
 			sub: userId,
-			email: userEmail,
 		}
 
 		const [accessToken, refreshToken] = await Promise.all([
@@ -90,7 +89,7 @@ export class AuthService {
 
 		if (!refreshTokenMatches) throw new UnauthorizedException('Access Denied')
 
-		const tokens = await this.generateTokens(user.id, user.email)
+		const tokens = await this.generateTokens(user.id)
 		await this.updateRefreshToken(user.id, tokens.refreshToken)
 
 		return tokens
