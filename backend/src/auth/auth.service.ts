@@ -1,7 +1,6 @@
 import {
 	BadRequestException,
 	ForbiddenException,
-	HttpException,
 	Inject,
 	Injectable,
 	UnauthorizedException,
@@ -14,7 +13,7 @@ import { compare, compareSync, hash } from 'bcryptjs'
 import { LoginUserDto } from './login-user.dto'
 import { JwtService } from '@nestjs/jwt'
 import { ConfigService } from '@nestjs/config'
-import { CookieOptions, Response } from 'express'
+import { Response } from 'express'
 import { UsersService } from 'src/users/users.service'
 
 @Injectable()
@@ -59,9 +58,18 @@ export class AuthService {
 		return result
 	}
 
-	async generateTokens(userId: schema.User['id'], res: Response) {
+	async generateTokens({
+		userId,
+		res,
+		activeProfileId,
+	}: {
+		userId: schema.User['id']
+		res: Response
+		activeProfileId: string | null
+	}) {
 		const jwtPayload = {
 			sub: userId,
+			activeProfileId,
 		}
 
 		const [accessToken, refreshToken] = await Promise.all([
@@ -82,11 +90,17 @@ export class AuthService {
 		return { accessToken, refreshToken }
 	}
 
-	async refreshTokens(
-		userId: schema.User['id'],
-		refreshToken: string,
-		res: Response,
-	) {
+	async refreshTokens({
+		userId,
+		activeProfileId,
+		refreshToken,
+		res,
+	}: {
+		userId: schema.User['id']
+		activeProfileId: string
+		refreshToken: string
+		res: Response
+	}) {
 		const user = await this.userService.findOne(userId)
 
 		if (!user || !user.refreshToken) {
@@ -97,7 +111,11 @@ export class AuthService {
 
 		if (!refreshTokenMatches) throw new UnauthorizedException('Access Denied')
 
-		const tokens = await this.generateTokens(user.id, res)
+		const tokens = await this.generateTokens({
+			userId: user.id,
+			activeProfileId,
+			res,
+		})
 
 		await this.updateRefreshToken(user.id, tokens.refreshToken)
 

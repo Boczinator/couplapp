@@ -81,11 +81,9 @@ export class ProfilesService {
 				.values({
 					...profile,
 					userId,
-					isActive: true,
 				})
 				.returning()
 
-			// TODO: Set created Profile always as isActive, build function to reuse in switchProfile and here.
 			return newProfile
 		} catch (error) {
 			throw new InternalServerErrorException({ cause: error })
@@ -118,49 +116,22 @@ export class ProfilesService {
 		return updatedProfile
 	}
 
-	async getLastActiveProfileId(userId: string) {
-		const [profile] = await this.db
-			.select({ id: schema.profiles.id })
-			.from(schema.profiles)
-			.where(
-				and(
-					eq(schema.profiles.userId, userId),
-					eq(schema.profiles.isActive, true),
-				),
-			)
-
-		if (!profile?.id) {
-			throw new NotFoundException('No active profile set yet')
-		}
-
-		return profile.id
-	}
-
 	async switchActiveProfile(userId: string, profileId: string) {
 		return await this.db.transaction(async (tx) => {
-			await tx
-				.update(schema.profiles)
-				.set({ isActive: false })
-				.where(
-					and(
-						eq(schema.profiles.userId, userId),
-						eq(schema.profiles.isActive, true),
-					),
-				)
+			const exists = await tx.query.profiles.findFirst({
+				where: and(
+					eq(schema.profiles.userId, userId),
+					eq(schema.profiles.id, profileId),
+				),
+			})
 
-			const [activeProfile] = await tx
-				.update(schema.profiles)
-				.set({ isActive: true })
-				.where(
-					and(
-						eq(schema.profiles.userId, userId),
-						eq(schema.profiles.id, profileId),
-					),
+			if (!exists) {
+				throw new NotFoundException(
+					'No profile with this id found on given user id',
 				)
-				.returning()
+			}
 
-			// TODO: use jwt for activeProfileId, generating new jwt here
-			return activeProfile
+			return exists
 		})
 	}
 

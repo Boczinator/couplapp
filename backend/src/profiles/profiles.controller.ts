@@ -8,6 +8,7 @@ import {
 	Post,
 	Query,
 	Req,
+	Res,
 	UseGuards,
 } from '@nestjs/common'
 import { CreateProfileDto } from './dtos/create-profile.dto'
@@ -15,11 +16,16 @@ import { ProfilesService } from './profiles.service'
 import * as schema from 'src/db/schema'
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth-guard'
 import { UpdateProfileDto } from './dtos/update-profile.dto'
+import { AuthService } from 'src/auth/auth.service'
+import type { Response } from 'express'
 
 @UseGuards(JwtAuthGuard)
 @Controller('profiles')
 export class ProfilesController {
-	constructor(private readonly profileService: ProfilesService) {}
+	constructor(
+		private readonly profileService: ProfilesService,
+		private readonly authService: AuthService,
+	) {}
 
 	@Get('search')
 	async search(@Query('query') query: string) {
@@ -48,9 +54,16 @@ export class ProfilesController {
 	@Post()
 	async create(
 		@Req() req: Request & { user: { id: string } },
+		@Res({ passthrough: true }) res: Response,
 		@Body() profile: CreateProfileDto,
 	) {
 		const newProfile = await this.profileService.create(profile, req.user.id)
+
+		await this.authService.generateTokens({
+			userId: newProfile.userId,
+			res,
+			activeProfileId: newProfile.id,
+		})
 
 		return newProfile
 	}
@@ -74,15 +87,18 @@ export class ProfilesController {
 	async switchProfile(
 		@Param('id') id: string,
 		@Req() req: Request & { user: { id: string } },
+		@Res({ passthrough: true }) res: Response,
 	) {
 		const updatedProfile = await this.profileService.switchActiveProfile(
 			req.user.id,
 			id,
 		)
 
-		if (!updatedProfile) {
-			throw new NotFoundException('Profile not found or access denied')
-		}
+		await this.authService.generateTokens({
+			userId: updatedProfile.userId,
+			res,
+			activeProfileId: updatedProfile.id,
+		})
 
 		return updatedProfile
 	}

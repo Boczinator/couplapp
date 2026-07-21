@@ -20,11 +20,14 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
 		})
 	}
 
-	async validate(payload: { sub: User['id'] }) {
+	async validate(payload: { sub: User['id']; activeProfileId: string }) {
 		const { refreshToken, ...rest } = await this.usersService.findOne(
 			payload.sub,
 		)
 
-		return rest
+		return {
+			...rest,
+			activeProfileId: payload.activeProfileId,
+		}
 	}
 }

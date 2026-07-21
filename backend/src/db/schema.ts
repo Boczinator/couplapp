@@ -9,10 +9,10 @@ import { timestamp } from 'drizzle-orm/pg-core'
 import { text } from 'drizzle-orm/pg-core'
 import { pgTable, uuid } from 'drizzle-orm/pg-core'
 
-const roleEnum = pgEnum('user_role', ['admin', 'user'])
+export const roleEnum = pgEnum('user_role', ['admin', 'user'])
 
 export const users = pgTable('users', {
-	id: uuid('id').defaultRandom().primaryKey(),
+	id: uuid('id').defaultRandom().primaryKey().notNull(),
 	firstName: varchar('first_name', { length: 255 }).notNull(),
 	lastName: varchar('last_name', { length: 255 }).notNull(),
 	email: text('email').notNull().unique(),
@@ -29,18 +29,17 @@ export const profiles = pgTable(
 	'profiles',
 	{
 		id: uuid('id').defaultRandom().primaryKey(),
-		userId: uuid('user_id').references(() => users.id, {
-			onDelete: 'cascade',
-		}),
+		userId: uuid('user_id')
+			.references(() => users.id, {
+				onDelete: 'cascade',
+			})
+			.notNull(),
 		name: text('name').notNull(),
 		picture: text('picture'),
 		bannerPicture: text('banner'),
 		bio: text('bio'),
 		location: text('location'),
 		isPrivate: boolean('is_private'),
-
-		// TODO:remove isActive and only use activeProfileId in jwt
-		isActive: boolean('is_active').default(false),
 		createdAt: timestamp('created_at').notNull().defaultNow(),
 		updatedAt: timestamp('updated_at').notNull().defaultNow(),
 	},
@@ -52,7 +51,7 @@ export const profiles = pgTable(
 	],
 )
 
-const friendshipStatusEnum = pgEnum('friendship_status', [
+export const friendshipStatusEnum = pgEnum('friendship_status', [
 	'pending',
 	'accepted',
 	'blocked',

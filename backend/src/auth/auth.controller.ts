@@ -12,13 +12,11 @@ import { LoginUserDto } from './login-user.dto'
 import { type Response } from 'express'
 import { JwtRefreshGuard } from './guards/jwt-refresh-guard'
 import { JwtAuthGuard } from './guards/jwt-auth-guard'
-import { ProfilesService } from 'src/profiles/profiles.service'
 
 @Controller('auth')
 export class AuthController {
 	constructor(
 		private readonly authService: AuthService,
-		private readonly profileService: ProfilesService,
 	) {}
 
 	@Post('login')
@@ -32,7 +30,11 @@ export class AuthController {
 		})
 
 		// TODO: set everything regarding tokens in one service function for better reusability
-		const tokens = await this.authService.generateTokens(user.id, res)
+		const tokens = await this.authService.generateTokens({
+			userId: user.id,
+			activeProfileId: null,
+			res,
+		})
 
 		await this.authService.updateRefreshToken(user.id, tokens.refreshToken)
 
@@ -58,11 +60,12 @@ export class AuthController {
 	@UseGuards(JwtRefreshGuard)
 	@Post('refresh')
 	async refresh(@Req() req: any, @Res({ passthrough: true }) res: Response) {
-		await this.authService.refreshTokens(
-			req.user.userId,
-			req.user.refreshToken,
+		await this.authService.refreshTokens({
+			userId: req.user.userId,
+			activeProfileId: req.user.activeProfileId,
+			refreshToken: req.user.refreshToken,
 			res,
-		)
+		})
 
 		return {
 			message: 'refresh successfully',
@@ -84,13 +87,6 @@ export class AuthController {
 	@UseGuards(JwtAuthGuard)
 	@Get('me')
 	async getProfile(@Req() req: any) {
-		const activeProfileId = await this.profileService.getLastActiveProfileId(
-			req.user.id,
-		)
-
-		return {
-			...req.user,
-			activeProfileId,
-		}
+		return req.user
 	}
 }

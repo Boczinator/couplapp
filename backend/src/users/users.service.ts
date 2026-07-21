@@ -2,7 +2,6 @@ import {
 	ConflictException,
 	Inject,
 	Injectable,
-	InternalServerErrorException,
 	NotFoundException,
 } from '@nestjs/common'
 import { DRIZZLE_PROVIDER } from 'src/database/database.provider'
