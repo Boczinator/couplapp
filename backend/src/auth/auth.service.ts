@@ -59,7 +59,7 @@ export class AuthService {
 		return result
 	}
 
-	async generateTokens(userId: schema.User['id']) {
+	async generateTokens(userId: schema.User['id'], res: Response) {
 		const jwtPayload = {
 			sub: userId,
 		}
@@ -75,10 +75,18 @@ export class AuthService {
 			}),
 		])
 
+		await this.updateRefreshToken(userId, refreshToken)
+
+		this.setTokenCookies(res, accessToken, refreshToken)
+
 		return { accessToken, refreshToken }
 	}
 
-	async refreshTokens(userId: schema.User['id'], refreshToken: string) {
+	async refreshTokens(
+		userId: schema.User['id'],
+		refreshToken: string,
+		res: Response,
+	) {
 		const user = await this.userService.findOne(userId)
 
 		if (!user || !user.refreshToken) {
@@ -89,7 +97,8 @@ export class AuthService {
 
 		if (!refreshTokenMatches) throw new UnauthorizedException('Access Denied')
 
-		const tokens = await this.generateTokens(user.id)
+		const tokens = await this.generateTokens(user.id, res)
+
 		await this.updateRefreshToken(user.id, tokens.refreshToken)
 
 		return tokens

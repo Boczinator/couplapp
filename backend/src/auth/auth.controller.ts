@@ -32,7 +32,7 @@ export class AuthController {
 		})
 
 		// TODO: set everything regarding tokens in one service function for better reusability
-		const tokens = await this.authService.generateTokens(user.id)
+		const tokens = await this.authService.generateTokens(user.id, res)
 
 		await this.authService.updateRefreshToken(user.id, tokens.refreshToken)
 
@@ -58,15 +58,10 @@ export class AuthController {
 	@UseGuards(JwtRefreshGuard)
 	@Post('refresh')
 	async refresh(@Req() req: any, @Res({ passthrough: true }) res: Response) {
-		const tokens = await this.authService.refreshTokens(
+		await this.authService.refreshTokens(
 			req.user.userId,
 			req.user.refreshToken,
-		)
-
-		this.authService.setTokenCookies(
 			res,
-			tokens.accessToken,
-			tokens.refreshToken,
 		)
 
 		return {
