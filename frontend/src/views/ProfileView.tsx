@@ -9,12 +9,14 @@ export const ProfileView = () => {
 	const { profile, isLoading } = useCurrentProfile(profileId)
 
 	if (isLoading) return <div>Is Loading...</div>
+	console.log(profile)
 
 	return (
 		<>
 			<div>Name: {profile.name}</div>
 			<div>Profile Id: {profile.id}</div>
 			<div>User Id: {profile.userId}</div>
+			<div>Is owner: {String(profile.isOwner)}</div>
 		</>
 	)
 }

@@ -2,7 +2,7 @@ import { IsOptional, IsString } from 'class-validator'
 
 export class CreateProfileDto {
 	@IsString()
-	name!: string | null
+	name!: string
 
 	@IsOptional()
 	@IsString()

@@ -1,15 +1,15 @@
 import { useField } from 'formik'
-import { useState, type HTMLInputTypeAttribute } from 'react'
+import {
+	useState,
+	type HTMLInputAutoCompleteAttribute,
+	type InputHTMLAttributes,
+} from 'react'
 import { twMerge } from 'tailwind-merge'
 
 type TextField = {
 	label: string
-	name: string
-	id: string
-	placeholder?: string
-	type: HTMLInputTypeAttribute
 	className?: string
-}
+} & InputHTMLAttributes<HTMLInputElement>
 
 export const TextField = ({
 	label,

@@ -1,10 +1,15 @@
 import { sql } from 'drizzle-orm'
 import { varchar } from 'drizzle-orm/pg-core'
 import { boolean } from 'drizzle-orm/pg-core'
+import { primaryKey } from 'drizzle-orm/pg-core'
+import { check } from 'drizzle-orm/pg-core'
+import { pgEnum } from 'drizzle-orm/pg-core'
 import { index } from 'drizzle-orm/pg-core'
 import { timestamp } from 'drizzle-orm/pg-core'
 import { text } from 'drizzle-orm/pg-core'
 import { pgTable, uuid } from 'drizzle-orm/pg-core'
+
+const roleEnum = pgEnum('user_role', ['admin', 'user'])
 
 export const users = pgTable('users', {
 	id: uuid('id').defaultRandom().primaryKey(),
@@ -15,6 +20,7 @@ export const users = pgTable('users', {
 	refreshToken: text('refresh_token'),
 	isVerified: boolean('is_verified').default(false),
 	optInToken: text('opt_in_token'),
+	role: roleEnum('role').default('user').notNull(),
 	createdAt: timestamp('created_at').notNull().defaultNow(),
 	updatedAt: timestamp('updated_at').notNull().defaultNow(),
 })
@@ -26,12 +32,14 @@ export const profiles = pgTable(
 		userId: uuid('user_id').references(() => users.id, {
 			onDelete: 'cascade',
 		}),
-		name: text('name'),
+		name: text('name').notNull(),
 		picture: text('picture'),
 		bannerPicture: text('banner'),
 		bio: text('bio'),
 		location: text('location'),
 		isPrivate: boolean('is_private'),
+
+		// TODO:remove isActive and only use activeProfileId in jwt
 		isActive: boolean('is_active').default(false),
 		createdAt: timestamp('created_at').notNull().defaultNow(),
 		updatedAt: timestamp('updated_at').notNull().defaultNow(),
@@ -44,5 +52,39 @@ export const profiles = pgTable(
 	],
 )
 
+const friendshipStatusEnum = pgEnum('friendship_status', [
+	'pending',
+	'accepted',
+	'blocked',
+])
+
+export const friendships = pgTable(
+	'friendships',
+	{
+		profileId1: uuid('profile_id_1')
+			.notNull()
+			.references(() => profiles.id, {
+				onDelete: 'cascade',
+			}),
+		profileId2: uuid('profile_id_2')
+			.notNull()
+			.references(() => profiles.id, {
+				onDelete: 'cascade',
+			}),
+		status: friendshipStatusEnum('status').notNull(),
+		actionProfileId: uuid('action_profile_id')
+			.notNull()
+			.references(() => profiles.id, { onDelete: 'cascade' }),
+	},
+	(table) => [
+		primaryKey({ columns: [table.profileId1, table.profileId2] }),
+		check(
+			'profile_order_check',
+			sql`${table.profileId1} < ${table.profileId2}`,
+		),
+	],
+)
+
 export type User = typeof users.$inferSelect
 export type Profile = typeof profiles.$inferSelect
+export type Friendships = typeof friendships.$inferSelect

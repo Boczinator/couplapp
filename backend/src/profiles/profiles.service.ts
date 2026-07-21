@@ -81,6 +81,7 @@ export class ProfilesService {
 				.values({
 					...profile,
 					userId,
+					isActive: true,
 				})
 				.returning()
 
@@ -118,7 +119,7 @@ export class ProfilesService {
 	}
 
 	async getLastActiveProfileId(userId: string) {
-		const [{ id: profileId }] = await this.db
+		const [profile] = await this.db
 			.select({ id: schema.profiles.id })
 			.from(schema.profiles)
 			.where(
@@ -128,7 +129,11 @@ export class ProfilesService {
 				),
 			)
 
-		return profileId
+		if (!profile?.id) {
+			throw new NotFoundException('No active profile set yet')
+		}
+
+		return profile.id
 	}
 
 	async switchActiveProfile(userId: string, profileId: string) {
@@ -154,15 +159,17 @@ export class ProfilesService {
 				)
 				.returning()
 
+			// TODO: use jwt for activeProfileId, generating new jwt here
 			return activeProfile
 		})
 	}
 
 	async search(query: string) {
-		console.log(query)
 		if (query === '') {
 			return
 		}
+
+		const sanitizedQuery = `${query.trim()}:*`
 
 		const results = await this.db
 			.select({
@@ -172,7 +179,7 @@ export class ProfilesService {
 			})
 			.from(schema.profiles)
 			.where(
-				sql`to_tsvector('english', ${schema.profiles.name}) @@ websearch_to_tsquery('english', ${query})`,
+				sql`to_tsvector('english', ${schema.profiles.name}) @@ to_tsquery('english', ${sanitizedQuery})`,
 			)
 
 		return results

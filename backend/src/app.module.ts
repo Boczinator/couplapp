@@ -10,6 +10,7 @@ import { MailerModule } from '@nestjs-modules/mailer'
 import { join } from 'path'
 import { PugAdapter } from '@nestjs-modules/mailer/adapters/pug.adapter'
 import { ProfilesModule } from './profiles/profiles.module'
+import { FriendsModule } from './friends/friends.module';
 
 @Module({
 	imports: [
@@ -38,6 +39,7 @@ import { ProfilesModule } from './profiles/profiles.module'
 			},
 		}),
 		ProfilesModule,
+		FriendsModule,
 	],
 	controllers: [AppController],
 	providers: [AppService],
