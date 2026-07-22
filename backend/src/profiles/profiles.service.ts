@@ -12,12 +12,14 @@ import { UpdateProfileDto } from './dtos/update-profile.dto'
 import { eq, sql } from 'drizzle-orm'
 import { DbTransaction } from 'src/db/db.types'
 import { and } from 'drizzle-orm'
+import { FriendsService } from 'src/friends/friends.service'
 
 @Injectable()
 export class ProfilesService {
 	constructor(
 		@Inject(DRIZZLE_PROVIDER)
 		private readonly db: NodePgDatabase<typeof schema>,
+		private readonly friendsService: FriendsService,
 	) {}
 
 	async findAllLight(userId: schema.Profile['userId']) {

@@ -37,7 +37,7 @@ export const getProfile = async (profileId: string) => {
 
 export const switchProfile = async (profileId: string) => {
 	try {
-		const profile = await client.patch(`profiles/switch/${profileId}`)
+		const profile = await client.patch(`accounts/profiles/switch/${profileId}`)
 
 		return await profile.json()
 	} catch (error) {
@@ -47,7 +47,7 @@ export const switchProfile = async (profileId: string) => {
 
 export const createProfile = async (profile: Profile) => {
 	try {
-		const createdProfile = await client.post('profiles', {
+		const createdProfile = await client.post('accounts/profiles/create', {
 			json: profile,
 		})
 

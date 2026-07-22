@@ -3,21 +3,13 @@ import { ProfilesController } from './profiles.controller'
 import { ProfilesService } from './profiles.service'
 import { DatabaseModule } from 'src/database/database.module'
 import { ConfigModule } from '@nestjs/config'
-import { AuthService } from 'src/auth/auth.service'
-import { JwtService } from '@nestjs/jwt'
-import { UsersService } from 'src/users/users.service'
-import { MailService } from 'src/mail/mail.service'
+import { FriendsModule } from 'src/friends/friends.module'
+import { MailModule } from 'src/mail/mail.module'
 
 @Module({
 	controllers: [ProfilesController],
-	providers: [
-		ProfilesService,
-		AuthService,
-		JwtService,
-		UsersService,
-		MailService,
-	],
-	imports: [DatabaseModule, ConfigModule],
+	providers: [ProfilesService],
+	imports: [DatabaseModule, ConfigModule, FriendsModule, MailModule],
 	exports: [ProfilesService],
 })
 export class ProfilesModule {}

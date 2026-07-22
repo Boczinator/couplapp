@@ -12,7 +12,6 @@ import { CreateUserDto } from './dtos/create-user.dto'
 import { hashSync } from 'bcryptjs'
 import { UpdateUserDto } from './dtos/update-user.dto'
 import { MailService } from 'src/mail/mail.service'
-import { ProfilesService } from 'src/profiles/profiles.service'
 
 @Injectable()
 export class UsersService {
@@ -20,7 +19,6 @@ export class UsersService {
 		@Inject(DRIZZLE_PROVIDER)
 		private readonly db: NodePgDatabase<typeof schema>,
 		private readonly mailService: MailService,
-		private readonly profileService: ProfilesService,
 	) {}
 
 	async findAll() {
@@ -42,8 +40,10 @@ export class UsersService {
 		return result
 	}
 
-	async create(createUserDto: CreateUserDto) {
-		const [existingUser] = await this.db
+	async create(createUserDto: CreateUserDto, tx?: any) {
+		const client = tx || this.db
+
+		const [existingUser] = await client
 			.select()
 			.from(schema.users)
 			.where(eq(schema.users.email, createUserDto.email))
@@ -54,30 +54,16 @@ export class UsersService {
 
 		const password = hashSync(createUserDto.password, 10)
 
-		return await this.db.transaction(async (tx) => {
-			const [newUser] = await tx
-				.insert(schema.users)
-				.values({ ...createUserDto, password })
-				.returning()
+		const [newUser] = await client
+			.insert(schema.users)
+			.values({ ...createUserDto, password })
+			.returning()
 
-			await this.mailService.sendVerificationMail(newUser, tx)
+		await this.mailService.sendVerificationMail(newUser, client)
 
-			await this.profileService.create(
-				{
-					name: `${newUser.firstName} ${newUser.lastName}`,
-					bio: null,
-					picture: null,
-					bannerPicture: null,
-					location: null,
-				},
-				newUser.id,
-				tx,
-			)
+		const { refreshToken, password: _, isVerified, ...rest } = newUser
 
-			const { refreshToken, password: _, isVerified, ...rest } = newUser
-
-			return rest
-		})
+		return rest
 	}
 
 	async remove(id: schema.User['id']) {

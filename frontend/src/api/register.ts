@@ -9,7 +9,7 @@ export type CreateUserInput = {
 
 export const registerUser = async (input: CreateUserInput) => {
 	try {
-		const user = await client.post('/users/create', {
+		const user = await client.post('/accounts/register', {
 			json: input,
 		})
 
