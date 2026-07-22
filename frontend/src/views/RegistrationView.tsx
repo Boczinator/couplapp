@@ -1,4 +1,4 @@
-import { useRegister } from '../hooks/useRegister.hook'
+import { useRegister } from '../hooks/useRegister'
 import { FormikProvider, useFormik } from 'formik'
 import { TextField } from '../components/input/TextField'
 import { Button } from '../components/button/Button'

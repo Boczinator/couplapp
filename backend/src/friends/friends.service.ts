@@ -62,12 +62,15 @@ export class FriendsService {
 			throw new BadRequestException('An active internaction already exists.')
 		}
 
-		return await this.db.insert(schema.friendships).values({
-			profileId1: profile1Id,
-			profileId2: profile2Id,
-			status: 'pending',
-			actionProfileId: senderId,
-		})
+		return await this.db
+			.insert(schema.friendships)
+			.values({
+				profileId1: profile1Id,
+				profileId2: profile2Id,
+				status: 'pending',
+				actionProfileId: senderId,
+			})
+			.returning()
 	}
 
 	async acceptRequest(currentProfileId: string, requesterId: string) {
@@ -93,7 +96,7 @@ export class FriendsService {
 	}
 
 	async removeConnection(currentProfileId: string, targetProfileId: string) {
-		const [profile1Id, profile2Id] = sortUuids(
+		const [profileId1, profileId2] = sortUuids(
 			currentProfileId,
 			targetProfileId,
 		)
@@ -102,8 +105,8 @@ export class FriendsService {
 			.delete(schema.friendships)
 			.where(
 				and(
-					eq(schema.friendships.profileId1, profile1Id),
-					eq(schema.friendships.profileId2, profile2Id),
+					eq(schema.friendships.profileId1, profileId1),
+					eq(schema.friendships.profileId2, profileId2),
 				),
 			)
 			.returning()
@@ -116,5 +119,25 @@ export class FriendsService {
 			success: true,
 			message: 'Connection removed successfully',
 		}
+	}
+
+	async getStatus(currentProfileId: string, targetProfileId: string) {
+		const [profileId1, profileId2] = sortUuids(
+			currentProfileId,
+			targetProfileId,
+		)
+
+		const relation = await this.db.query.friendships.findFirst({
+			where: and(
+				eq(schema.friendships.profileId1, profileId1),
+				eq(schema.friendships.profileId2, profileId2),
+			),
+		})
+
+		if (!relation) {
+			return null
+		}
+
+		return relation
 	}
 }

@@ -7,6 +7,7 @@ import {
 import { NodePgDatabase } from 'drizzle-orm/node-postgres'
 import { DRIZZLE_PROVIDER } from 'src/database/database.provider'
 import * as schema from 'src/db/schema'
+import type { Friendships } from 'src/db/schema'
 import { CreateProfileDto } from './dtos/create-profile.dto'
 import { UpdateProfileDto } from './dtos/update-profile.dto'
 import { eq, sql } from 'drizzle-orm'
@@ -44,8 +45,13 @@ export class ProfilesService {
 		}
 	}
 
-	async findOne(id: schema.Profile['id'], currentUserId: string) {
+	async findOne(
+		id: schema.Profile['id'],
+		currentUserId: string,
+		activeProfileId: string,
+	) {
 		let userProfile: schema.Profile
+		let friendship: Friendships | null = null
 
 		try {
 			;[userProfile] = await this.db
@@ -64,9 +70,17 @@ export class ProfilesService {
 
 		const isOwner = userProfile.userId === currentUserId
 
+		if (activeProfileId) {
+			friendship = await this.friendsService.getStatus(
+				activeProfileId,
+				userProfile.id,
+			)
+		}
+
 		return {
 			...userProfile,
 			isOwner,
+			friendship,
 		}
 	}
 

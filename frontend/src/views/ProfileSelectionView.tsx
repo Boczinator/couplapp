@@ -1,7 +1,4 @@
-import {
-	useProfileOverview,
-	useSwitchActiveProfile,
-} from '../hooks/useProfile.hook'
+import { useProfileOverview, useSwitchActiveProfile } from '../hooks/useProfile'
 import logo from '../assets/icons/avatar.svg'
 import { useNavigate } from '@tanstack/react-router'
 import { Route } from '../routes/_authenticated/_gateway/create-profile'

@@ -1,5 +1,5 @@
 import { createContext, useMemo } from 'react' // 1. Import useMemo
-import { useAuthUser } from '../hooks/useAuthUser.hook'
+import { useAuthUser } from '../hooks/useAuthUser'
 
 export const UserContext = createContext(null) // 2. Export this
 

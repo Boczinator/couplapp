@@ -1,5 +1,7 @@
 import { useParams } from '@tanstack/react-router'
-import { useCurrentProfile } from '../hooks/useProfile.hook'
+import { useCurrentProfile } from '../hooks/useProfile'
+import { Button } from '../components/button/Button'
+import { useInviteFriends } from '../hooks/useFriends'
 
 export const ProfileView = () => {
 	const { profileId } = useParams({
@@ -7,9 +9,9 @@ export const ProfileView = () => {
 	})
 
 	const { profile, isLoading } = useCurrentProfile(profileId)
+	const { sendInvite } = useInviteFriends()
 
 	if (isLoading) return <div>Is Loading...</div>
-	console.log(profile)
 
 	return (
 		<>
@@ -17,6 +19,12 @@ export const ProfileView = () => {
 			<div>Profile Id: {profile.id}</div>
 			<div>User Id: {profile.userId}</div>
 			<div>Is owner: {String(profile.isOwner)}</div>
+			<div>Friendship status: {profile?.friendship?.status}</div>
+			{!profile.isOwner && (
+				<Button onClick={() => sendInvite(profileId)}>
+					Send friend request
+				</Button>
+			)}
 		</>
 	)
 }

@@ -1,7 +1,7 @@
 import { useNavigate } from '@tanstack/react-router'
 import { FormikProvider, useFormik } from 'formik'
-import { useDebounce } from '../../hooks/useDebounce.hook'
-import { useSearchProfiles } from '../../hooks/useSearchProfiles.hook'
+import { useDebounce } from '../../hooks/useDebounce'
+import { useSearchProfiles } from '../../hooks/useSearchProfiles'
 import { TextField } from '../input/TextField'
 
 export const SearchBar = () => {

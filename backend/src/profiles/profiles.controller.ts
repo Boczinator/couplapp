@@ -35,9 +35,13 @@ export class ProfilesController {
 	@Get(':id')
 	async getById(
 		@Param('id') id: schema.Profile['id'],
-		@Req() req: Request & { user: { id: string } },
+		@Req() req: Request & { user: { id: string; activeProfileId: string } },
 	) {
-		const profile = await this.profileService.findOne(id, req.user.id)
+		const profile = await this.profileService.findOne(
+			id,
+			req.user.id,
+			req.user.activeProfileId,
+		)
 
 		return profile
 	}

@@ -1,6 +1,6 @@
 import { FormikProvider, useFormik } from 'formik'
 import { TextField } from '../input/TextField'
-import { useCreateProfile } from '../../hooks/useProfile.hook'
+import { useCreateProfile } from '../../hooks/useProfile'
 import { Button } from '../button/Button'
 
 export const CreateProfileForm = () => {

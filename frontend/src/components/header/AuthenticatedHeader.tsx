@@ -1,9 +1,9 @@
 import { HeaderLink } from '../link/HeaderLink'
 import logo from '../../assets/couplapp-logo-inline.png'
-import { useLogout } from '../../hooks/useLogout.hook'
+import { useLogout } from '../../hooks/useLogout'
 import { Link } from '@tanstack/react-router'
-import { useCurrentProfile } from '../../hooks/useProfile.hook'
-import { useAuthUser } from '../../hooks/useAuthUser.hook'
+import { useCurrentProfile } from '../../hooks/useProfile'
+import { useAuthUser } from '../../hooks/useAuthUser'
 import { SearchBar } from '../search/SearchBar'
 //import { ReactComponent as SvgIcon } from '../../assets/icons/logout-svgrepo-com.svg?react'
 
@@ -21,7 +21,7 @@ export const AuthenticatedHeader = () => {
 
 	return (
 		<header className="flex flex-col shadow-xl h-dvh w-1/5 overflow-y-auto pb-5">
-			<div className="flex sticky top-0 w-full bg-white">
+			<div className="flex sticky top-0 w-full bg-white z-10">
 				<img src={logo} className="w-60 h-20 object-cover object-center" />
 			</div>
 			<div className="px-5 flex flex-col h-full">
