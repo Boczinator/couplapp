@@ -22,6 +22,10 @@ export class JwtRefreshStrategy extends PassportStrategy(
 		const refreshToken = req.cookies?.['refresh_token']
 		if (!refreshToken) throw new UnauthorizedException()
 
-		return { userId: payload.sub, email: payload.email, refreshToken }
+		return {
+			userId: payload.sub,
+			activeProfileId: payload.activeProfileId,
+			refreshToken,
+		}
 	}
 }
