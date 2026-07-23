@@ -1,7 +1,7 @@
 import { useParams } from '@tanstack/react-router'
 import { useCurrentProfile } from '../hooks/useProfile'
 import { Button } from '../components/button/Button'
-import { useInviteFriends } from '../hooks/useFriends'
+import { useInviteFriends, useRemoveRelationship } from '../hooks/useFriends'
 
 export const ProfileView = () => {
 	const { profileId } = useParams({
@@ -10,6 +10,18 @@ export const ProfileView = () => {
 
 	const { profile, isLoading } = useCurrentProfile(profileId)
 	const { sendInvite } = useInviteFriends()
+	const { removeRelationship } = useRemoveRelationship()
+
+	const statusMapping = {
+		pending: { text: 'Undo invite', fn: removeRelationship },
+		accepted: { text: 'Remove friend', fn: removeRelationship },
+		blocked: { text: 'User blocked', fn: removeRelationship },
+	}
+
+	const status = statusMapping?.[profile?.friendship?.status] || {
+		text: 'Send invite',
+		fn: sendInvite,
+	}
 
 	if (isLoading) return <div>Is Loading...</div>
 
@@ -21,9 +33,7 @@ export const ProfileView = () => {
 			<div>Is owner: {String(profile.isOwner)}</div>
 			<div>Friendship status: {profile?.friendship?.status}</div>
 			{!profile.isOwner && (
-				<Button onClick={() => sendInvite(profileId)}>
-					Send friend request
-				</Button>
+				<Button onClick={() => status.fn(profileId)}>{status.text}</Button>
 			)}
 		</>
 	)

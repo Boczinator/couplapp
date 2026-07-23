@@ -1,3 +1,4 @@
+import { relations } from 'drizzle-orm'
 import { sql } from 'drizzle-orm'
 import { varchar } from 'drizzle-orm/pg-core'
 import { boolean } from 'drizzle-orm/pg-core'
@@ -83,6 +84,19 @@ export const friendships = pgTable(
 		),
 	],
 )
+
+export const friendshipsRelations = relations(friendships, ({ one }) => ({
+	profile1: one(profiles, {
+		fields: [friendships.profileId1],
+		references: [profiles.id],
+		relationName: 'profile1',
+	}),
+	profile2: one(profiles, {
+		fields: [friendships.profileId2],
+		references: [profiles.id],
+		relationName: 'profile2',
+	}),
+}))
 
 export type User = typeof users.$inferSelect
 export type Profile = typeof profiles.$inferSelect

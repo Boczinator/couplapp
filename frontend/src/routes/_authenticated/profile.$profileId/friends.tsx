@@ -1,9 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { FriendsView } from '../../../views/FriendsView'
 
-export const Route = createFileRoute('/_authenticated/profile/$profileId/friends')({
-	component: RouteComponent,
+export const Route = createFileRoute(
+	'/_authenticated/profile/$profileId/friends',
+)({
+	component: FriendsView,
 })
-
-function RouteComponent() {
-	return <div>Hello "/_authenticated/friends"!</div>
-}

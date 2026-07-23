@@ -84,10 +84,11 @@ export class FriendsService {
 			})
 			.where(
 				and(
-					eq(schema.friendships.profileId1, profile1Id),
-					eq(schema.friendships.profileId2, profile2Id),
+					or(
+						eq(schema.friendships.profileId1, profile1Id),
+						eq(schema.friendships.profileId2, profile2Id),
+					),
 					eq(schema.friendships.status, 'pending'),
-					ne(schema.friendships.actionProfileId, currentProfileId),
 				),
 			)
 			.returning()
@@ -139,5 +140,61 @@ export class FriendsService {
 		}
 
 		return relation
+	}
+
+	async getAllRequestsByProfileId(currentProfileId: string) {
+		const relations = await this.db.query.friendships.findMany({
+			where: and(
+				or(
+					eq(schema.friendships.profileId1, currentProfileId),
+					eq(schema.friendships.profileId2, currentProfileId),
+				),
+				ne(schema.friendships.status, 'blocked'),
+			),
+			with: {
+				profile1: true,
+				profile2: true,
+			},
+		})
+
+		return relations.map((relation) => {
+			const isIncoming = relation.actionProfileId !== currentProfileId
+
+			const targetProfile =
+				relation.profileId1 === currentProfileId
+					? relation.profile2
+					: relation.profile1
+
+			return {
+				status: relation.status,
+				direction: isIncoming ? 'INCOMING' : 'OUTGOING',
+				profile: targetProfile,
+			}
+		})
+	}
+
+	async getAllFriends(activeProfileId: string) {
+		const friendships = await this.db.query.friendships.findMany({
+			where: and(
+				or(
+					eq(schema.friendships.profileId1, activeProfileId),
+					eq(schema.friendships.profileId2, activeProfileId),
+				),
+				eq(schema.friendships.status, 'accepted'),
+			),
+			with: {
+				profile1: true,
+				profile2: true,
+			},
+		})
+
+		return friendships.map((friendship) => {
+			const friendProfile =
+				friendship.profileId1 === activeProfileId
+					? friendship.profile2
+					: friendship.profile1
+
+			return friendProfile
+		})
 	}
 }
