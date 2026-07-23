@@ -43,6 +43,7 @@ export const useRemoveRelationship = () => {
 		},
 		onSuccess: (_, receiverId) => {
 			queryClient.invalidateQueries({ queryKey: ['profile', receiverId] })
+			queryClient.invalidateQueries({ queryKey: ['friends'] })
 		},
 	})
 

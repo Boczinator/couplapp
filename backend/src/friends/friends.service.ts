@@ -84,15 +84,14 @@ export class FriendsService {
 			})
 			.where(
 				and(
-					or(
-						eq(schema.friendships.profileId1, profile1Id),
-						eq(schema.friendships.profileId2, profile2Id),
-					),
+					eq(schema.friendships.profileId1, profile1Id),
+					eq(schema.friendships.profileId2, profile2Id),
 					eq(schema.friendships.status, 'pending'),
 				),
 			)
 			.returning()
 
+		console.log(updatedRelation)
 		return updatedRelation
 	}
 
@@ -149,6 +148,7 @@ export class FriendsService {
 					eq(schema.friendships.profileId1, currentProfileId),
 					eq(schema.friendships.profileId2, currentProfileId),
 				),
+				eq(schema.friendships.status, 'pending'),
 				ne(schema.friendships.status, 'blocked'),
 			),
 			with: {

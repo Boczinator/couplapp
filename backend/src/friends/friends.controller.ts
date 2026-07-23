@@ -27,9 +27,7 @@ export class FriendsController {
 
 	@Get('')
 	async getAllFriends(@Req() req: any) {
-		return await this.friendsService.getAllFriends(
-			req.user.activeProfileId,
-		)
+		return await this.friendsService.getAllFriends(req.user.activeProfileId)
 	}
 
 	@Post('invite')
@@ -50,8 +48,10 @@ export class FriendsController {
 
 	@Patch('accept/:requesterId')
 	async accept(@Req() req: any, @Param() params: { requesterId: string }) {
+		console.log(req.user, params)
+
 		return await this.friendsService.acceptRequest(
-			req.user.currentProfileId,
+			req.user.activeProfileId,
 			params.requesterId,
 		)
 	}
