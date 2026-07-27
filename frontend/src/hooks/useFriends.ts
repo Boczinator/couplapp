@@ -6,6 +6,7 @@ import {
 	removeRelation,
 	sendFriendInvite,
 } from '../api/friends'
+import { useAuthUser } from './useAuthUser'
 
 export const useInviteFriends = () => {
 	const queryClient = useQueryClient()
@@ -64,7 +65,8 @@ export const useAcceptFriendRequest = () => {
 		mutationFn: (requesterId: string) => {
 			return acceptFriendRequest(requesterId)
 		},
-		onSuccess: () => {
+		onSuccess: (_, requesterId) => {
+			queryClient.invalidateQueries({ queryKey: ['profile', requesterId] })
 			queryClient.invalidateQueries({
 				queryKey: ['friends'],
 			})
