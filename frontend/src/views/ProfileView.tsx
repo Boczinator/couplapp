@@ -22,17 +22,6 @@ export const ProfileView = () => {
 	const { removeRelationship } = useRemoveRelationship()
 	const { acceptRequest } = useAcceptFriendRequest()
 
-	const statusMapping = {
-		pending: { text: 'Undo invite', fn: removeRelationship },
-		accepted: { text: 'Remove friend', fn: removeRelationship },
-		blocked: { text: 'User blocked', fn: removeRelationship },
-	}
-
-	const status = statusMapping?.[profile?.friendship?.status] || {
-		text: 'Send invite',
-		fn: sendInvite,
-	}
-
 	if (isLoading) return <div>Is Loading...</div>
 
 	return (

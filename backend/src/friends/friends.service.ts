@@ -17,28 +17,6 @@ export class FriendsService {
 		@Inject(DRIZZLE_PROVIDER)
 		private readonly db: NodePgDatabase<typeof schema>,
 	) {}
-	async changeStatus(
-		currentProfileId: Friendships['profileId1'],
-		requestedProfileId: Friendships['profileId2'],
-		status: Friendships['status'],
-	) {
-		const [updatedFriendship] = await this.db
-			.update(schema.friendships)
-			.set({ status, actionProfileId: currentProfileId })
-			.where(
-				and(
-					eq(schema.friendships.profileId1, currentProfileId),
-					eq(schema.friendships.profileId2, requestedProfileId),
-				),
-			)
-			.returning()
-
-		if (!updatedFriendship) {
-			throw new NotFoundException('No active relationship found to update')
-		}
-
-		return updatedFriendship
-	}
 
 	async sendRequest(
 		senderId: Friendships['profileId1'],
