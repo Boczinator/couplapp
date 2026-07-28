@@ -27,7 +27,11 @@ export const getProfileOverview = async () => {
 
 export const getProfile = async (profileId: string) => {
 	try {
-		const profile = await client.get(`profiles/${profileId}`)
+		const profile = await client.get(`profiles/${profileId}`, {
+			searchParams: {
+				includes: 'friends',
+			},
+		})
 
 		return await profile.json()
 	} catch (error) {

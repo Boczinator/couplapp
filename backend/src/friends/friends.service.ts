@@ -151,12 +151,12 @@ export class FriendsService {
 		})
 	}
 
-	async getAllFriends(activeProfileId: string) {
+	async getAllFriends(profileId: string) {
 		const friendships = await this.db.query.friendships.findMany({
 			where: and(
 				or(
-					eq(schema.friendships.profileId1, activeProfileId),
-					eq(schema.friendships.profileId2, activeProfileId),
+					eq(schema.friendships.profileId1, profileId),
+					eq(schema.friendships.profileId2, profileId),
 				),
 				eq(schema.friendships.status, 'accepted'),
 			),
@@ -168,7 +168,7 @@ export class FriendsService {
 
 		return friendships.map((friendship) => {
 			const friendProfile =
-				friendship.profileId1 === activeProfileId
+				friendship.profileId1 === profileId
 					? friendship.profile2
 					: friendship.profile1
 

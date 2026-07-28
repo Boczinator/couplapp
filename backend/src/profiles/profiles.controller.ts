@@ -12,6 +12,7 @@ import { ProfilesService } from './profiles.service'
 import * as schema from 'src/db/schema'
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth-guard'
 import { UpdateProfileDto } from './dtos/update-profile.dto'
+import { GetProfileQueryDto } from './dtos/get-profile-query.dto'
 
 @UseGuards(JwtAuthGuard)
 @Controller('profiles')
@@ -36,11 +37,13 @@ export class ProfilesController {
 	async getById(
 		@Param('id') id: schema.Profile['id'],
 		@Req() req: Request & { user: { id: string; activeProfileId: string } },
+		@Query() query: GetProfileQueryDto,
 	) {
 		const profile = await this.profileService.findOne(
 			id,
 			req.user.id,
 			req.user.activeProfileId,
+			query,
 		)
 
 		return profile

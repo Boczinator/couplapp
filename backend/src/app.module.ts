@@ -10,8 +10,10 @@ import { MailerModule } from '@nestjs-modules/mailer'
 import { join } from 'path'
 import { PugAdapter } from '@nestjs-modules/mailer/adapters/pug.adapter'
 import { ProfilesModule } from './profiles/profiles.module'
-import { FriendsModule } from './friends/friends.module';
-import { AccountsModule } from './accounts/accounts.module';
+import { FriendsModule } from './friends/friends.module'
+import { AccountsModule } from './accounts/accounts.module'
+import { FilesModule } from './files/files.module'
+import { MulterModule } from '@nestjs/platform-express'
 
 @Module({
 	imports: [
@@ -42,6 +44,10 @@ import { AccountsModule } from './accounts/accounts.module';
 		ProfilesModule,
 		FriendsModule,
 		AccountsModule,
+		FilesModule,
+		MulterModule.register({
+			dest: './upload',
+		}),
 	],
 	controllers: [AppController],
 	providers: [AppService],

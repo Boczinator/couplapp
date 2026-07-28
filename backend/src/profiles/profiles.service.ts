@@ -14,6 +14,7 @@ import { eq, sql } from 'drizzle-orm'
 import { DbTransaction } from 'src/db/db.types'
 import { and } from 'drizzle-orm'
 import { FriendsService } from 'src/friends/friends.service'
+import { GetProfileQueryDto } from './dtos/get-profile-query.dto'
 
 @Injectable()
 export class ProfilesService {
@@ -49,15 +50,16 @@ export class ProfilesService {
 		id: schema.Profile['id'],
 		currentUserId: string,
 		activeProfileId: string,
+		query: GetProfileQueryDto,
 	) {
-		let userProfile: schema.Profile
-		let friendship: Friendships | null = null
+		let userProfile
+
+		const includeFriends = query.includes?.includes('friends')
 
 		try {
-			;[userProfile] = await this.db
-				.select()
-				.from(schema.profiles)
-				.where(eq(schema.profiles.id, id))
+			userProfile = await this.db.query.profiles.findFirst({
+				where: () => eq(schema.profiles.id, id),
+			})
 		} catch (error) {
 			throw new InternalServerErrorException({
 				cause: error,
@@ -70,17 +72,35 @@ export class ProfilesService {
 
 		const isOwner = userProfile.userId === currentUserId
 
-		if (activeProfileId) {
-			friendship = await this.friendsService.getStatus(
-				activeProfileId,
-				userProfile.id,
-			)
-		}
+		const friendshipPromise = activeProfileId
+			? this.friendsService.getStatus(activeProfileId, userProfile.id)
+			: Promise.resolve(undefined)
+
+		const friendsPromise = includeFriends
+			? this.friendsService.getAllFriends(id)
+			: Promise.resolve(undefined)
+
+		const [friendship, friends] = await Promise.all([
+			friendshipPromise,
+			friendsPromise,
+		])
+
+		const isPrivate =
+			userProfile.isPrivate && userProfile.id !== activeProfileId
 
 		return {
-			...userProfile,
-			isOwner,
-			friendship,
+			...(!isPrivate
+				? {
+						...userProfile,
+						isOwner,
+						friendship,
+						...(includeFriends && { friends }),
+					}
+				: {
+						...{ name: userProfile.name, picture: userProfile.picture },
+						isOwner,
+						friendship,
+					}),
 		}
 	}
 

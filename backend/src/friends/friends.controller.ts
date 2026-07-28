@@ -6,6 +6,7 @@ import {
 	Param,
 	Patch,
 	Post,
+	Query,
 	Req,
 	UseGuards,
 } from '@nestjs/common'
@@ -26,7 +27,7 @@ export class FriendsController {
 	}
 
 	@Get('')
-	async getAllFriends(@Req() req: any) {
+	async getFriends(@Req() req: any) {
 		return await this.friendsService.getAllFriends(req.user.activeProfileId)
 	}
 
