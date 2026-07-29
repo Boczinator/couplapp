@@ -13,7 +13,7 @@ import { ProfilesModule } from './profiles/profiles.module'
 import { FriendsModule } from './friends/friends.module'
 import { AccountsModule } from './accounts/accounts.module'
 import { FilesModule } from './files/files.module'
-import { MulterModule } from '@nestjs/platform-express'
+import { CloudStorageModule } from './cloud-storage/cloud-storage.module';
 
 @Module({
 	imports: [
@@ -45,9 +45,7 @@ import { MulterModule } from '@nestjs/platform-express'
 		FriendsModule,
 		AccountsModule,
 		FilesModule,
-		MulterModule.register({
-			dest: './upload',
-		}),
+		CloudStorageModule,
 	],
 	controllers: [AppController],
 	providers: [AppService],

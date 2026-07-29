@@ -8,7 +8,6 @@ import {
 } from '../hooks/useFriends'
 import { useAuthUser } from '../hooks/useAuthUser'
 import UserLogo from '../assets/icons/avatar.svg'
-import { Modal } from '../components/modal/Modal'
 import { useState } from 'react'
 import { DataImageTransferModal } from '../components/modal/DataImageTransferModal'
 
@@ -43,19 +42,19 @@ export const ProfileView = () => {
 			<div className="flex flex-wrap">
 				<div className="w-3/4">
 					<div className="w-full h-[30vh] min-h-60 bg-gray-300 rounded-b-md mb-5 relative">
-						<div className="size-20 bg-red-200 rounded-full absolute left-2.5 bottom-2.5 p-3 group">
-							<div>
+						<div className="size-30  absolute left-2.5 bottom-2.5 group ">
+							<div className="overflow-hidden bg-red-200 rounded-full ">
 								<img
 									className="object-contain size-full"
 									src={profile?.picture ?? UserLogo}
 								></img>
-								<button
-									onClick={openModal}
-									className="before:z-[-1] z-10 before:border-2 before:border-[#FF6D56] border-2 border-[#FF6D56] hidden group-hover:block text-sm bg-white shadow-xl cursor-pointer absolute before:size-4 before:rotate-45 before:left-1/2 before:-translate-x-1/2 p-2 before:top-0 before:-translate-1/2 before:absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-full before:bg-white"
-								>
-									Bearbeiten
-								</button>
 							</div>
+							<button
+								onClick={openModal}
+								className="before:z-[-1] z-10 before:border-2 before:border-[#FF6D56] border-2 border-[#FF6D56] hidden group-hover:block text-sm bg-white shadow-xl cursor-pointer absolute before:size-4 before:rotate-45 before:left-1/2 before:-translate-x-1/2 p-2 before:top-0 before:-translate-1/2 before:absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-full before:bg-white"
+							>
+								Bearbeiten
+							</button>
 						</div>
 					</div>
 					<div className="flex flex-wrap">

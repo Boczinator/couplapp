@@ -5,11 +5,18 @@ import { DatabaseModule } from 'src/database/database.module'
 import { ConfigModule } from '@nestjs/config'
 import { FriendsModule } from 'src/friends/friends.module'
 import { MailModule } from 'src/mail/mail.module'
+import { FilesModule } from 'src/files/files.module'
 
 @Module({
 	controllers: [ProfilesController],
 	providers: [ProfilesService],
-	imports: [DatabaseModule, ConfigModule, FriendsModule, MailModule],
+	imports: [
+		DatabaseModule,
+		ConfigModule,
+		FriendsModule,
+		MailModule,
+		FilesModule,
+	],
 	exports: [ProfilesService],
 })
 export class ProfilesModule {}

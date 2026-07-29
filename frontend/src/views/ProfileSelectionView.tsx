@@ -20,7 +20,7 @@ export const ProfileSelectionView = () => {
 						className="cursor-pointer text-[#06202B] bg-gray-200 font-medium text-2xl hover:bg-[#7AE2CF] transition-colors px-5 py-3 flex gap-3 rounded-2xl items-center mb-5"
 						onClick={() => switchActiveProfile(profile.id)}
 					>
-						<span className="rounded-full border-white border-2 p-1 size-10 bg-white">
+						<span className="rounded-full border-white border-2 overflow-hidden size-13 bg-white">
 							<img src={profile.picture || logo} className="size-full" />
 						</span>
 						{profile.name}

@@ -13,7 +13,7 @@ export const DataImageTransferModal = ({ isOpen, onClose }) => {
 				const formData = new FormData()
 				formData.append('file', avatar)
 
-				await client.post('upload/profile', {
+				await client.patch('profiles/avatar', {
 					body: formData,
 				})
 			} catch (error) {
@@ -29,7 +29,7 @@ export const DataImageTransferModal = ({ isOpen, onClose }) => {
 					<input
 						type="file"
 						name="avatar"
-						className="bg-gray-200 rounded-sm w-100 h-100"
+						className="bg-gray-200 rounded-sm w-100 h-60"
 						onChange={(e) =>
 							formik.setFieldValue('avatar', e.currentTarget.files[0])
 						}

@@ -3,6 +3,7 @@ import {
 	Inject,
 	Injectable,
 	NotFoundException,
+	Req,
 } from '@nestjs/common'
 import { DRIZZLE_PROVIDER } from 'src/database/database.provider'
 import { NodePgDatabase } from 'drizzle-orm/node-postgres'

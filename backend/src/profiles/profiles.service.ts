@@ -7,7 +7,6 @@ import {
 import { NodePgDatabase } from 'drizzle-orm/node-postgres'
 import { DRIZZLE_PROVIDER } from 'src/database/database.provider'
 import * as schema from 'src/db/schema'
-import type { Friendships } from 'src/db/schema'
 import { CreateProfileDto } from './dtos/create-profile.dto'
 import { UpdateProfileDto } from './dtos/update-profile.dto'
 import { eq, sql } from 'drizzle-orm'
@@ -15,6 +14,9 @@ import { DbTransaction } from 'src/db/db.types'
 import { and } from 'drizzle-orm'
 import { FriendsService } from 'src/friends/friends.service'
 import { GetProfileQueryDto } from './dtos/get-profile-query.dto'
+import { randomUUID } from 'crypto'
+import { FilesService } from 'src/files/files.service'
+import { ConfigService } from '@nestjs/config'
 
 @Injectable()
 export class ProfilesService {
@@ -22,6 +24,8 @@ export class ProfilesService {
 		@Inject(DRIZZLE_PROVIDER)
 		private readonly db: NodePgDatabase<typeof schema>,
 		private readonly friendsService: FriendsService,
+		private readonly filesService: FilesService,
+		private readonly configService: ConfigService,
 	) {}
 
 	async findAllLight(userId: schema.Profile['userId']) {
@@ -190,5 +194,47 @@ export class ProfilesService {
 			)
 
 		return results
+	}
+
+	async updateAvatar(profileId: string, file: Express.Multer.File) {
+		const uuid = randomUUID()
+		const fileExtension = file.mimetype.split('/')[1]
+		const publicDomain =
+			this.configService.getOrThrow<string>('R2_PUBLIC_DOMAIN')
+		const publicBucket = this.configService.getOrThrow<string>(
+			'R2_BUCKET_NAME_PUBLIC',
+		)
+
+		const key = `profiles/${profileId}/avatar-${uuid}.${fileExtension}`
+
+		const profile = await this.db.query.profiles.findFirst({
+			where: () => eq(schema.profiles.id, profileId),
+		})
+
+		if (profile?.picture) {
+			try {
+				await this.filesService.removeFile({
+					key: profile?.picture,
+					isPrivate: false,
+				})
+			} catch (error) {
+				console.error(`Failed to cleanup old avatar ${profile.picture}`)
+			}
+		}
+
+		const result = await this.filesService.generateUrlAndUploadFile({
+			file,
+			key,
+			isPrivate: false,
+		})
+
+		const publicUrl = `${publicDomain}/${publicBucket}/${key}`
+
+		await this.db
+			.update(schema.profiles)
+			.set({ picture: publicUrl })
+			.where(eq(schema.profiles.id, profileId))
+
+		return result
 	}
 }

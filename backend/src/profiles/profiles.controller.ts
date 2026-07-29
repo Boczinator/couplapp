@@ -1,18 +1,25 @@
 import {
 	Body,
 	Controller,
+	FileTypeValidator,
 	Get,
+	MaxFileSizeValidator,
 	Param,
+	ParseFilePipe,
 	Patch,
 	Query,
 	Req,
+	UploadedFile,
 	UseGuards,
+	UseInterceptors,
 } from '@nestjs/common'
 import { ProfilesService } from './profiles.service'
 import * as schema from 'src/db/schema'
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth-guard'
 import { UpdateProfileDto } from './dtos/update-profile.dto'
 import { GetProfileQueryDto } from './dtos/get-profile-query.dto'
+import 'multer'
+import { FileInterceptor } from '@nestjs/platform-express'
 
 @UseGuards(JwtAuthGuard)
 @Controller('profiles')
@@ -47,6 +54,26 @@ export class ProfilesController {
 		)
 
 		return profile
+	}
+
+	@Patch('avatar')
+	@UseInterceptors(FileInterceptor('file'))
+	async updateAvatar(
+		@UploadedFile(
+			new ParseFilePipe({
+				validators: [
+					new MaxFileSizeValidator({ maxSize: 100000000 }),
+					new FileTypeValidator({ fileType: /^image\/(png|jpeg)$/ }),
+				],
+			}),
+		)
+		file: Express.Multer.File,
+		@Req() req: any,
+	) {
+		return await this.profileService.updateAvatar(
+			req.user.activeProfileId,
+			file,
+		)
 	}
 
 	@Patch(':id')
