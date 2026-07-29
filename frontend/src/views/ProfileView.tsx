@@ -42,10 +42,10 @@ export const ProfileView = () => {
 			<div className="flex flex-wrap">
 				<div className="w-3/4">
 					<div className="w-full h-[30vh] min-h-60 bg-gray-300 rounded-b-md mb-5 relative">
-						<div className="size-30  absolute left-2.5 bottom-2.5 group ">
-							<div className="overflow-hidden bg-red-200 rounded-full ">
+						<div className="size-30 absolute left-2.5 bottom-2.5 group ">
+							<div className="overflow-hidden bg-red-200 rounded-full size-full">
 								<img
-									className="object-contain size-full"
+									className="object-cover size-full"
 									src={profile?.picture ?? UserLogo}
 								></img>
 							</div>
@@ -96,19 +96,18 @@ export const ProfileView = () => {
 						</div>
 					</div>
 				</div>
-				<div className="w-1/4 px-2.5 gap-2 flex-col flex">
+				<div className="w-1/4 px-2.5 gap-3 flex-col flex">
 					<h3 className="font-bold text-lg">{`${profile.name}´s friends`}</h3>
 					{profile?.friends &&
 						profile.friends.map((friend) => (
-							<div>
-								<Link
-									to="/profile/$profileId"
-									params={{ profileId: friend.id }}
-									className="cursor-pointer"
-								>
-									{friend.name}
-								</Link>
-							</div>
+							<Link
+								to="/profile/$profileId"
+								params={{ profileId: friend.id }}
+								className="cursor-pointer flex items-center gap-2"
+							>
+								<img src={friend.picture || UserLogo} className="size-10"></img>
+								{friend.name}
+							</Link>
 						))}
 				</div>
 			</div>

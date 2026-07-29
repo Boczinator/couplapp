@@ -16,6 +16,8 @@ export const DataImageTransferModal = ({ isOpen, onClose }) => {
 				await client.patch('profiles/avatar', {
 					body: formData,
 				})
+
+				onClose()
 			} catch (error) {
 				console.log(error)
 			}
