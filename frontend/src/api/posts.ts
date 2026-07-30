@@ -1,6 +1,6 @@
 import { client } from './client'
 
-type PostPayload = {
+export type PostPayload = {
 	text: string
 }
 

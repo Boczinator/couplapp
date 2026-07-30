@@ -1,21 +1,18 @@
 import { useField } from 'formik'
-import {
-	useState,
-	type InputHTMLAttributes,
-} from 'react'
+import { useState, type InputHTMLAttributes } from 'react'
 import { twMerge } from 'tailwind-merge'
 
-type TextField = {
+type TextAreaProps = {
 	label: string
 	className?: string
-} & InputHTMLAttributes<HTMLInputElement>
+} & InputHTMLAttributes<HTMLTextAreaElement>
 
-export const TextField = ({
+export const TextAreaField = ({
 	label,
 	className,
 	//placeholder,
 	...props
-}: TextField) => {
+}: TextAreaProps) => {
 	const [field, meta] = useField(props)
 	const [isFocused, setIsFocused] = useState(meta.touched)
 
@@ -34,7 +31,7 @@ export const TextField = ({
 			>
 				{label || placeholder}
 			</label>
-			<input
+			<textarea
 				className="text-sm text-black bg-white border-black py-1.5 px-1 border w-full rounded-sm"
 				onFocus={handleFocus}
 				{...field}

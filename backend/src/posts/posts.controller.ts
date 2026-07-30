@@ -19,14 +19,21 @@ export class PostsController {
 	constructor(private readonly postsService: PostsService) {}
 
 	@Get(':profileId')
-	async getPostsByProfile(@Param() params: { profileId: string }) {
+	async getPostsByProfile(
+		@Param() params: { profileId: string },
+		@Req() req: any,
+	) {
 		const { profileId } = params
 
-		return await this.postsService.getPostsByProfile({ profileId })
+		return await this.postsService.getPostsByProfile({
+			profileId,
+			activeProfileId: req.user.activeProfileId,
+		})
 	}
 
-	@Post()
+	@Post('create')
 	async create(@Req() req: any, @Body() createPostDto: CreatePostDto) {
+		console.log(createPostDto)
 		return await this.postsService.createPost({
 			profileId: req.user.activeProfileId,
 			post: createPostDto,

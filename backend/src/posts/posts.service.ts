@@ -6,7 +6,7 @@ import {
 import { NodePgDatabase } from 'drizzle-orm/node-postgres'
 import { DRIZZLE_PROVIDER } from 'src/database/database.provider'
 import * as schema from '../db/schema'
-import { and, eq } from 'drizzle-orm'
+import { and, asc, desc, eq } from 'drizzle-orm'
 import { CreatePostDto } from './dto/create-post.dto'
 
 @Injectable()
@@ -16,12 +16,22 @@ export class PostsService {
 		private readonly db: NodePgDatabase<typeof schema>,
 	) {}
 
-	async getPostsByProfile({ profileId }: { profileId: string }) {
+	async getPostsByProfile({
+		profileId,
+		activeProfileId,
+	}: {
+		profileId: string
+		activeProfileId: string
+	}) {
 		const posts = await this.db.query.posts.findMany({
 			where: eq(schema.posts.profileId, profileId),
+			orderBy: desc(schema.posts.createdAt),
 		})
 
-		return posts
+		return {
+			posts,
+			isOwner: profileId === activeProfileId,
+		}
 	}
 
 	async createPost({
