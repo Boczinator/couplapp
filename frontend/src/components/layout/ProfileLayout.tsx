@@ -6,7 +6,7 @@ export const ProfileLayout = () => {
 		<div className="flex">
 			<AuthenticatedHeader />
 
-			<div className="flex-1 px-10 py-15">
+			<div className="flex-1 px-10 py-10">
 				<Outlet />
 			</div>
 		</div>

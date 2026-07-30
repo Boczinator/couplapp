@@ -98,6 +98,17 @@ export const friendshipsRelations = relations(friendships, ({ one }) => ({
 	}),
 }))
 
+export const posts = pgTable('posts', {
+	id: uuid('id').defaultRandom().primaryKey().notNull(),
+	profileId: uuid('profile_id').references(() => profiles.id, {
+		onDelete: 'cascade',
+	}),
+	text: text('text').notNull(),
+	updatedAt: timestamp('updated_at'),
+	createdAt: timestamp('created_at').defaultNow().notNull(),
+})
+
 export type User = typeof users.$inferSelect
 export type Profile = typeof profiles.$inferSelect
 export type Friendships = typeof friendships.$inferSelect
+export type Posts = typeof posts.$inferSelect

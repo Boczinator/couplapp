@@ -14,6 +14,7 @@ import { FriendsModule } from './friends/friends.module'
 import { AccountsModule } from './accounts/accounts.module'
 import { FilesModule } from './files/files.module'
 import { CloudStorageModule } from './cloud-storage/cloud-storage.module';
+import { PostsModule } from './posts/posts.module';
 
 @Module({
 	imports: [
@@ -46,6 +47,7 @@ import { CloudStorageModule } from './cloud-storage/cloud-storage.module';
 		AccountsModule,
 		FilesModule,
 		CloudStorageModule,
+		PostsModule,
 	],
 	controllers: [AppController],
 	providers: [AppService],

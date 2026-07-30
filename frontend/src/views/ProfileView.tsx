@@ -44,7 +44,7 @@ export const ProfileView = () => {
 				<div className="w-3/4">
 					<div className="w-full h-[30vh] min-h-60 bg-gray-300 rounded-b-md mb-5 relative">
 						<div className="size-30 absolute left-2.5 bottom-2.5 group ">
-							<div className="overflow-hidden bg-red-200 rounded-full size-full">
+							<div className="overflow-hidden bg-red-200 rounded-full size-full shadow-lg">
 								<img
 									className="object-cover size-full"
 									src={profile?.picture ?? UserLogo}

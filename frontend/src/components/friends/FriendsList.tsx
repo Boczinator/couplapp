@@ -34,15 +34,15 @@ export const FriendsList = () => {
 				<>
 					<h2 className="text-2xl font-bold mb-5">Deine Freunde</h2>
 
-					<div className="flex flex-wrap">
+					<div className="flex flex-wrap flex-col gap-5">
 						{friends.map((friend) => (
-							<a
+							<button
 								onClick={(e) => navigateToFriendPorfile(e, friend.id)}
 								key={friend.id}
-								className="text-lg mb-2 w-full"
+								className="text-lg w-full cursor-pointer"
 							>
 								<ProfileCard image={friend.picture} name={friend.name} />
-							</a>
+							</button>
 						))}
 					</div>
 				</>
