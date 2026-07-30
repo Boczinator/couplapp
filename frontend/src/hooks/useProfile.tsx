@@ -10,6 +10,7 @@ import { useNavigate } from '@tanstack/react-router'
 import type { Profile } from '../api/types'
 import { queryClient } from '../api/queryClient'
 import { useAuthUser } from './useAuthUser'
+import { useToast } from '../components/toast/ToastContext'
 
 export const useProfileOverview = () => {
 	const { data, isLoading } = useQuery({
@@ -112,12 +113,18 @@ export const useCreateProfile = () => {
 export const useProfilePicture = () => {
 	const queryClient = useQueryClient()
 	const { user } = useAuthUser()
+	const { addToast } = useToast()
 
 	const { mutate, isPending, isSuccess } = useMutation({
 		mutationFn: (file) => updateProfilePicture(file),
 		onSuccess: () => {
 			queryClient.invalidateQueries({
 				queryKey: ['profile', user?.activeProfileId],
+			})
+
+			addToast({
+				type: 'success',
+				message: 'Profile Picture updated successfully',
 			})
 		},
 	})

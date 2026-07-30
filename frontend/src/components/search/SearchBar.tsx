@@ -3,6 +3,7 @@ import { FormikProvider, useFormik } from 'formik'
 import { useDebounce } from '../../hooks/useDebounce'
 import { useSearchProfiles } from '../../hooks/useSearchProfiles'
 import { TextField } from '../input/TextField'
+import { ProfileCard } from '../card/ProfileCard'
 
 export const SearchBar = () => {
 	const navigate = useNavigate()
@@ -55,7 +56,7 @@ export const SearchBar = () => {
 										})
 									}}
 								>
-									{profile.name}
+									<ProfileCard name={profile.name} image={profile.picture} />
 								</button>
 							))}
 					</div>

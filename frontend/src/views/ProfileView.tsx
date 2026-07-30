@@ -10,6 +10,7 @@ import { useAuthUser } from '../hooks/useAuthUser'
 import UserLogo from '../assets/icons/avatar.svg'
 import { useState } from 'react'
 import { DataImageTransferModal } from '../components/modal/DataImageTransferModal'
+import { ProfileCard } from '../components/card/ProfileCard'
 
 export const ProfileView = () => {
 	const { profileId } = useParams({
@@ -52,7 +53,7 @@ export const ProfileView = () => {
 							{profile?.isOwner && (
 								<button
 									onClick={openModal}
-									className="before:z-[-1] z-10 before:border-2 before:border-[#FF6D56] border-2 border-[#FF6D56] hidden group-hover:block text-sm bg-white shadow-xl cursor-pointer absolute before:size-4 before:rotate-45 before:left-1/2 before:-translate-x-1/2 p-2 before:top-0 before:-translate-1/2 before:absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-full before:bg-white"
+									className="absolute bottom-2 left-1/2 translate-y-full -translate-x-1/2 z-0 hidden group-hover:block p-2 bg-white text-sm border-2 border-[#FF6D56] shadow-xl cursor-pointer before:absolute before:top-0 before:left-1/2 before:-translate-y-1/2 before:-translate-x-1/2 before:-z-10 before:size-4 before:rotate-45 before:bg-white before:border-2 before:border-[#FF6D56]"
 								>
 									Bearbeiten
 								</button>
@@ -105,10 +106,9 @@ export const ProfileView = () => {
 							<Link
 								to="/profile/$profileId"
 								params={{ profileId: friend.id }}
-								className="cursor-pointer flex items-center gap-2"
+								className="cursor-pointer"
 							>
-								<img src={friend.picture || UserLogo} className="size-10"></img>
-								{friend.name}
+								<ProfileCard image={friend.picture} name={friend.name} />
 							</Link>
 						))}
 				</div>

@@ -1,11 +1,10 @@
 import { FormikProvider, useFormik } from 'formik'
 import { Modal } from './Modal'
-import { client } from '../../api/client'
 import { Button } from '../button/Button'
 import { useProfilePicture } from '../../hooks/useProfile'
 
 export const DataImageTransferModal = ({ isOpen, onClose }) => {
-	const { mutate, isSuccess } = useProfilePicture()
+	const { mutate } = useProfilePicture()
 
 	const formik = useFormik({
 		initialValues: {

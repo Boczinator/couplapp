@@ -10,12 +10,13 @@ export const ToastContainer = () => {
 				<div
 					key={toast.id}
 					className={clsx(
-						'text-sm font-bold px-5 py-4 rounded-xl w-full sm:w-100 relative',
+						'text-sm font-bold px-5 py-4 rounded-xl w-full sm:w-100 relative border-2 bg-white shadow-2xl',
 						toast.type === ToastTypes.Error &&
-							'bg-red-200 text-red-500 hover:bg-red-100',
+							'border-red-500 text-red-500 hover:bg-red-100',
 						toast.type === ToastTypes.Success &&
-							'border border-green-500 bg-green-100 text-green-500 hover:bg-green-100',
-						toast.type === ToastTypes.Info && 'bg-yellow-200 text-yellow-500',
+							'border border-green-500 text-green-500 hover:bg-green-100',
+						toast.type === ToastTypes.Info &&
+							'border-yellow-500 text-yellow-500',
 					)}
 				>
 					<p>{toast.message}</p>

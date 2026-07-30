@@ -5,13 +5,18 @@ import { Link } from '@tanstack/react-router'
 import { useCurrentProfile } from '../../hooks/useProfile'
 import { useAuthUser } from '../../hooks/useAuthUser'
 import { SearchBar } from '../search/SearchBar'
+import { useFriendRequests } from '../../hooks/useFriends'
+import { ProfileCard } from '../card/ProfileCard'
 //import { ReactComponent as SvgIcon } from '../../assets/icons/logout-svgrepo-com.svg?react'
 
 export const AuthenticatedHeader = () => {
 	const { logout } = useLogout()
-	const { user } = useAuthUser()
+	const {
+		user: { activeProfileId },
+	} = useAuthUser()
 
-	const { profile, isLoading } = useCurrentProfile(user?.activeProfileId)
+	const { friendRequests } = useFriendRequests(activeProfileId)
+	const { profile, isLoading } = useCurrentProfile(activeProfileId)
 
 	const handleLogoutClick = () => {
 		logout()
@@ -40,16 +45,29 @@ export const AuthenticatedHeader = () => {
 						My Feed
 					</HeaderLink>
 					<HeaderLink
+						className="flex justify-between w-full"
 						href="/profile/$profileId/friends"
 						params={{ profileId: profile?.id }}
 					>
 						My Friends
+						{friendRequests?.length > 0 && (
+							<span className="text-sm p-1 font-bold bg-[#7AE2CF] rounded-full inline-block h-fit min-w-6 leading-4 text-center items-center">
+								{
+									friendRequests.filter(
+										(friendRequest) =>
+											friendRequest.actionProfileId !== activeProfileId,
+									).length
+								}
+							</span>
+						)}
 					</HeaderLink>
 					<HeaderLink href="/profiles-selection">Profiles Overview</HeaderLink>
 				</nav>
 
 				<div className="flex justify-between py-5 border-t border-[#06202B] items-center">
-					<Link to="/profiles-selection">{profile?.name}</Link>
+					<Link to="/profiles-selection">
+						<ProfileCard name={profile?.name} image={profile.picture} />
+					</Link>
 					<button className="cursor-pointer" onClick={handleLogoutClick}>
 						{/* <SvgIcon /> */}
 						Logout

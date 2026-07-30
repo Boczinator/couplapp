@@ -1,6 +1,7 @@
 import { useNavigate } from '@tanstack/react-router'
 import { useAuthUser } from '../../hooks/useAuthUser'
 import { useFriendsList } from '../../hooks/useFriends'
+import { ProfileCard } from '../card/ProfileCard'
 
 export const FriendsList = () => {
 	const {
@@ -40,7 +41,7 @@ export const FriendsList = () => {
 								key={friend.id}
 								className="text-lg mb-2 w-full"
 							>
-								{friend.name}
+								<ProfileCard image={friend.picture} name={friend.name} />
 							</a>
 						))}
 					</div>
