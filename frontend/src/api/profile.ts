@@ -60,3 +60,18 @@ export const createProfile = async (profile: Profile) => {
 		console.log(error)
 	}
 }
+
+export const updateProfilePicture = async (file) => {
+	try {
+		const formData = new FormData()
+		formData.append('file', file)
+
+		const result = await client.patch('profiles/avatar', {
+			body: formData,
+		})
+
+		return await result.json()
+	} catch (error) {
+		console.log(error)
+	}
+}

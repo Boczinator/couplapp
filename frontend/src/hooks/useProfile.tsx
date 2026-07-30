@@ -1,13 +1,15 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
 	getProfile,
 	getProfileOverview,
 	switchProfile,
 	createProfile as createNewProfile,
+	updateProfilePicture,
 } from '../api/profile'
 import { useNavigate } from '@tanstack/react-router'
 import type { Profile } from '../api/types'
 import { queryClient } from '../api/queryClient'
+import { useAuthUser } from './useAuthUser'
 
 export const useProfileOverview = () => {
 	const { data, isLoading } = useQuery({
@@ -102,6 +104,26 @@ export const useCreateProfile = () => {
 
 	return {
 		createProfile,
+		isPending,
+		isSuccess,
+	}
+}
+
+export const useProfilePicture = () => {
+	const queryClient = useQueryClient()
+	const { user } = useAuthUser()
+
+	const { mutate, isPending, isSuccess } = useMutation({
+		mutationFn: (file) => updateProfilePicture(file),
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: ['profile', user?.activeProfileId],
+			})
+		},
+	})
+
+	return {
+		mutate,
 		isPending,
 		isSuccess,
 	}

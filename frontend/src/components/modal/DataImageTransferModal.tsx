@@ -2,20 +2,18 @@ import { FormikProvider, useFormik } from 'formik'
 import { Modal } from './Modal'
 import { client } from '../../api/client'
 import { Button } from '../button/Button'
+import { useProfilePicture } from '../../hooks/useProfile'
 
 export const DataImageTransferModal = ({ isOpen, onClose }) => {
+	const { mutate, isSuccess } = useProfilePicture()
+
 	const formik = useFormik({
 		initialValues: {
 			avatar: null,
 		},
 		onSubmit: async ({ avatar }) => {
 			try {
-				const formData = new FormData()
-				formData.append('file', avatar)
-
-				await client.patch('profiles/avatar', {
-					body: formData,
-				})
+				mutate(avatar)
 
 				onClose()
 			} catch (error) {

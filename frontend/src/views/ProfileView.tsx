@@ -49,12 +49,14 @@ export const ProfileView = () => {
 									src={profile?.picture ?? UserLogo}
 								></img>
 							</div>
-							<button
-								onClick={openModal}
-								className="before:z-[-1] z-10 before:border-2 before:border-[#FF6D56] border-2 border-[#FF6D56] hidden group-hover:block text-sm bg-white shadow-xl cursor-pointer absolute before:size-4 before:rotate-45 before:left-1/2 before:-translate-x-1/2 p-2 before:top-0 before:-translate-1/2 before:absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-full before:bg-white"
-							>
-								Bearbeiten
-							</button>
+							{profile?.isOwner && (
+								<button
+									onClick={openModal}
+									className="before:z-[-1] z-10 before:border-2 before:border-[#FF6D56] border-2 border-[#FF6D56] hidden group-hover:block text-sm bg-white shadow-xl cursor-pointer absolute before:size-4 before:rotate-45 before:left-1/2 before:-translate-x-1/2 p-2 before:top-0 before:-translate-1/2 before:absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-full before:bg-white"
+								>
+									Bearbeiten
+								</button>
+							)}
 						</div>
 					</div>
 					<div className="flex flex-wrap">

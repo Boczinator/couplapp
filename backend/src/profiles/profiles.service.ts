@@ -74,7 +74,7 @@ export class ProfilesService {
 			throw new NotFoundException(`User profile with given Id ${id} not found`)
 		}
 
-		const isOwner = userProfile.userId === currentUserId
+		const isOwner = userProfile.id === activeProfileId
 
 		const friendshipPromise = activeProfileId
 			? this.friendsService.getStatus(activeProfileId, userProfile.id)
