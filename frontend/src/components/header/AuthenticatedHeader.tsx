@@ -33,20 +33,20 @@ export const AuthenticatedHeader = () => {
 				<SearchBar />
 				<nav className="flex flex-1 flex-col py-5">
 					<HeaderLink
-						href="/profile/$profileId"
+						to="/profile/$profileId"
 						params={{ profileId: profile?.id }}
 					>
 						Home
 					</HeaderLink>
 					<HeaderLink
-						href="/profile/$profileId/feed"
+						to="/profile/$profileId/feed"
 						params={{ profileId: profile?.id }}
 					>
 						My Feed
 					</HeaderLink>
 					<HeaderLink
 						className="flex justify-between w-full"
-						href="/profile/$profileId/friends"
+						to="/profile/$profileId/friends"
 						params={{ profileId: profile?.id }}
 					>
 						My Friends
@@ -61,7 +61,7 @@ export const AuthenticatedHeader = () => {
 							</span>
 						)}
 					</HeaderLink>
-					<HeaderLink href="/profiles-selection">Profiles Overview</HeaderLink>
+					<HeaderLink to="/profile/$profileId/messages">Messages</HeaderLink>
 				</nav>
 
 				<div className="flex justify-between py-5 border-t border-[#06202B] items-center">
