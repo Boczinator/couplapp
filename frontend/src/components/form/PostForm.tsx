@@ -3,7 +3,7 @@ import { useCreatePost } from '../../hooks/usePosts'
 import { Button } from '../button/Button'
 import { TextAreaField } from '../input/TextAreaField'
 
-export const PostForm = () => {
+export const PostForm = ({ className }) => {
 	const { mutate: createPost } = useCreatePost()
 
 	const formik = useFormik({
@@ -20,11 +20,13 @@ export const PostForm = () => {
 	})
 
 	return (
-		<FormikProvider value={formik}>
-			<form onSubmit={formik.handleSubmit}>
-				<TextAreaField name="text" label="Schreibe etwas..." />
-				<Button type="submit">Posten</Button>
-			</form>
-		</FormikProvider>
+		<div className={className}>
+			<FormikProvider value={formik}>
+				<form onSubmit={formik.handleSubmit}>
+					<TextAreaField name="text" label="Schreibe etwas..." />
+					<Button type="submit">Posten</Button>
+				</form>
+			</FormikProvider>
+		</div>
 	)
 }

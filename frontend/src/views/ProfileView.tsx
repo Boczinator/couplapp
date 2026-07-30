@@ -64,7 +64,7 @@ export const ProfileView = () => {
 									)}
 								</div>
 								<div className="text-2xl h-fit font-bold  text-[#ff6d56]">
-									{profile.name}
+									{profile.name} {profile.id === activeProfileId && '(me)'}
 								</div>
 							</div>
 							<div className="w-auto pr-5 pb-5 flex items-end">
@@ -101,7 +101,7 @@ export const ProfileView = () => {
 
 					<div className="flex flex-wrap"></div>
 
-					<PostForm />
+					<PostForm className="mb-5" />
 					<ProfilePosts profileId={profileId} />
 				</div>
 				<div className="w-1/4 px-2.5 gap-3 flex-col flex">
