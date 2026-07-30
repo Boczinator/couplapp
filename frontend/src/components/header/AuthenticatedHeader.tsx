@@ -54,8 +54,7 @@ export const AuthenticatedHeader = () => {
 							<span className="text-sm p-1 font-bold bg-[#7AE2CF] rounded-full inline-block h-fit min-w-6 leading-4 text-center items-center">
 								{
 									friendRequests.filter(
-										(friendRequest) =>
-											friendRequest.actionProfileId !== activeProfileId,
+										(friendRequest) => friendRequest.direction === 'INCOMING',
 									).length
 								}
 							</span>
