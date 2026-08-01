@@ -108,6 +108,13 @@ export const posts = pgTable('posts', {
 	createdAt: timestamp('created_at').defaultNow().notNull(),
 })
 
+export const postsRelations = relations(posts, ({ one }) => ({
+	author: one(profiles, {
+		fields: [posts.profileId],
+		references: [profiles.id],
+	}),
+}))
+
 export type User = typeof users.$inferSelect
 export type Profile = typeof profiles.$inferSelect
 export type Friendships = typeof friendships.$inferSelect

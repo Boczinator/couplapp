@@ -26,6 +26,9 @@ export class PostsService {
 		const posts = await this.db.query.posts.findMany({
 			where: eq(schema.posts.profileId, profileId),
 			orderBy: desc(schema.posts.createdAt),
+			with: {
+				author: true,
+			},
 		})
 
 		return {

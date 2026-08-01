@@ -13,6 +13,8 @@ export const PostForm = ({ className }) => {
 		onSubmit: async ({ text }) => {
 			try {
 				createPost({ text })
+
+				formik.setFieldValue('text', '')
 			} catch (error) {
 				console.log(error)
 			}

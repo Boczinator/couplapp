@@ -113,7 +113,7 @@ export const ProfileView = () => {
 								params={{ profileId: friend.id }}
 								className="cursor-pointer"
 							>
-								<ProfileCard image={friend.picture} name={friend.name} />
+								<ProfileCard image={friend?.picture} name={friend?.name} />
 							</Link>
 						))}
 				</div>

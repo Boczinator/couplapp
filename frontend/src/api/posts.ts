@@ -4,6 +4,23 @@ export type PostPayload = {
 	text: string
 }
 
+export type PostResponse = {
+	isOwner: boolean
+	posts: Post[]
+}
+
+export type Post = {
+	id: string
+	author: {
+		id: string
+		name: string
+		picture: string
+	}
+	text: string
+	createdAt: Date
+	updatedAt: Date
+}
+
 export const createPost = async (post: PostPayload) => {
 	try {
 		const result = await client.post('posts/create', {
@@ -16,13 +33,16 @@ export const createPost = async (post: PostPayload) => {
 	}
 }
 
-export const getPostsByProfileId = async (profileId: string) => {
+export const getPostsByProfileId = async (
+	profileId: string,
+): Promise<PostResponse> => {
 	try {
 		const posts = await client.get(`posts/${profileId}`)
 
 		return posts.json()
 	} catch (error) {
 		console.error(error)
+		throw error
 	}
 }
 

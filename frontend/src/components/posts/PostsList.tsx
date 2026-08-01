@@ -1,15 +1,26 @@
+import type { Post as PostType } from '../../api/posts'
 import { Post } from './Post'
 
-export const PostsList = ({ posts }) => {
+type PostListProps = {
+	posts: PostType[]
+	isOwner: boolean
+}
+
+export const PostsList = ({ posts, isOwner }: PostListProps) => {
 	return (
-		<div>
+		<div className="flex flex-col gap-8">
 			{posts &&
-				posts?.posts.length > 0 &&
-				posts.posts?.map((post) => (
+				posts?.length > 0 &&
+				posts?.map((post) => (
 					<Post
+						key={post.id}
+						id={post.id}
 						text={post.text}
-						userName={post?.author?.name}
-						userPicture={post?.author?.picture}
+						authorName={post?.author?.name}
+						authorPicture={post?.author?.picture}
+						createdAt={post?.createdAt}
+						updatedAt={post?.updatedAt}
+						isOwner={isOwner}
 					/>
 				))}
 		</div>

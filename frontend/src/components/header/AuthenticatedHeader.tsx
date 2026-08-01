@@ -65,7 +65,7 @@ export const AuthenticatedHeader = () => {
 
 				<div className="flex justify-between py-5 border-t border-[#06202B] items-center">
 					<Link to="/profiles-selection">
-						<ProfileCard name={profile?.name} image={profile.picture} />
+						<ProfileCard name={profile?.name} image={profile?.picture} />
 					</Link>
 					<button className="cursor-pointer" onClick={handleLogoutClick}>
 						{/* <SvgIcon /> */}
