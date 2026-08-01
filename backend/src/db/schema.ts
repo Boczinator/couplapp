@@ -103,6 +103,9 @@ export const posts = pgTable('posts', {
 	profileId: uuid('profile_id').references(() => profiles.id, {
 		onDelete: 'cascade',
 	}),
+	receiverId: uuid('receiver_id').references(() => profiles.id, {
+		onDelete: 'set null',
+	}),
 	text: text('text').notNull(),
 	updatedAt: timestamp('updated_at'),
 	createdAt: timestamp('created_at').defaultNow().notNull(),
@@ -111,6 +114,10 @@ export const posts = pgTable('posts', {
 export const postsRelations = relations(posts, ({ one }) => ({
 	author: one(profiles, {
 		fields: [posts.profileId],
+		references: [profiles.id],
+	}),
+	receiver: one(profiles, {
+		fields: [posts.receiverId],
 		references: [profiles.id],
 	}),
 }))

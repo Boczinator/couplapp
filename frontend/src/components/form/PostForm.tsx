@@ -3,7 +3,9 @@ import { useCreatePost } from '../../hooks/usePosts'
 import { Button } from '../button/Button'
 import { TextAreaField } from '../input/TextAreaField'
 
-export const PostForm = ({ className }) => {
+type PostForm = { receiverId: string } & React.ComponentPropsWithoutRef<'div'>
+
+export const PostForm = ({ receiverId, className }: PostForm) => {
 	const { mutate: createPost } = useCreatePost()
 
 	const formik = useFormik({
@@ -12,7 +14,7 @@ export const PostForm = ({ className }) => {
 		},
 		onSubmit: async ({ text }) => {
 			try {
-				createPost({ text })
+				createPost({ post: { text }, receiverId })
 
 				formik.setFieldValue('text', '')
 			} catch (error) {

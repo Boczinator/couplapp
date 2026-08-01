@@ -12,20 +12,6 @@ export const FriendsList = () => {
 
 	const { friends, isPending } = useFriendsList(activeProfileId)
 
-	const navigateToFriendPorfile = (
-		event: MouseEvent<HTMLAnchorElement, MouseEvent>,
-		profileId: string,
-	) => {
-		event.preventDefault()
-
-		navigate({
-			to: '/profile/$profileId',
-			params: {
-				profileId,
-			},
-		})
-	}
-
 	if (isPending) return <div>Loading friends...</div>
 
 	return (
@@ -36,13 +22,12 @@ export const FriendsList = () => {
 
 					<div className="flex flex-wrap flex-col gap-5">
 						{friends.map((friend) => (
-							<button
-								onClick={(e) => navigateToFriendPorfile(e, friend.id)}
-								key={friend.id}
-								className="text-lg w-full cursor-pointer"
-							>
-								<ProfileCard image={friend.picture} name={friend.name} />
-							</button>
+							<ProfileCard
+								image={friend.picture}
+								name={friend.name}
+								to="/profile/$profileId"
+								params={{ profileId: friend.id }}
+							/>
 						))}
 					</div>
 				</>

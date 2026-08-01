@@ -4,30 +4,38 @@ import { formatDate } from '../../helpers/date'
 import { Button } from '../button/Button'
 import { useState } from 'react'
 import { useRemovePost } from '../../hooks/usePosts'
+import type { Author, Receiver } from '../../api/posts'
+import { useAuthUser } from '../../hooks/useAuthUser'
+import { useParams } from '@tanstack/react-router'
 
 type PostProps = {
 	id: string
 	text: string
 	createdAt: Date
 	updatedAt: Date
-	authorName: string
-	authorPicture: string
-	isOwner: boolean
+	author: Author
+	receiver: Receiver
 } & React.ComponentPropsWithoutRef<'div'>
 
 export const Post = ({
 	id,
 	text,
-	authorName,
-	authorPicture,
+	author,
+	receiver,
 	updatedAt,
 	createdAt,
-	isOwner,
 	className,
 }: PostProps) => {
 	const [isOptionsOpen, setIsOptionsOpen] = useState(false)
+	const {
+		user: { activeProfileId },
+	} = useAuthUser()
 
-	const { mutate: removePost } = useRemovePost()
+	const params = useParams({
+		from: '/_authenticated/profile/$profileId',
+	})
+
+	const { mutate: removePost } = useRemovePost(params.profileId)
 
 	const toggleOptions = () => {
 		setIsOptionsOpen(!isOptionsOpen)
@@ -36,14 +44,32 @@ export const Post = ({
 	return (
 		<div className={twMerge('bg-[#D1F5F0] px-5 py-5', className)}>
 			<div className="flex items-center justify-between mb-2.5">
-				<ProfileCard name={authorName} image={authorPicture} />
+				<div className="flex gap-5 items-center">
+					<ProfileCard
+						name={author?.name}
+						image={author?.picture}
+						to="/profile/$profileId"
+						params={{ profileId: author.id }}
+					/>
+					{receiver.id !== author.id && (
+						<>
+							<div className="text-lg">posted to</div>
+							<ProfileCard
+								name={receiver?.name}
+								image={receiver?.picture}
+								to="/profile/$profileId"
+								params={{ profileId: receiver.id }}
+							/>
+						</>
+					)}
+				</div>
 				<div>
 					{formatDate(new Date(createdAt))}{' '}
 					{updatedAt && <span>`(edited at ${formatDate(updatedAt)})`</span>}
 				</div>
 			</div>
 			<div className="rounded-xl px-2.5 py-2.5 bg-white">{text}</div>
-			{isOwner && (
+			{author.id === activeProfileId && (
 				<div className="relative flex flex-wrap justify-end">
 					<div
 						className="text-4xl text-black text-right cursor-pointer inline-block"

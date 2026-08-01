@@ -5,8 +5,19 @@ export type PostPayload = {
 }
 
 export type PostResponse = {
-	isOwner: boolean
 	posts: Post[]
+}
+
+export type Author = {
+	id: string
+	name: string
+	picture: string
+}
+
+export type Receiver = {
+	id: string
+	name: string
+	picture: string
 }
 
 export type Post = {
@@ -16,15 +27,21 @@ export type Post = {
 		name: string
 		picture: string
 	}
+	receiver: {
+		id: string
+		name: string
+		picture: string
+	}
 	text: string
 	createdAt: Date
 	updatedAt: Date
 }
 
-export const createPost = async (post: PostPayload) => {
+export const createPost = async (post: PostPayload, receiverId: string) => {
+	console.log({ post, receiverId })
 	try {
 		const result = await client.post('posts/create', {
-			json: post,
+			json: { ...post, receiverId },
 		})
 
 		return await result.json()

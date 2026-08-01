@@ -28,7 +28,7 @@ export const ProfileSelectionView = () => {
 				</div>
 			))}
 
-			<div className="w-full flex justify-center">
+			<div className="w-full flex justify-center mb-30">
 				<button
 					className="cursor-pointer text-[#06202B] font-medium text-xl transition-colors px-5 py-3 hover:bg-[#FF624C] hover:text-white rounded-2xl"
 					onClick={() =>

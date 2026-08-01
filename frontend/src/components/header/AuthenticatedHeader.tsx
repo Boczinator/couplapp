@@ -64,9 +64,11 @@ export const AuthenticatedHeader = () => {
 				</nav>
 
 				<div className="flex justify-between py-5 border-t border-[#06202B] items-center">
-					<Link to="/profiles-selection">
-						<ProfileCard name={profile?.name} image={profile?.picture} />
-					</Link>
+					<ProfileCard
+						name={profile?.name}
+						image={profile?.picture}
+						to="/profiles-selection"
+					/>
 					<button className="cursor-pointer" onClick={handleLogoutClick}>
 						{/* <SvgIcon /> */}
 						Logout

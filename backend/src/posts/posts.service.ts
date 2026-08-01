@@ -6,7 +6,7 @@ import {
 import { NodePgDatabase } from 'drizzle-orm/node-postgres'
 import { DRIZZLE_PROVIDER } from 'src/database/database.provider'
 import * as schema from '../db/schema'
-import { and, asc, desc, eq } from 'drizzle-orm'
+import { and, asc, desc, eq, or } from 'drizzle-orm'
 import { CreatePostDto } from './dto/create-post.dto'
 
 @Injectable()
@@ -24,10 +24,14 @@ export class PostsService {
 		activeProfileId: string
 	}) {
 		const posts = await this.db.query.posts.findMany({
-			where: eq(schema.posts.profileId, profileId),
+			where: or(
+				eq(schema.posts.profileId, profileId),
+				eq(schema.posts.receiverId, profileId),
+			),
 			orderBy: desc(schema.posts.createdAt),
 			with: {
 				author: true,
+				receiver: true,
 			},
 		})
 
@@ -48,6 +52,7 @@ export class PostsService {
 			.insert(schema.posts)
 			.values({
 				text: post.text,
+				receiverId: post.receiverId,
 				profileId,
 			})
 			.returning()

@@ -6,5 +6,5 @@ export const ProfilePosts = ({ profileId }: { profileId: string }) => {
 
 	if (isPending) return <div>Fetching profile posts...</div>
 
-	return <PostsList posts={data.posts} isOwner={data.isOwner} />
+	return <PostsList posts={data.posts} />
 }

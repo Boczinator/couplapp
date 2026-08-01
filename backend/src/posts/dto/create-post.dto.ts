@@ -4,4 +4,8 @@ export class CreatePostDto {
 	@IsNotEmpty()
 	@IsString()
 	text!: string
+
+	@IsNotEmpty()
+	@IsString()
+	receiverId!: string
 }

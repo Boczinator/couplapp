@@ -22,16 +22,26 @@ export const useCreatePost = () => {
 	const queryClient = useQueryClient()
 
 	return useMutation({
-		mutationFn: (post: PostPayload) => createPost(post),
-		onSuccess: () => {
+		mutationFn: ({
+			post,
+			receiverId,
+		}: {
+			post: PostPayload
+			receiverId: string
+		}) => createPost(post, receiverId),
+		onSuccess: (_, { receiverId }) => {
 			queryClient.invalidateQueries({
 				queryKey: ['profiles', 'posts', activeProfileId],
+			})
+
+			queryClient.invalidateQueries({
+				queryKey: ['profiles', 'posts', receiverId],
 			})
 		},
 	})
 }
 
-export const useRemovePost = () => {
+export const useRemovePost = (currentProfile: string) => {
 	const {
 		user: { activeProfileId },
 	} = useAuthUser()
@@ -44,6 +54,12 @@ export const useRemovePost = () => {
 			queryClient.invalidateQueries({
 				queryKey: ['profiles', 'posts', activeProfileId],
 			})
+
+			if (currentProfile !== activeProfileId) {
+				queryClient.invalidateQueries({
+					queryKey: ['profiles', 'posts', currentProfile],
+				})
+			}
 
 			addToast({
 				type: 'success',

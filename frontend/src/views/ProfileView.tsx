@@ -101,20 +101,19 @@ export const ProfileView = () => {
 
 					<div className="flex flex-wrap"></div>
 
-					<PostForm className="mb-5" />
+					<PostForm className="mb-5" receiverId={profile?.id} />
 					<ProfilePosts profileId={profileId} />
 				</div>
 				<div className="w-1/4 px-2.5 gap-3 flex-col flex">
 					<h3 className="font-bold text-lg">{`${profile.name}´s friends`}</h3>
 					{profile?.friends &&
 						profile.friends.map((friend) => (
-							<Link
+							<ProfileCard
+								image={friend?.picture}
+								name={friend?.name}
 								to="/profile/$profileId"
 								params={{ profileId: friend.id }}
-								className="cursor-pointer"
-							>
-								<ProfileCard image={friend?.picture} name={friend?.name} />
-							</Link>
+							/>
 						))}
 				</div>
 			</div>

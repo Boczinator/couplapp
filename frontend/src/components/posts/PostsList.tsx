@@ -3,10 +3,9 @@ import { Post } from './Post'
 
 type PostListProps = {
 	posts: PostType[]
-	isOwner: boolean
 }
 
-export const PostsList = ({ posts, isOwner }: PostListProps) => {
+export const PostsList = ({ posts }: PostListProps) => {
 	return (
 		<div className="flex flex-col gap-8">
 			{posts &&
@@ -16,11 +15,10 @@ export const PostsList = ({ posts, isOwner }: PostListProps) => {
 						key={post.id}
 						id={post.id}
 						text={post.text}
-						authorName={post?.author?.name}
-						authorPicture={post?.author?.picture}
+						author={post?.author}
+						receiver={post?.receiver}
 						createdAt={post?.createdAt}
 						updatedAt={post?.updatedAt}
-						isOwner={isOwner}
 					/>
 				))}
 		</div>
