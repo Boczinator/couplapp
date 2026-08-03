@@ -3,10 +3,10 @@ import { ProfileCard } from '../card/ProfileCard'
 import { formatDate } from '../../helpers/date'
 import { Button } from '../button/Button'
 import { useState } from 'react'
-import { useRemovePost } from '../../hooks/usePosts'
 import type { Author, Receiver } from '../../api/posts'
 import { useAuthUser } from '../../hooks/useAuthUser'
 import { useParams } from '@tanstack/react-router'
+import { PostEditDropdown } from './PostEditDropdown'
 
 type PostProps = {
 	id: string
@@ -31,11 +31,9 @@ export const Post = ({
 		user: { activeProfileId },
 	} = useAuthUser()
 
-	const params = useParams({
+	const { profileId } = useParams({
 		from: '/_authenticated/profile/$profileId',
 	})
-
-	const { mutate: removePost } = useRemovePost(params.profileId)
 
 	const toggleOptions = () => {
 		setIsOptionsOpen(!isOptionsOpen)
@@ -78,18 +76,12 @@ export const Post = ({
 						...
 					</div>
 
-					{isOptionsOpen && (
-						<div className="absolute bottom-0 translate-y-full bg-white p-2.5 flex flex-col gap-2.5 shadow-mauve-500 shadow-md right-0">
-							<Button className="px-5">Edit</Button>
-							<Button
-								className="px-5 bg-red-300"
-								variant="red"
-								onClick={() => removePost(id)}
-							>
-								Remove
-							</Button>
-						</div>
-					)}
+					<PostEditDropdown
+						isOpen={isOptionsOpen}
+						id={id}
+						profileId={profileId}
+						onClose={() => setIsOptionsOpen(false)}
+					/>
 				</div>
 			)}
 		</div>
