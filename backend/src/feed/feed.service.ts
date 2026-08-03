@@ -3,7 +3,7 @@ import { NodePgDatabase } from 'drizzle-orm/node-postgres'
 import * as schema from '../db/schema'
 import { DRIZZLE_PROVIDER } from 'src/database/database.provider'
 import { FriendsService } from 'src/friends/friends.service'
-import { asc, eq } from 'drizzle-orm'
+import { desc, eq } from 'drizzle-orm'
 
 @Injectable()
 export class FeedService {
@@ -27,7 +27,7 @@ export class FeedService {
 	async getFeed(currentProfileId: string) {
 		const feed = await this.db.query.feedActivities.findMany({
 			where: () => eq(schema.feedActivities.profileId, currentProfileId),
-			orderBy: asc(schema.feedActivities.createdAt),
+			orderBy: desc(schema.feedActivities.createdAt),
 			with: {
 				post: {
 					with: {

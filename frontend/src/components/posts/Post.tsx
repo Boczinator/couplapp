@@ -41,6 +41,12 @@ export const Post = ({
 		setIsOptionsOpen(!isOptionsOpen)
 	}
 
+	const { date: createdAtDate, time: createdAtTime } = formatDate(
+		new Date(createdAt),
+	)
+
+	const { date: updatedAtDate } = formatDate(new Date(updatedAt))
+
 	return (
 		<div className={twMerge('bg-[#D1F5F0] px-5 py-5', className)}>
 			<div className="flex items-center justify-between mb-2.5">
@@ -64,11 +70,9 @@ export const Post = ({
 					)}
 				</div>
 				<div>
-					{formatDate(new Date(createdAt))}{' '}
+					{createdAtDate} {createdAtTime}
 					{updatedAt && (
-						<span className="text-sm">
-							(edited at {formatDate(new Date(updatedAt))})
-						</span>
+						<span className="text-sm">(edited at {updatedAtDate})</span>
 					)}
 				</div>
 			</div>

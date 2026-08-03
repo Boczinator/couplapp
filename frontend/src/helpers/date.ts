@@ -1,3 +1,6 @@
 export const formatDate = (date: Date) => {
-	return date.toLocaleDateString('en-GB')
+	return {
+		date: date.toLocaleDateString('en-GB'),
+		time: date.toLocaleTimeString('en-GB'),
+	}
 }
