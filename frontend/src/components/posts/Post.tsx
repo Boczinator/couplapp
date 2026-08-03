@@ -49,7 +49,7 @@ export const Post = ({
 						name={author?.name}
 						image={author?.picture}
 						to="/profile/$profileId"
-						params={{ profileId: author.id }}
+						params={{ profileId: author?.id }}
 					/>
 					{receiver.id !== author.id && (
 						<>
@@ -58,7 +58,7 @@ export const Post = ({
 								name={receiver?.name}
 								image={receiver?.picture}
 								to="/profile/$profileId"
-								params={{ profileId: receiver.id }}
+								params={{ profileId: receiver?.id }}
 							/>
 						</>
 					)}

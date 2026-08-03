@@ -15,6 +15,7 @@ import { AccountsModule } from './accounts/accounts.module'
 import { FilesModule } from './files/files.module'
 import { CloudStorageModule } from './cloud-storage/cloud-storage.module';
 import { PostsModule } from './posts/posts.module';
+import { FeedModule } from './feed/feed.module';
 
 @Module({
 	imports: [
@@ -48,6 +49,7 @@ import { PostsModule } from './posts/posts.module';
 		FilesModule,
 		CloudStorageModule,
 		PostsModule,
+		FeedModule,
 	],
 	controllers: [AppController],
 	providers: [AppService],

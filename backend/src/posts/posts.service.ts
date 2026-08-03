@@ -8,15 +8,17 @@ import {
 import { NodePgDatabase } from 'drizzle-orm/node-postgres'
 import { DRIZZLE_PROVIDER } from 'src/database/database.provider'
 import * as schema from '../db/schema'
-import { and, asc, desc, eq, or } from 'drizzle-orm'
+import { and, desc, eq, or } from 'drizzle-orm'
 import { CreatePostDto } from './dto/create-post.dto'
 import { UpdatePostDto } from './dto/update-post.dto'
+import { FeedService } from 'src/feed/feed.service'
 
 @Injectable()
 export class PostsService {
 	constructor(
 		@Inject(DRIZZLE_PROVIDER)
 		private readonly db: NodePgDatabase<typeof schema>,
+		private readonly feedService: FeedService,
 	) {}
 
 	async getPostsByProfile({
@@ -63,6 +65,11 @@ export class PostsService {
 		if (!createdPost) {
 			throw new InternalServerErrorException('Posts couldn´t be created')
 		}
+
+		await this.feedService.fanOutPost({
+			authorId: profileId,
+			postId: createdPost.id,
+		})
 
 		return createdPost
 	}
@@ -112,8 +119,6 @@ export class PostsService {
 		if (oldPost.profileId !== profileId) {
 			throw new ForbiddenException('Access forbidden on given post')
 		}
-
-		console.log('update', post)
 
 		const updatedPost = await this.db
 			.update(schema.posts)

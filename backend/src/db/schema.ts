@@ -122,6 +122,22 @@ export const postsRelations = relations(posts, ({ one }) => ({
 	}),
 }))
 
+export const feedActivities = pgTable('feed_activities', {
+	id: uuid('id').unique().defaultRandom(),
+	profileId: uuid('profile_id').references(() => profiles.id, {
+		onDelete: 'cascade',
+	}),
+	postId: uuid('post_id').references(() => posts.id, { onDelete: 'cascade' }),
+	createdAt: timestamp('created_at').defaultNow().notNull(),
+})
+
+export const feedActivitiesRelations = relations(feedActivities, ({ one }) => ({
+	post: one(posts, {
+		fields: [feedActivities.postId],
+		references: [posts.id],
+	}),
+}))
+
 export type User = typeof users.$inferSelect
 export type Profile = typeof profiles.$inferSelect
 export type Friendships = typeof friendships.$inferSelect
