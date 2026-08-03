@@ -3,6 +3,7 @@ import {
 	createPost,
 	getPostsByProfileId,
 	removePost,
+	updatePost,
 	type PostPayload,
 } from '../api/posts'
 import { useAuthUser } from './useAuthUser'
@@ -64,6 +65,35 @@ export const useRemovePost = (currentProfile: string) => {
 			addToast({
 				type: 'success',
 				message: 'Post successfully removed',
+			})
+		},
+	})
+}
+
+export const useEditPost = (currentProfileId: string) => {
+	const {
+		user: { activeProfileId },
+	} = useAuthUser()
+	const queryClient = useQueryClient()
+	const { addToast } = useToast()
+
+	return useMutation({
+		mutationFn: ({ id, post }: { id: string; post: PostPayload }) =>
+			updatePost(id, post),
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: ['profiles', 'posts', activeProfileId],
+			})
+
+			if (currentProfileId !== activeProfileId) {
+				queryClient.invalidateQueries({
+					queryKey: ['profiles', 'posts', currentProfileId],
+				})
+			}
+
+			addToast({
+				type: 'success',
+				message: 'Post successfully updated',
 			})
 		},
 	})

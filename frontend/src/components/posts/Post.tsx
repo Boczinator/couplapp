@@ -1,12 +1,12 @@
 import { twMerge } from 'tailwind-merge'
 import { ProfileCard } from '../card/ProfileCard'
 import { formatDate } from '../../helpers/date'
-import { Button } from '../button/Button'
 import { useState } from 'react'
 import type { Author, Receiver } from '../../api/posts'
 import { useAuthUser } from '../../hooks/useAuthUser'
 import { useParams } from '@tanstack/react-router'
 import { PostEditDropdown } from './PostEditDropdown'
+import { EditPostForm } from '../form/EditPostForm'
 
 type PostProps = {
 	id: string
@@ -27,6 +27,8 @@ export const Post = ({
 	className,
 }: PostProps) => {
 	const [isOptionsOpen, setIsOptionsOpen] = useState(false)
+	const [isEditFormOpen, setIsEditFormOpen] = useState(false)
+
 	const {
 		user: { activeProfileId },
 	} = useAuthUser()
@@ -63,10 +65,27 @@ export const Post = ({
 				</div>
 				<div>
 					{formatDate(new Date(createdAt))}{' '}
-					{updatedAt && <span>`(edited at ${formatDate(updatedAt)})`</span>}
+					{updatedAt && (
+						<span className="text-sm">
+							(edited at {formatDate(new Date(updatedAt))})
+						</span>
+					)}
 				</div>
 			</div>
-			<div className="rounded-xl px-2.5 py-2.5 bg-white">{text}</div>
+			{!isEditFormOpen && (
+				<div className="rounded-xl px-2.5 py-2.5 bg-white">{text}</div>
+			)}
+
+			{isEditFormOpen && (
+				<EditPostForm
+					onSuccess={() => setIsEditFormOpen(false)}
+					onAbort={() => setIsEditFormOpen(false)}
+					postId={id}
+					currentProfileId={profileId}
+					initialPostText={text}
+				/>
+			)}
+
 			{author.id === activeProfileId && (
 				<div className="relative flex flex-wrap justify-end">
 					<div
@@ -81,6 +100,7 @@ export const Post = ({
 						id={id}
 						profileId={profileId}
 						onClose={() => setIsOptionsOpen(false)}
+						onEditClick={() => setIsEditFormOpen(true)}
 					/>
 				</div>
 			)}

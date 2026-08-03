@@ -8,6 +8,7 @@ type PostEditDropdown = {
 	profileId: string
 	isOpen: boolean
 	onClose: () => void
+	onEditClick: () => void
 }
 
 export const PostEditDropdown = ({
@@ -15,6 +16,7 @@ export const PostEditDropdown = ({
 	profileId,
 	isOpen,
 	onClose,
+	onEditClick,
 }: PostEditDropdown) => {
 	const { mutate: removePost } = useRemovePost(profileId)
 
@@ -30,7 +32,9 @@ export const PostEditDropdown = ({
 				ref={elementRef}
 				className="absolute bottom-0 translate-y-full bg-white p-2.5 flex flex-col gap-2.5 shadow-mauve-500 shadow-md right-0"
 			>
-				<Button className="px-5">Edit</Button>
+				<Button className="px-5" onClick={onEditClick}>
+					Edit
+				</Button>
 				<Button
 					className="px-5 bg-red-300"
 					variant="red"

@@ -1,13 +1,16 @@
 import {
+	ForbiddenException,
 	Inject,
 	Injectable,
 	InternalServerErrorException,
+	NotFoundException,
 } from '@nestjs/common'
 import { NodePgDatabase } from 'drizzle-orm/node-postgres'
 import { DRIZZLE_PROVIDER } from 'src/database/database.provider'
 import * as schema from '../db/schema'
 import { and, asc, desc, eq, or } from 'drizzle-orm'
 import { CreatePostDto } from './dto/create-post.dto'
+import { UpdatePostDto } from './dto/update-post.dto'
 
 @Injectable()
 export class PostsService {
@@ -87,5 +90,44 @@ export class PostsService {
 		return {
 			success: true,
 		}
+	}
+
+	async updatePost({
+		postId,
+		post,
+		profileId,
+	}: {
+		postId: string
+		post: UpdatePostDto
+		profileId: string
+	}) {
+		const oldPost = await this.db.query.posts.findFirst({
+			where: eq(schema.posts.id, postId),
+		})
+
+		if (!oldPost) {
+			throw new NotFoundException(`Post with given id not found`)
+		}
+
+		if (oldPost.profileId !== profileId) {
+			throw new ForbiddenException('Access forbidden on given post')
+		}
+
+		console.log('update', post)
+
+		const updatedPost = await this.db
+			.update(schema.posts)
+			.set({
+				...post,
+				updatedAt: new Date(),
+			})
+			.where(eq(schema.posts.id, postId))
+			.returning()
+
+		if (!updatedPost) {
+			throw new InternalServerErrorException(`Failed to update post ${postId}`)
+		}
+
+		return updatedPost
 	}
 }

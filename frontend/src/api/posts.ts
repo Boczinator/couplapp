@@ -72,3 +72,15 @@ export const removePost = async (postId: string) => {
 		console.error(error)
 	}
 }
+
+export const updatePost = async (postId: string, post: PostPayload) => {
+	try {
+		const result = await client.patch(`posts/${postId}`, {
+			json: post,
+		})
+
+		return result.json()
+	} catch (error) {
+		console.log(error)
+	}
+}

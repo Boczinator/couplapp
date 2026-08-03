@@ -16,7 +16,7 @@ export const PostForm = ({ receiverId, className }: PostForm) => {
 			try {
 				createPost({ post: { text }, receiverId })
 
-				formik.setFieldValue('text', '')
+				formik.resetForm()
 			} catch (error) {
 				console.log(error)
 			}

@@ -4,6 +4,7 @@ import {
 	Delete,
 	Get,
 	Param,
+	Patch,
 	Post,
 	Req,
 	UseGuards,
@@ -12,6 +13,7 @@ import { PostsService } from './posts.service'
 import { CreatePostDto } from './dto/create-post.dto'
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth-guard'
 import { RemovePostDto } from './dto/remove-post.dto'
+import { UpdatePostDto } from './dto/update-post.dto'
 
 @UseGuards(JwtAuthGuard)
 @Controller('posts')
@@ -45,6 +47,19 @@ export class PostsController {
 		return await this.postsService.removePost({
 			profileId: req.user.activeProfileId,
 			postId: params.id,
+		})
+	}
+
+	@Patch(':id')
+	async update(
+		@Req() req: any,
+		@Param('id') id: string,
+		@Body() updatePostDto: UpdatePostDto,
+	) {
+		return await this.postsService.updatePost({
+			postId: id,
+			post: updatePostDto,
+			profileId: req.user.activeProfileId
 		})
 	}
 }
