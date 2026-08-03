@@ -6,7 +6,6 @@ export const FeedView = () => {
 
 	if (isPending && !feedData) return <div>Fetching feed data...</div>
 
-	console.log(feedData)
 	return (
 		<div>
 			<h2 className="text-2xl font-bold mb-5">Your Feed</h2>

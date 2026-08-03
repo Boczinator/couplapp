@@ -6,7 +6,6 @@ type PostListProps = {
 }
 
 export const PostsList = ({ posts }: PostListProps) => {
-	console.log(posts)
 	return (
 		<div className="flex flex-col gap-8">
 			{posts &&

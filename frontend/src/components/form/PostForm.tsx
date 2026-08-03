@@ -27,8 +27,12 @@ export const PostForm = ({ receiverId, className }: PostForm) => {
 		<div className={className}>
 			<FormikProvider value={formik}>
 				<form onSubmit={formik.handleSubmit}>
-					<TextAreaField name="text" label="Schreibe etwas..." />
-					<Button type="submit">Posten</Button>
+					<div className="w-1/2 mb-2.5">
+						<TextAreaField name="text" label="Schreibe etwas..." />
+					</div>
+					<div className="w-1/2">
+						<Button type="submit">Posten</Button>
+					</div>
 				</form>
 			</FormikProvider>
 		</div>

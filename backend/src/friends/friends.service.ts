@@ -69,7 +69,6 @@ export class FriendsService {
 			)
 			.returning()
 
-		console.log(updatedRelation)
 		return updatedRelation
 	}
 

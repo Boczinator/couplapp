@@ -49,8 +49,6 @@ export class FriendsController {
 
 	@Patch('accept/:requesterId')
 	async accept(@Req() req: any, @Param() params: { requesterId: string }) {
-		console.log(req.user, params)
-
 		return await this.friendsService.acceptRequest(
 			req.user.activeProfileId,
 			params.requesterId,

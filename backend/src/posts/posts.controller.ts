@@ -35,7 +35,6 @@ export class PostsController {
 
 	@Post('create')
 	async create(@Req() req: any, @Body() createPostDto: CreatePostDto) {
-		console.log(createPostDto)
 		return await this.postsService.createPost({
 			profileId: req.user.activeProfileId,
 			post: createPostDto,
@@ -59,7 +58,7 @@ export class PostsController {
 		return await this.postsService.updatePost({
 			postId: id,
 			post: updatePostDto,
-			profileId: req.user.activeProfileId
+			profileId: req.user.activeProfileId,
 		})
 	}
 }

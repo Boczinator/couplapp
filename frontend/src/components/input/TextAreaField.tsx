@@ -21,7 +21,7 @@ export const TextAreaField = ({
 	}
 
 	return (
-		<div className={twMerge('mb-6 relative w-full', className)}>
+		<div className={twMerge('relative w-full', className)}>
 			<label
 				className={twMerge(
 					'mr-2 top-1/2 left-0 absolute -translate-y-1/2 px-1 transform transition-transform scale-100 hidden',
