@@ -107,7 +107,7 @@ export class AuthService {
 			throw new UnauthorizedException('Access Denied')
 		}
 
-		const refreshTokenMatches = compare(refreshToken, user.refreshToken)
+		const refreshTokenMatches = await compare(refreshToken, user.refreshToken)
 
 		if (!refreshTokenMatches) throw new UnauthorizedException('Access Denied')
 
