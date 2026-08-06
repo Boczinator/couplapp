@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as PublicRouteImport } from './routes/_public'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as PublicVerifyMailSentRouteImport } from './routes/_public/verify-mail-sent'
 import { Route as PublicVerifyMailRouteImport } from './routes/_public/verify-mail'
 import { Route as PublicRegisterRouteImport } from './routes/_public/register'
@@ -29,6 +30,11 @@ const PublicRoute = PublicRouteImport.update({
 } as any)
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
   id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PublicVerifyMailSentRoute = PublicVerifyMailSentRouteImport.update({
@@ -93,7 +99,7 @@ const AuthenticatedProfileProfileIdFeedRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof AuthenticatedGatewayRouteWithChildren
+  '/': typeof IndexRoute
   '/login': typeof PublicLoginRoute
   '/register': typeof PublicRegisterRoute
   '/verify-mail': typeof PublicVerifyMailRoute
@@ -106,7 +112,7 @@ export interface FileRoutesByFullPath {
   '/profile/$profileId/': typeof AuthenticatedProfileProfileIdIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof AuthenticatedGatewayRouteWithChildren
+  '/': typeof IndexRoute
   '/login': typeof PublicLoginRoute
   '/register': typeof PublicRegisterRoute
   '/verify-mail': typeof PublicVerifyMailRoute
@@ -119,6 +125,7 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/_public': typeof PublicRouteWithChildren
   '/_authenticated/_gateway': typeof AuthenticatedGatewayRouteWithChildren
@@ -161,6 +168,7 @@ export interface FileRouteTypes {
     | '/profile/$profileId'
   id:
     | '__root__'
+    | '/'
     | '/_authenticated'
     | '/_public'
     | '/_authenticated/_gateway'
@@ -177,6 +185,7 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   PublicRoute: typeof PublicRouteWithChildren
 }
@@ -195,6 +204,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_public/verify-mail-sent': {
@@ -346,6 +362,7 @@ const PublicRouteWithChildren =
   PublicRoute._addFileChildren(PublicRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   PublicRoute: PublicRouteWithChildren,
 }
