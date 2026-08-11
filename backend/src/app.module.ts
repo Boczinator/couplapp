@@ -16,6 +16,7 @@ import { FilesModule } from './files/files.module'
 import { CloudStorageModule } from './cloud-storage/cloud-storage.module';
 import { PostsModule } from './posts/posts.module';
 import { FeedModule } from './feed/feed.module';
+import { RedisModule } from './redis/redis.module';
 
 @Module({
 	imports: [
@@ -50,6 +51,7 @@ import { FeedModule } from './feed/feed.module';
 		CloudStorageModule,
 		PostsModule,
 		FeedModule,
+		RedisModule,
 	],
 	controllers: [AppController],
 	providers: [AppService],
