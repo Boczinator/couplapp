@@ -17,7 +17,9 @@ import { CloudStorageModule } from './cloud-storage/cloud-storage.module'
 import { PostsModule } from './posts/posts.module'
 import { FeedModule } from './feed/feed.module'
 import { MessagesModule } from './messages/messages.module'
-import { RedisModule } from './redis/redis.module'
+//import { RedisModule } from './redis/redis.module'
+import { ConversationsService } from './conversations/conversations.service';
+import { ConversationsModule } from './conversations/conversations.module';
 
 @Module({
 	imports: [
@@ -53,9 +55,10 @@ import { RedisModule } from './redis/redis.module'
 		PostsModule,
 		FeedModule,
 		MessagesModule,
-		RedisModule,
+		ConversationsModule,
+		//RedisModule,
 	],
 	controllers: [AppController],
-	providers: [AppService],
+	providers: [AppService, ConversationsService],
 })
 export class AppModule {}

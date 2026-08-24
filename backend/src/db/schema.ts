@@ -138,6 +138,67 @@ export const feedActivitiesRelations = relations(feedActivities, ({ one }) => ({
 	}),
 }))
 
+export const messages = pgTable('messages', {
+	id: uuid().defaultRandom().notNull(),
+	senderId: uuid('sender_id')
+		.notNull()
+		.references(() => profiles.id, { onDelete: 'cascade' }),
+	conversationId: uuid('conversation_id').references(() => conversations.id, {
+		onDelete: 'cascade',
+	}),
+	content: text('content'),
+	createdAt: timestamp('created_at').defaultNow().notNull(),
+})
+
+export const conversations = pgTable('conversations', {
+	id: uuid('id').defaultRandom().notNull(),
+	title: text('title'),
+	isGroupChat: boolean('is_group_chat').default(false).notNull(),
+	createdAt: timestamp('created_at').defaultNow(),
+	updatedAt: timestamp('created_at').defaultNow(),
+})
+
+export const participants = pgTable(
+	'participants',
+	{
+		conversationId: uuid('conversation_id').references(() => conversations.id, {
+			onDelete: 'cascade',
+		}),
+		profileId: uuid('profile_id').references(() => profiles.id, {
+			onDelete: 'cascade',
+		}),
+		joinedAt: timestamp().defaultNow(),
+	},
+	(table) => [primaryKey({ columns: [table.conversationId, table.profileId] })],
+)
+
+export const conversationsRelations = relations(conversations, ({ many }) => ({
+	participants: many(participants),
+	messages: many(messages),
+}))
+
+export const participantsRelations = relations(participants, ({ one }) => ({
+	conversation: one(conversations, {
+		fields: [participants.conversationId],
+		references: [conversations.id],
+	}),
+	profile: one(profiles, {
+		fields: [participants.profileId],
+		references: [profiles.id],
+	}),
+}))
+
+export const messagesRelations = relations(messages, ({ one }) => ({
+	conversation: one(conversations, {
+		fields: [messages.conversationId],
+		references: [conversations.id],
+	}),
+	sender: one(profiles, {
+		fields: [messages.senderId],
+		references: [profiles.id],
+	}),
+}))
+
 export type User = typeof users.$inferSelect
 export type Profile = typeof profiles.$inferSelect
 export type Friendships = typeof friendships.$inferSelect

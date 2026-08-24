@@ -1,4 +1,4 @@
-import { Global, Module } from '@nestjs/common'
+/* import { Global, Module } from '@nestjs/common'
 import { RedisService } from './redis.service'
 import Redis from 'ioredis'
 
@@ -20,3 +20,4 @@ export const REDIS_PROVIDER = 'REDIS_PROVIDER'
 	],
 })
 export class RedisModule {}
+ */

@@ -21,6 +21,7 @@ import { Route as AuthenticatedProfileProfileIdRouteImport } from './routes/_aut
 import { Route as AuthenticatedGatewayProfilesSelectionRouteImport } from './routes/_authenticated/_gateway/profiles-selection'
 import { Route as AuthenticatedGatewayCreateProfileRouteImport } from './routes/_authenticated/_gateway/create-profile'
 import { Route as AuthenticatedProfileProfileIdIndexRouteImport } from './routes/_authenticated/profile.$profileId/index'
+import { Route as AuthenticatedProfileProfileIdMessagesRouteImport } from './routes/_authenticated/profile.$profileId/messages'
 import { Route as AuthenticatedProfileProfileIdFriendsRouteImport } from './routes/_authenticated/profile.$profileId/friends'
 import { Route as AuthenticatedProfileProfileIdFeedRouteImport } from './routes/_authenticated/profile.$profileId/feed'
 
@@ -85,6 +86,12 @@ const AuthenticatedProfileProfileIdIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedProfileProfileIdRoute,
   } as any)
+const AuthenticatedProfileProfileIdMessagesRoute =
+  AuthenticatedProfileProfileIdMessagesRouteImport.update({
+    id: '/messages',
+    path: '/messages',
+    getParentRoute: () => AuthenticatedProfileProfileIdRoute,
+  } as any)
 const AuthenticatedProfileProfileIdFriendsRoute =
   AuthenticatedProfileProfileIdFriendsRouteImport.update({
     id: '/friends',
@@ -109,6 +116,7 @@ export interface FileRoutesByFullPath {
   '/profile/$profileId': typeof AuthenticatedProfileProfileIdRouteWithChildren
   '/profile/$profileId/feed': typeof AuthenticatedProfileProfileIdFeedRoute
   '/profile/$profileId/friends': typeof AuthenticatedProfileProfileIdFriendsRoute
+  '/profile/$profileId/messages': typeof AuthenticatedProfileProfileIdMessagesRoute
   '/profile/$profileId/': typeof AuthenticatedProfileProfileIdIndexRoute
 }
 export interface FileRoutesByTo {
@@ -121,6 +129,7 @@ export interface FileRoutesByTo {
   '/profiles-selection': typeof AuthenticatedGatewayProfilesSelectionRoute
   '/profile/$profileId/feed': typeof AuthenticatedProfileProfileIdFeedRoute
   '/profile/$profileId/friends': typeof AuthenticatedProfileProfileIdFriendsRoute
+  '/profile/$profileId/messages': typeof AuthenticatedProfileProfileIdMessagesRoute
   '/profile/$profileId': typeof AuthenticatedProfileProfileIdIndexRoute
 }
 export interface FileRoutesById {
@@ -138,6 +147,7 @@ export interface FileRoutesById {
   '/_authenticated/profile/$profileId': typeof AuthenticatedProfileProfileIdRouteWithChildren
   '/_authenticated/profile/$profileId/feed': typeof AuthenticatedProfileProfileIdFeedRoute
   '/_authenticated/profile/$profileId/friends': typeof AuthenticatedProfileProfileIdFriendsRoute
+  '/_authenticated/profile/$profileId/messages': typeof AuthenticatedProfileProfileIdMessagesRoute
   '/_authenticated/profile/$profileId/': typeof AuthenticatedProfileProfileIdIndexRoute
 }
 export interface FileRouteTypes {
@@ -153,6 +163,7 @@ export interface FileRouteTypes {
     | '/profile/$profileId'
     | '/profile/$profileId/feed'
     | '/profile/$profileId/friends'
+    | '/profile/$profileId/messages'
     | '/profile/$profileId/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -165,6 +176,7 @@ export interface FileRouteTypes {
     | '/profiles-selection'
     | '/profile/$profileId/feed'
     | '/profile/$profileId/friends'
+    | '/profile/$profileId/messages'
     | '/profile/$profileId'
   id:
     | '__root__'
@@ -181,6 +193,7 @@ export interface FileRouteTypes {
     | '/_authenticated/profile/$profileId'
     | '/_authenticated/profile/$profileId/feed'
     | '/_authenticated/profile/$profileId/friends'
+    | '/_authenticated/profile/$profileId/messages'
     | '/_authenticated/profile/$profileId/'
   fileRoutesById: FileRoutesById
 }
@@ -276,6 +289,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProfileProfileIdIndexRouteImport
       parentRoute: typeof AuthenticatedProfileProfileIdRoute
     }
+    '/_authenticated/profile/$profileId/messages': {
+      id: '/_authenticated/profile/$profileId/messages'
+      path: '/messages'
+      fullPath: '/profile/$profileId/messages'
+      preLoaderRoute: typeof AuthenticatedProfileProfileIdMessagesRouteImport
+      parentRoute: typeof AuthenticatedProfileProfileIdRoute
+    }
     '/_authenticated/profile/$profileId/friends': {
       id: '/_authenticated/profile/$profileId/friends'
       path: '/friends'
@@ -311,6 +331,7 @@ const AuthenticatedGatewayRouteWithChildren =
 interface AuthenticatedProfileProfileIdRouteChildren {
   AuthenticatedProfileProfileIdFeedRoute: typeof AuthenticatedProfileProfileIdFeedRoute
   AuthenticatedProfileProfileIdFriendsRoute: typeof AuthenticatedProfileProfileIdFriendsRoute
+  AuthenticatedProfileProfileIdMessagesRoute: typeof AuthenticatedProfileProfileIdMessagesRoute
   AuthenticatedProfileProfileIdIndexRoute: typeof AuthenticatedProfileProfileIdIndexRoute
 }
 
@@ -320,6 +341,8 @@ const AuthenticatedProfileProfileIdRouteChildren: AuthenticatedProfileProfileIdR
       AuthenticatedProfileProfileIdFeedRoute,
     AuthenticatedProfileProfileIdFriendsRoute:
       AuthenticatedProfileProfileIdFriendsRoute,
+    AuthenticatedProfileProfileIdMessagesRoute:
+      AuthenticatedProfileProfileIdMessagesRoute,
     AuthenticatedProfileProfileIdIndexRoute:
       AuthenticatedProfileProfileIdIndexRoute,
   }
