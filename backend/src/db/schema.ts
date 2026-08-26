@@ -151,11 +151,11 @@ export const messages = pgTable('messages', {
 })
 
 export const conversations = pgTable('conversations', {
-	id: uuid('id').defaultRandom().notNull(),
+	id: uuid('id').primaryKey().defaultRandom().notNull(),
 	title: text('title'),
 	isGroupChat: boolean('is_group_chat').default(false).notNull(),
 	createdAt: timestamp('created_at').defaultNow(),
-	updatedAt: timestamp('created_at').defaultNow(),
+	updatedAt: timestamp('updated_at').defaultNow(),
 })
 
 export const participants = pgTable(

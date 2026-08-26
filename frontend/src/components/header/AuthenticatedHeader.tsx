@@ -60,7 +60,7 @@ export const AuthenticatedHeader = () => {
 							</span>
 						)}
 					</HeaderLink>
-					<HeaderLink to="/profile/$profileId/messages">Messages</HeaderLink>
+					<HeaderLink to="/profile/$profileId/inbox">Messages</HeaderLink>
 				</nav>
 
 				<div className="flex justify-between py-5 border-t border-[#06202B] items-center">

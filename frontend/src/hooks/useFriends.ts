@@ -6,7 +6,6 @@ import {
 	removeRelation,
 	sendFriendInvite,
 } from '../api/friends'
-import { useAuthUser } from './useAuthUser'
 
 export const useInviteFriends = () => {
 	const queryClient = useQueryClient()

@@ -6,7 +6,7 @@ import {
 import { DRIZZLE_PROVIDER } from 'src/database/database.provider'
 import * as schema from '../db/schema'
 import { NodePgDatabase } from 'drizzle-orm/node-postgres'
-import { desc, eq } from 'drizzle-orm'
+import { and, desc, eq } from 'drizzle-orm'
 
 @Injectable()
 export class ConversationsService {
@@ -27,7 +27,7 @@ export class ConversationsService {
 
 		if (conversationIds.length === 0) return []
 
-		this.db.query.conversations.findMany({
+		return await this.db.query.conversations.findMany({
 			where: (table, { inArray }) => inArray(table.id, conversationIds),
 			orderBy: [desc(schema.conversations.updatedAt)],
 			with: {
@@ -35,41 +35,106 @@ export class ConversationsService {
 					orderBy: [desc(schema.messages.createdAt)],
 					limit: 1,
 				},
+				participants: {
+					with: {
+						profile: true,
+					},
+				},
 			},
+		})
+	}
+
+	async getConversationMessages(conversationId: string) {
+		return await this.db.query.messages.findMany({
+			where: eq(schema.messages.conversationId, conversationId),
+			orderBy: desc(schema.messages.createdAt),
 		})
 	}
 
 	async createMessage({
 		senderId,
+		receiverId,
 		conversationId,
 		content,
 	}: {
 		senderId: string
-		conversationId: string
+		receiverId: string
+		conversationId?: string
 		content: string
 	}) {
 		return await this.db.transaction(async (tx) => {
-			const createdMessage = await tx
+			let activeConversationId = conversationId
+
+			// 1. If no conversationId passed, check if a 1-on-1 conversation already exists between these users
+			if (!activeConversationId) {
+				const existingConversation = await tx
+					.select({ conversationId: schema.participants.conversationId })
+					.from(schema.participants)
+					.where(
+						and(
+							eq(
+								schema.participants.conversationId,
+								tx
+									.select({
+										conversationId: schema.participants.conversationId,
+									})
+									.from(schema.participants)
+									.where(eq(schema.participants.profileId, senderId)),
+							),
+							eq(schema.participants.profileId, receiverId),
+						),
+					)
+					.limit(1)
+
+				activeConversationId =
+					existingConversation[0]?.conversationId ?? undefined
+			}
+
+			// 2. If still no conversationId found, create a new conversation and add participants
+			if (!activeConversationId) {
+				const [newConversation] = await tx
+					.insert(schema.conversations)
+					.values({
+						title: null,
+						isGroupChat: false,
+					})
+					.returning({ id: schema.conversations.id })
+
+				if (!newConversation?.id) {
+					throw new InternalServerErrorException(
+						'Failed to create conversation',
+					)
+				}
+
+				activeConversationId = newConversation.id
+
+				await tx.insert(schema.participants).values([
+					{ conversationId: activeConversationId, profileId: senderId },
+					{ conversationId: activeConversationId, profileId: receiverId },
+				])
+			}
+
+			// 3. Create the message attached to the resolved conversation ID
+			const [createdMessage] = await tx
 				.insert(schema.messages)
 				.values({
 					senderId,
-					conversationId,
+					conversationId: activeConversationId,
 					content,
 				})
 				.returning()
 
 			if (!createdMessage) {
-				throw new InternalServerErrorException()
+				throw new InternalServerErrorException('Failed to create message')
 			}
 
+			// 4. Touch updated_at on the conversation record
 			await tx
 				.update(schema.conversations)
 				.set({ updatedAt: new Date() })
-				.where(eq(schema.conversations.id, conversationId))
+				.where(eq(schema.conversations.id, activeConversationId))
 
-			return {
-				...createdMessage,
-			}
+			return createdMessage
 		})
 	}
 }
