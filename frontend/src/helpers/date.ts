@@ -1,6 +1,9 @@
 export const formatDate = (date: Date) => {
 	return {
 		date: date.toLocaleDateString('en-GB'),
-		time: date.toLocaleTimeString('en-GB'),
+		time: date.toLocaleTimeString('en-GB', {
+			hour: '2-digit',
+			minute: '2-digit',
+		}),
 	}
 }

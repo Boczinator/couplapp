@@ -123,7 +123,7 @@ export const postsRelations = relations(posts, ({ one }) => ({
 }))
 
 export const feedActivities = pgTable('feed_activities', {
-	id: uuid('id').unique().defaultRandom(),
+	id: uuid('id').primaryKey().unique().defaultRandom(),
 	profileId: uuid('profile_id').references(() => profiles.id, {
 		onDelete: 'cascade',
 	}),
@@ -139,7 +139,7 @@ export const feedActivitiesRelations = relations(feedActivities, ({ one }) => ({
 }))
 
 export const messages = pgTable('messages', {
-	id: uuid().defaultRandom().notNull(),
+	id: uuid().primaryKey().defaultRandom().notNull(),
 	senderId: uuid('sender_id')
 		.notNull()
 		.references(() => profiles.id, { onDelete: 'cascade' }),
@@ -147,6 +147,7 @@ export const messages = pgTable('messages', {
 		onDelete: 'cascade',
 	}),
 	content: text('content'),
+	isRead: boolean('is_read').default(false),
 	createdAt: timestamp('created_at').defaultNow().notNull(),
 })
 
@@ -161,12 +162,16 @@ export const conversations = pgTable('conversations', {
 export const participants = pgTable(
 	'participants',
 	{
-		conversationId: uuid('conversation_id').references(() => conversations.id, {
-			onDelete: 'cascade',
-		}),
-		profileId: uuid('profile_id').references(() => profiles.id, {
-			onDelete: 'cascade',
-		}),
+		conversationId: uuid('conversation_id')
+			.notNull()
+			.references(() => conversations.id, {
+				onDelete: 'cascade',
+			}),
+		profileId: uuid('profile_id')
+			.notNull()
+			.references(() => profiles.id, {
+				onDelete: 'cascade',
+			}),
 		joinedAt: timestamp().defaultNow(),
 	},
 	(table) => [primaryKey({ columns: [table.conversationId, table.profileId] })],

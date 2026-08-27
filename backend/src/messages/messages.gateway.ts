@@ -11,6 +11,8 @@ import { ConversationsService } from 'src/conversations/conversations.service'
 
 @WebSocketGateway({
 	cors: {
+		origin: 'http://localhost:5173',
+		autoConnect: false,
 		credentials: true,
 	},
 })
@@ -21,10 +23,17 @@ export class MessagesGateway {
 	constructor(private readonly conversationsService: ConversationsService) {}
 
 	handleConnection(client: Socket) {
+		console.log(client)
+		// ACHTUNG: Stelle sicher, dass das Frontend die ID genau hier mitschickt!
 		const profileId = client.handshake.query.activeProfileId
 
 		if (profileId) {
+			console.log(
+				`[Socket] Profil ${profileId} hat Raum betreten: profile:${profileId}`,
+			)
 			client.join(`profile:${profileId}`)
+		} else {
+			console.warn('[Socket] Verbindung ohne activeProfileId aufgebaut!')
 		}
 	}
 
@@ -39,7 +48,6 @@ export class MessagesGateway {
 			content: string
 		},
 	) {
-		console.log(payload)
 		const message = await this.conversationsService.createMessage({
 			senderId: payload.senderId,
 			receiverId: payload.receiverId,
@@ -52,6 +60,10 @@ export class MessagesGateway {
 
 		// Emit back to the sender (useful if using multiple tabs/devices)
 		this.server.to(`profile:${payload.senderId}`).emit('message', message)
+
+		console.log(
+			`[Socket] Event an profile:${payload.senderId} und profile:${payload.receiverId} gesendet.`,
+		)
 
 		return message
 	}

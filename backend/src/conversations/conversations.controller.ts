@@ -12,6 +12,13 @@ export class ConversationsController {
 		return this.conversationsService.getInbox(req.user.activeProfileId)
 	}
 
+	@Get(':conversationId/details')
+	async getConversationDetails(@Param() param: { conversationId: string }) {
+		return await this.conversationsService.getConversationDetails(
+			param.conversationId,
+		)
+	}
+
 	@Get(':conversationId/messages')
 	async getConversationMessages(@Param() param: { conversationId: string }) {
 		return await this.conversationsService.getConversationMessages(

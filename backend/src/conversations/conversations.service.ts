@@ -1,4 +1,5 @@
 import {
+	BadRequestException,
 	Inject,
 	Injectable,
 	InternalServerErrorException,
@@ -6,7 +7,7 @@ import {
 import { DRIZZLE_PROVIDER } from 'src/database/database.provider'
 import * as schema from '../db/schema'
 import { NodePgDatabase } from 'drizzle-orm/node-postgres'
-import { and, desc, eq } from 'drizzle-orm'
+import { and, asc, desc, eq } from 'drizzle-orm'
 
 @Injectable()
 export class ConversationsService {
@@ -44,10 +45,23 @@ export class ConversationsService {
 		})
 	}
 
+	async getConversationDetails(conversationId: string) {
+		return await this.db.query.conversations.findFirst({
+			where: eq(schema.conversations.id, conversationId),
+			with: {
+				participants: {
+					with: {
+						profile: true,
+					},
+				},
+			},
+		})
+	}
+
 	async getConversationMessages(conversationId: string) {
 		return await this.db.query.messages.findMany({
 			where: eq(schema.messages.conversationId, conversationId),
-			orderBy: desc(schema.messages.createdAt),
+			orderBy: asc(schema.messages.createdAt),
 		})
 	}
 
@@ -58,15 +72,20 @@ export class ConversationsService {
 		content,
 	}: {
 		senderId: string
-		receiverId: string
+		receiverId?: string
 		conversationId?: string
 		content: string
 	}) {
+		if (!conversationId && !receiverId) {
+			throw new BadRequestException(
+				'Either conversationId or receiverId must be provided',
+			)
+		}
 		return await this.db.transaction(async (tx) => {
 			let activeConversationId = conversationId
 
 			// 1. If no conversationId passed, check if a 1-on-1 conversation already exists between these users
-			if (!activeConversationId) {
+			if (!activeConversationId && receiverId) {
 				const existingConversation = await tx
 					.select({ conversationId: schema.participants.conversationId })
 					.from(schema.participants)
@@ -108,9 +127,19 @@ export class ConversationsService {
 
 				activeConversationId = newConversation.id
 
+				if (!senderId || !receiverId) {
+					throw new Error('Sender ID und Receiver ID müssen angegeben werden.')
+				}
+
 				await tx.insert(schema.participants).values([
-					{ conversationId: activeConversationId, profileId: senderId },
-					{ conversationId: activeConversationId, profileId: receiverId },
+					{
+						conversationId: activeConversationId, // Deine generierte Konversations-ID
+						profileId: senderId as string,
+					},
+					{
+						conversationId: activeConversationId,
+						profileId: receiverId as string,
+					},
 				])
 			}
 

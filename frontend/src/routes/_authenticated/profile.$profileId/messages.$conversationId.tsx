@@ -1,9 +1,17 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, useNavigate, useParams } from '@tanstack/react-router'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { socket } from '../../../socket/client'
 import { useAuthUser } from '../../../hooks/useAuthUser'
-import { useConversation } from '../../../hooks/useInbox'
+import {
+	useConversationDetails,
+	useConversationMessages,
+} from '../../../hooks/useInbox'
+import { twMerge } from 'tailwind-merge'
+import { formatDate } from '../../../helpers/date'
+import { TextAreaField } from '../../../components/input/TextAreaField'
+import { FormikProvider, useFormik } from 'formik'
+import { Button } from '../../../components/button/Button'
 
 export const Route = createFileRoute(
 	'/_authenticated/profile/$profileId/messages/$conversationId',
@@ -12,41 +20,47 @@ export const Route = createFileRoute(
 })
 
 function RouteComponent() {
-	const { conversationId: id, profileId: routeProfileId } = useParams({
+	const { conversationId: id } = useParams({
 		from: '/_authenticated/profile/$profileId/messages/$conversationId',
 	})
 
 	const isDraft = id?.startsWith('profile_')
-
-	// If draft, parse from route param. If active, resolve recipient from conversation data.
 	const draftRecipientId = isDraft ? id.replace('profile_', '') : null
 	const conversationId = !isDraft ? id : null
 
 	const navigate = useNavigate()
 	const queryClient = useQueryClient()
-	const [text, setText] = useState('')
+
+	// FIX 1: Lokalen [text, setText] gelöscht. Formik übernimmt das jetzt komplett!
+
 	const {
 		user: { activeProfileId },
 	} = useAuthUser()
 
-	const { data: messages } = useConversation(conversationId)
+	const { data: conversationDetails, isPending } =
+		useConversationDetails(conversationId)
 
-	// Fallback: Get recipient from draft route OR active conversation query data
+	const { data: messages } = useConversationMessages(conversationId)
+
+	const activeRecipientId =
+		draftRecipientId ||
+		conversationDetails?.participants?.find(
+			(p: any) => p.profileId !== activeProfileId,
+		)?.profileId
 
 	useEffect(() => {
-		function onMessageSent(payload: { message: any; conversationId: string }) {
-			const { message, conversationId: serverConvId } = payload
+		function handleIncomingMessage(message: any) {
+			const serverConvId = message.conversationId
+			console.log('Event im Client empfangen! ConvID:', serverConvId, message)
+			if (!serverConvId) return
 
-			// 1. Direct cache update for real-time UI updates
-			queryClient.setQueryData(
-				['conversation', serverConvId],
-				(old: any[] = []) => [...old, message],
-			)
+			// FIX 2: Absicherung, falls 'old' noch undefined ist (wichtig bei neuen Chats)
+			queryClient.setQueryData(['messages', serverConvId], (old: any) => {
+				return old ? [...old, message] : [message]
+			})
 
-			// 2. Invalidate inbox/conversations list query to refresh sidebar
 			queryClient.invalidateQueries({ queryKey: ['inbox'] })
 
-			// 3. Upgrade route smoothly from draft to active conversation
 			if (!conversationId) {
 				navigate({
 					to: '/profile/$profileId/messages/$conversationId',
@@ -59,45 +73,110 @@ function RouteComponent() {
 			}
 		}
 
-		socket.on('message', onMessageSent)
+		socket.on('message', handleIncomingMessage)
 
 		return () => {
-			socket.off('message', onMessageSent)
+			socket.off('message', handleIncomingMessage)
 		}
 	}, [conversationId, navigate, queryClient, activeProfileId])
 
-	const handleSend = () => {
-		if (!text.trim()) return
+	// FIX 3: Formik steuert nun das Absenden & den Zustand
+	const formik = useFormik({
+		initialValues: {
+			text: '',
+		},
+		onSubmit: (values, { resetForm }) => {
+			if (!values.text.trim()) return
 
-		// Emit socket payload with fallback receiverId
-		socket.emit('message', {
-			senderId: activeProfileId,
-			receiverId: draftRecipientId,
-			conversationId,
-			content: text,
-		})
+			console.log('Emitting message via Socket...', values.text)
 
-		setText('')
-	}
+			socket.emit('message', {
+				senderId: activeProfileId,
+				receiverId: activeRecipientId,
+				conversationId: conversationId || undefined, // undefined statt null mitschicken
+				content: values.text,
+			})
+
+			resetForm() // Leert das Feld nach erfolgreichem Senden
+		},
+	})
+
+	if (conversationId && isPending) return <div>Test</div>
 
 	return (
-		<div className="flex flex-col h-full">
-			<div className="flex-1 overflow-y-auto">
-				{messages?.map((msg: any) => (
-					<div key={msg.id}>{msg.content}</div>
-				))}
-				{!conversationId && messages?.length === 0 && (
-					<div className="text-gray-400">Send a message to start chatting!</div>
-				)}
+		<>
+			<div className="flex flex-col h-full">
+				<div className="text-2xl font-bold pb-2.5 border-b">
+					{`${
+						conversationDetails?.title ||
+						conversationDetails?.participants?.filter(
+							(p: any) => p.profileId === activeRecipientId,
+						)[0]?.profile?.name ||
+						'Chat'
+					}
+					& du`}
+				</div>
+				<div className="flex-1 overflow-y-auto px-10 py-2.5">
+					{messages?.map((msg: any) =>
+						msg.senderId === activeProfileId ? (
+							<div key={msg.id} className="w-full flex justify-end">
+								<div className="w-1/3 mb-2.5 flex justify-end flex-wrap">
+									<div
+										className={twMerge(
+											'bg-[#D1F5F0] w-full px-5 py-2.5 rounded-2xl relative after:absolute after:block after:bg-inherit after:right-0 after:bottom-0 after:size-5 shadow-sm',
+										)}
+									>
+										{msg.content}
+									</div>
+									<span className="text-sm">
+										{formatDate(new Date(msg.createdAt)).time}
+									</span>
+								</div>
+							</div>
+						) : (
+							<div key={msg.id} className="w-full flex justify-start">
+								<div className="w-1/3 mb-2.5 flex justify-start flex-wrap">
+									<div
+										className={twMerge(
+											'bg-[#FFE2DE] w-full px-5 py-2.5 rounded-2xl relative after:absolute after:block after:bg-inherit after:left-0 after:bottom-0 after:size-5 shadow-sm',
+										)}
+									>
+										{msg.content}
+									</div>
+									<span className="text-sm">
+										{formatDate(new Date(msg.createdAt)).time}
+									</span>
+								</div>
+							</div>
+						),
+					)}
+					{!conversationId && (!messages || messages.length === 0) && (
+						<div className="text-gray-400">
+							Send a message to start chatting!
+						</div>
+					)}
+				</div>
+				<FormikProvider value={formik}>
+					<form onSubmit={formik.handleSubmit}>
+						<div className="px-10 pt-5">
+							{/* FIX 4: Bindung an Formik-Values und onChange-Handler */}
+							<TextAreaField
+								name="text"
+								value={formik.values.text}
+								onChange={formik.handleChange}
+								onKeyDown={(e) => {
+									if (e.key === 'Enter' && !e.shiftKey) {
+										e.preventDefault() // Verhindert ungewollten Zeilenumbruch
+										formik.handleSubmit()
+									}
+								}}
+								label="Text"
+							/>
+							<Button type="submit">Send</Button>
+						</div>
+					</form>
+				</FormikProvider>
 			</div>
-			<div className="flex gap-2">
-				<input
-					value={text}
-					onChange={(e) => setText(e.target.value)}
-					onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-				/>
-				<button onClick={handleSend}>Send</button>
-			</div>
-		</div>
+		</>
 	)
 }

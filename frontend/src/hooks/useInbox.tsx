@@ -1,5 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
-import { getConversation, getInbox } from '../api/conversations'
+import {
+	getConversationDetails,
+	getConversationMessages,
+	getInbox,
+} from '../api/conversations'
 import { useAuthUser } from './useAuthUser'
 
 export const useInbox = () => {
@@ -13,10 +17,18 @@ export const useInbox = () => {
 	})
 }
 
-export const useConversation = (conversationId: string) => {
+export const useConversationMessages = (conversationId: string) => {
 	return useQuery({
-		queryKey: ['conversation', conversationId],
-		queryFn: () => getConversation(conversationId),
+		queryKey: ['messages', conversationId],
+		queryFn: () => getConversationMessages(conversationId),
+		enabled: !!conversationId,
+	})
+}
+
+export const useConversationDetails = (conversationId: string) => {
+	return useQuery({
+		queryKey: ['conversation-details', conversationId],
+		queryFn: () => getConversationDetails(conversationId),
 		enabled: !!conversationId,
 	})
 }
