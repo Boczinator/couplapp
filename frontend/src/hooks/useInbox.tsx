@@ -1,8 +1,9 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
 	getConversationDetails,
 	getConversationMessages,
 	getInbox,
+	markConversationAsRead,
 } from '../api/conversations'
 import { useAuthUser } from './useAuthUser'
 
@@ -30,5 +31,19 @@ export const useConversationDetails = (conversationId: string) => {
 		queryKey: ['conversation-details', conversationId],
 		queryFn: () => getConversationDetails(conversationId),
 		enabled: !!conversationId,
+	})
+}
+
+export const useMarkConversationAsRead = () => {
+	const queryClient = useQueryClient()
+
+	return useMutation({
+		mutationFn: (conversationId: string) =>
+			markConversationAsRead(conversationId),
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: ['inbox'],
+			})
+		},
 	})
 }

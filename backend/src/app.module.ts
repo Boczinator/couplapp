@@ -18,11 +18,13 @@ import { PostsModule } from './posts/posts.module'
 import { FeedModule } from './feed/feed.module'
 import { MessagesModule } from './messages/messages.module'
 //import { RedisModule } from './redis/redis.module'
-import { ConversationsService } from './conversations/conversations.service';
-import { ConversationsModule } from './conversations/conversations.module';
+import { ConversationsService } from './conversations/conversations.service'
+import { ConversationsModule } from './conversations/conversations.module'
+import { EventEmitterModule } from '@nestjs/event-emitter'
 
 @Module({
 	imports: [
+		EventEmitterModule.forRoot(),
 		ConfigModule.forRoot({ isGlobal: true }),
 		AuthModule,
 		DatabaseModule,

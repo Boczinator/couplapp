@@ -1,3 +1,4 @@
+import { OnEvent } from '@nestjs/event-emitter'
 import {
 	ConnectedSocket,
 	MessageBody,
@@ -23,7 +24,6 @@ export class MessagesGateway {
 	constructor(private readonly conversationsService: ConversationsService) {}
 
 	handleConnection(client: Socket) {
-		console.log(client)
 		// ACHTUNG: Stelle sicher, dass das Frontend die ID genau hier mitschickt!
 		const profileId = client.handshake.query.activeProfileId
 
@@ -55,10 +55,8 @@ export class MessagesGateway {
 			content: payload.content,
 		})
 
-		// Emit only to the recipient's private room
 		this.server.to(`profile:${payload.receiverId}`).emit('message', message)
 
-		// Emit back to the sender (useful if using multiple tabs/devices)
 		this.server.to(`profile:${payload.senderId}`).emit('message', message)
 
 		console.log(
@@ -66,5 +64,15 @@ export class MessagesGateway {
 		)
 
 		return message
+	}
+
+	@OnEvent('chat.conversation_read')
+	async handleConversationRead(payload: {
+		conversationId: string
+		profileId: string
+	}) {
+		this.server
+			.to(`conversationId:${payload.conversationId}`)
+			.emit('conversation_read', { payload })
 	}
 }

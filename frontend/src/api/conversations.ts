@@ -29,3 +29,13 @@ export const getConversationDetails = async (conversationId: string) => {
 		console.log(error)
 	}
 }
+
+export const markConversationAsRead = async (conversationId: string) => {
+	try {
+		const result = await client.patch(`conversations/${conversationId}/read`)
+
+		return await result.json()
+	} catch (error) {
+		console.log(error)
+	}
+}

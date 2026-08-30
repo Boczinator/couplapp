@@ -7,13 +7,16 @@ import {
 import { DRIZZLE_PROVIDER } from 'src/database/database.provider'
 import * as schema from '../db/schema'
 import { NodePgDatabase } from 'drizzle-orm/node-postgres'
-import { and, asc, desc, eq } from 'drizzle-orm'
+import { and, asc, desc, eq, isNull, ne } from 'drizzle-orm'
+import { EventEmitter2 } from '@nestjs/event-emitter'
 
 @Injectable()
 export class ConversationsService {
 	constructor(
 		@Inject(DRIZZLE_PROVIDER)
 		private readonly db: NodePgDatabase<typeof schema>,
+
+		private readonly eventEmitter: EventEmitter2,
 	) {}
 
 	async getInbox(profileId: string) {
@@ -165,5 +168,30 @@ export class ConversationsService {
 
 			return createdMessage
 		})
+	}
+
+	async markAsRead({
+		conversationId,
+		profileId,
+	}: {
+		conversationId: string
+		profileId: string
+	}) {
+		await this.db
+			.update(schema.messages)
+			.set({ readAt: new Date() })
+			.where(
+				and(
+					eq(schema.messages.conversationId, conversationId),
+					ne(schema.messages.senderId, profileId),
+					isNull(schema.messages.readAt),
+				),
+			)
+
+		const eventPayload = { conversationId, profileId, markedAt: new Date() }
+
+		this.eventEmitter.emit('chat.conversation_read', eventPayload)
+
+		return eventPayload
 	}
 }

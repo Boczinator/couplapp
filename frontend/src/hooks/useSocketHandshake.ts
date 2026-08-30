@@ -2,41 +2,52 @@ import { useEffect } from 'react'
 import { socket } from '../socket/client'
 import { useAuthUser } from './useAuthUser'
 import { useToast } from '../components/toast/ToastContext'
+import { useQueryClient } from '@tanstack/react-query'
+import { useParams } from '@tanstack/react-router'
 
 export const useSocketHandshake = () => {
 	const {
 		user: { activeProfileId },
 	} = useAuthUser()
 
+	const queryClient = useQueryClient()
+
 	const { addToast } = useToast()
+
+	const { conversationId } = useParams({ strict: false })
 
 	useEffect(() => {
 		if (activeProfileId) {
-			// Aktualisiere die Query-Parameter für den Handshake
 			socket.io.opts.query = { activeProfileId }
 
-			// Falls bereits verbunden, trennen und neu verbinden mit der richtigen ID
 			if (socket.connected) {
 				socket.disconnect()
 			}
 
 			socket.connect()
-			console.log(
-				'[Socket] Client verbindet sich mit Profil-ID:',
-				activeProfileId,
-			)
 
-			const triggerToastOnEvent = (message) => {
-				addToast({
-					type: 'info',
-					message: message.content,
-				})
-				console.log(message)
+			const handleIncomingMessage = (message) => {
+				if (
+					message.senderId !== activeProfileId &&
+					message.conversationId !== conversationId
+				) {
+					addToast({
+						type: 'info',
+						message: 'Du hast eine neue Nachricht!',
+					})
+
+					queryClient.invalidateQueries({
+						queryKey: ['inbox'],
+					})
+				}
 			}
 
-			socket.on('message', triggerToastOnEvent)
+			socket.on('message', handleIncomingMessage)
 
-			return () => socket.off('message', triggerToastOnEvent)
+			return () => {
+				socket.off('message', handleIncomingMessage)
+				socket.disconnect()
+			}
 		}
-	}, [activeProfileId])
+	}, [activeProfileId, queryClient, conversationId])
 }

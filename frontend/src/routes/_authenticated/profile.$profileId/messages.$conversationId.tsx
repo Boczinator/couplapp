@@ -6,6 +6,7 @@ import { useAuthUser } from '../../../hooks/useAuthUser'
 import {
 	useConversationDetails,
 	useConversationMessages,
+	useMarkConversationAsRead,
 } from '../../../hooks/useInbox'
 import { twMerge } from 'tailwind-merge'
 import { formatDate } from '../../../helpers/date'
@@ -31,8 +32,6 @@ function RouteComponent() {
 	const navigate = useNavigate()
 	const queryClient = useQueryClient()
 
-	// FIX 1: Lokalen [text, setText] gelöscht. Formik übernimmt das jetzt komplett!
-
 	const {
 		user: { activeProfileId },
 	} = useAuthUser()
@@ -41,6 +40,8 @@ function RouteComponent() {
 		useConversationDetails(conversationId)
 
 	const { data: messages } = useConversationMessages(conversationId)
+
+	const { mutate: markConversationAsRead } = useMarkConversationAsRead()
 
 	const activeRecipientId =
 		draftRecipientId ||
@@ -54,7 +55,6 @@ function RouteComponent() {
 			console.log('Event im Client empfangen! ConvID:', serverConvId, message)
 			if (!serverConvId) return
 
-			// FIX 2: Absicherung, falls 'old' noch undefined ist (wichtig bei neuen Chats)
 			queryClient.setQueryData(['messages', serverConvId], (old: any) => {
 				return old ? [...old, message] : [message]
 			})
@@ -75,10 +75,27 @@ function RouteComponent() {
 
 		socket.on('message', handleIncomingMessage)
 
+		if (conversationId && messages && messages?.length > 0) {
+			const lastMessage = messages[messages?.length - 1]
+			const isIncoming = lastMessage.senderId !== activeProfileId
+			const isUnread = !lastMessage.readAt
+
+			if (isIncoming && isUnread) {
+				markConversationAsRead(conversationId)
+			}
+		}
+
 		return () => {
 			socket.off('message', handleIncomingMessage)
 		}
-	}, [conversationId, navigate, queryClient, activeProfileId])
+	}, [
+		conversationId,
+		navigate,
+		queryClient,
+		activeProfileId,
+		messages,
+		markConversationAsRead,
+	])
 
 	// FIX 3: Formik steuert nun das Absenden & den Zustand
 	const formik = useFormik({

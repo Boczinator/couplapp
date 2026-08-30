@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common'
+import { Controller, Get, Param, Patch, Req, UseGuards } from '@nestjs/common'
 import { ConversationsService } from './conversations.service'
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth-guard'
 
@@ -24,5 +24,19 @@ export class ConversationsController {
 		return await this.conversationsService.getConversationMessages(
 			param.conversationId,
 		)
+	}
+
+	@Patch(':conversationId/read')
+	async readConversation(
+		@Param('conversationId') conversationId: string,
+		@Req() req: any,
+	) {
+		const profileId = req.user.activeProfileId
+
+		console.log(conversationId)
+		return await this.conversationsService.markAsRead({
+			conversationId,
+			profileId,
+		})
 	}
 }

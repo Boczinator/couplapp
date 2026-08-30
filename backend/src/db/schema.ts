@@ -148,6 +148,7 @@ export const messages = pgTable('messages', {
 	}),
 	content: text('content'),
 	isRead: boolean('is_read').default(false),
+	readAt: timestamp('read_at'),
 	createdAt: timestamp('created_at').defaultNow().notNull(),
 })
 
