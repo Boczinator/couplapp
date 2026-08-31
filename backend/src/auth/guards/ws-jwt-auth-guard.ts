@@ -1,64 +1,73 @@
-import { ExecutionContext, Injectable } from '@nestjs/common'
-import { AuthGuard } from '@nestjs/passport'
-import { WsException } from '@nestjs/websockets'
+// src/auth/guards/ws-jwt-auth.guard.ts
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common'
+import { JwtService } from '@nestjs/jwt'
 import * as cookie from 'cookie'
+import { UsersService } from 'src/users/users.service'
 
 @Injectable()
-export class WsJwtAuthGuard extends AuthGuard('jwt') {
-	getRequest(context: ExecutionContext) {
-		const client = context.switchToWs().getClient()
-		const rawCookies = client.handshake.headers.cookie || ''
-
-		const parsedCookies = cookie.parseCookie(rawCookies)
-
-		const tokenFromCookie = parsedCookies.access_token
-		const tokenFromHeader =
-			client.handshake.headers.authorization ||
-			client.handshake.headers.Authorization
-
-		const token = tokenFromCookie || tokenFromHeader
-
-		console.log(token)
-
-		return {
-			headers: {
-				authorization: token
-					? token.startsWith('Bearer ')
-						? token
-						: `Bearer ${token}`
-					: undefined,
-			},
-			cookies: parsedCookies,
-		}
-	}
-
-	handleRequest(err: any, user: any) {
-		if (err || !user) {
-			throw new WsException('Unauthorized WebSocket request!')
-		}
-		return user
-	}
+export class WsJwtAuthGuard implements CanActivate {
+	constructor(
+		private readonly jwtService: JwtService,
+		private readonly usersService: UsersService,
+	) {}
 
 	async canActivate(context: ExecutionContext): Promise<boolean> {
+		const client = context.switchToWs().getClient()
+		return await this.authenticateSocket(client)
+	}
+
+	async authenticateSocket(client: any): Promise<boolean> {
 		try {
-			const result = await super.canActivate(context)
+			const rawCookies = client.handshake.headers.cookie || ''
+			const parsedCookies = cookie.parseCookie(rawCookies)
+			const token = parsedCookies.access_token
 
-			if (result) {
-				const client = context.switchToWs().getClient()
-				const req = this.getRequest(context) as any
+			if (!token) throw new Error('Missing token.')
 
-				if (!req?.user || !req.user.activeProfileId) {
-					throw new WsException('Unauthorized: Profile missing.')
-				}
+			const payload = await this.jwtService.verifyAsync(token, {
+				secret: process.env.JWT_SECRET_ACCESS_TOKEN,
+			})
 
-				client.user = req.user
+			const { refreshToken, profiles, ...user } =
+				await this.usersService.findOne(payload.sub)
+
+			if (!payload.activeProfileId) throw new Error('Profile unselected.')
+
+			const userOwnsProfile = profiles.some(
+				(profile) => profile.id === payload.activeProfileId,
+			)
+
+			if (!userOwnsProfile) throw new Error('Unauthorized profile assignment.')
+
+			client.user = {
+				...user,
+				activeProfileId: payload.activeProfileId,
+			}
+			client.activeProfileId = payload.activeProfileId
+
+			const tokenExpirationTime = payload.exp ? payload.exp * 1000 : null
+
+			if (tokenExpirationTime) {
+				const timeRemaining = tokenExpirationTime - Date.now()
+
+				// Clear any stale timeout if this is a reconnection track
+				if (client.authTimeout) clearTimeout(client.authTimeout)
+
+				// Force-disconnect the socket tunnel the exact second the access token expires
+				client.authTimeout = setTimeout(() => {
+					console.warn(
+						`[Socket Security] Access token expired for socket ${client.id}. Evicting.`,
+					)
+					client.disconnect(true) // 'true' forces a hard close on the socket tunnel
+				}, timeRemaining)
 			}
 
-			return !!result
+			return true
 		} catch (error) {
-			console.log(error)
+			console.error(`[Socket Security Dropout]: ${error.message}`)
+			// Evict malicious or expired users immediately
+			client.disconnect(true)
+			return false
 		}
-
-		return true
 	}
 }

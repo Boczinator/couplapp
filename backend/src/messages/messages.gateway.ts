@@ -11,6 +11,12 @@ import {
 import { Server, Socket } from 'socket.io'
 import { WsJwtAuthGuard } from 'src/auth/guards/ws-jwt-auth-guard'
 import { ConversationsService } from 'src/conversations/conversations.service'
+import { User } from 'src/db/schema'
+
+export interface AuthenticatedSocket extends Socket {
+	user: User & { activeProfileId: string }
+	activeProfileId: string
+}
 
 @UseGuards(WsJwtAuthGuard)
 @WebSocketGateway({
@@ -24,25 +30,24 @@ export class MessagesGateway {
 	@WebSocketServer()
 	server!: Server
 
-	constructor(private readonly conversationsService: ConversationsService) {}
+	constructor(
+		private readonly conversationsService: ConversationsService,
+		private readonly wsJwtAuthGuard: WsJwtAuthGuard,
+	) {}
 
-	handleConnection(client: Socket) {
-		// ACHTUNG: Stelle sicher, dass das Frontend die ID genau hier mitschickt!
-		const profileId = client.handshake.query.activeProfileId
+	async handleConnection(client: AuthenticatedSocket) {
+		const isAuthorized = await this.wsJwtAuthGuard.authenticateSocket(client)
 
-		if (profileId) {
-			console.log(
-				`[Socket] Profil ${profileId} hat Raum betreten: profile:${profileId}`,
-			)
-			client.join(`profile:${profileId}`)
-		} else {
-			console.warn('[Socket] Verbindung ohne activeProfileId aufgebaut!')
+		if (!isAuthorized) {
+			return
 		}
+
+		client.join(`profile:${client.user.activeProfileId}`)
 	}
 
 	@SubscribeMessage('message')
 	async handleMessage(
-		@ConnectedSocket() client: Socket,
+		@ConnectedSocket() client: AuthenticatedSocket,
 		@MessageBody()
 		payload: {
 			senderId: string
@@ -52,18 +57,20 @@ export class MessagesGateway {
 		},
 	) {
 		const message = await this.conversationsService.createMessage({
-			senderId: payload.senderId,
+			senderId: client?.user?.activeProfileId, // TODO: remove, is now being set by verified jwt 
 			receiverId: payload.receiverId,
 			conversationId: payload.conversationId,
 			content: payload.content,
 		})
 
+		const senderId = client?.user?.activeProfileId
+
 		this.server.to(`profile:${payload.receiverId}`).emit('message', message)
 
-		this.server.to(`profile:${payload.senderId}`).emit('message', message)
+		this.server.to(`profile:${senderId}`).emit('message', message)
 
 		console.log(
-			`[Socket] Event an profile:${payload.senderId} und profile:${payload.receiverId} gesendet.`,
+			`[Socket] Event an profile:${senderId} und profile:${payload.receiverId} gesendet.`,
 		)
 
 		return message
