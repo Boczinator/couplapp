@@ -13,13 +13,18 @@ import { ProfilesModule } from './profiles/profiles.module'
 import { FriendsModule } from './friends/friends.module'
 import { AccountsModule } from './accounts/accounts.module'
 import { FilesModule } from './files/files.module'
-import { CloudStorageModule } from './cloud-storage/cloud-storage.module';
-import { PostsModule } from './posts/posts.module';
-import { FeedModule } from './feed/feed.module';
-import { RedisModule } from './redis/redis.module';
+import { CloudStorageModule } from './cloud-storage/cloud-storage.module'
+import { PostsModule } from './posts/posts.module'
+import { FeedModule } from './feed/feed.module'
+import { MessagesModule } from './messages/messages.module'
+//import { RedisModule } from './redis/redis.module'
+import { ConversationsService } from './conversations/conversations.service'
+import { ConversationsModule } from './conversations/conversations.module'
+import { EventEmitterModule } from '@nestjs/event-emitter'
 
 @Module({
 	imports: [
+		EventEmitterModule.forRoot(),
 		ConfigModule.forRoot({ isGlobal: true }),
 		AuthModule,
 		DatabaseModule,
@@ -51,9 +56,11 @@ import { RedisModule } from './redis/redis.module';
 		CloudStorageModule,
 		PostsModule,
 		FeedModule,
-		RedisModule,
+		MessagesModule,
+		ConversationsModule,
+		//RedisModule,
 	],
 	controllers: [AppController],
-	providers: [AppService],
+	providers: [AppService, ConversationsService],
 })
 export class AppModule {}

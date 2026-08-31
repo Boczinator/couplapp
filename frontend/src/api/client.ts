@@ -10,7 +10,11 @@ export const client = baseClient.extend({
 		afterResponse: [
 			async ({ request, response, retryCount }) => {
 				try {
-					if (response.status === 401 && retryCount === 0) {
+					if (
+						response.status === 401 &&
+						retryCount === 0 &&
+						!request.url.includes('/auth/logout')
+					) {
 						await baseClient.post('/auth/refresh')
 
 						return ky.retry({ request })

@@ -7,6 +7,7 @@ import { useAuthUser } from '../../hooks/useAuthUser'
 import { SearchBar } from '../search/SearchBar'
 import { useFriendRequests } from '../../hooks/useFriends'
 import { ProfileCard } from '../card/ProfileCard'
+import { useInbox } from '../../hooks/useInbox'
 //import { ReactComponent as SvgIcon } from '../../assets/icons/logout-svgrepo-com.svg?react'
 
 export const AuthenticatedHeader = () => {
@@ -17,10 +18,17 @@ export const AuthenticatedHeader = () => {
 
 	const { friendRequests } = useFriendRequests(activeProfileId)
 	const { profile, isLoading } = useCurrentProfile(activeProfileId)
+	const { data: conversations } = useInbox(activeProfileId)
 
 	const incomingFriendRequestsAmount = friendRequests?.filter(
 		(friendRequest) => friendRequest.direction === 'INCOMING',
 	).length
+
+	const unreadConversations = conversations?.filter(
+		(conversation) =>
+			conversation.messages[0].senderId !== activeProfileId &&
+			!conversation.messages[0].readAt,
+	)
 
 	const handleLogoutClick = () => {
 		logout()
@@ -60,7 +68,14 @@ export const AuthenticatedHeader = () => {
 							</span>
 						)}
 					</HeaderLink>
-					<HeaderLink to="/profile/$profileId/messages">Messages</HeaderLink>
+					<HeaderLink to="/profile/$profileId/inbox">
+						Messages
+						{unreadConversations?.length > 0 && (
+							<span className="text-sm p-1 font-bold bg-[#7AE2CF] rounded-full inline-block h-fit min-w-6 leading-4 text-center items-center">
+								{unreadConversations?.length}
+							</span>
+						)}
+					</HeaderLink>
 				</nav>
 
 				<div className="flex justify-between py-5 border-t border-[#06202B] items-center">

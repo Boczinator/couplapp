@@ -52,6 +52,17 @@ export const profiles = pgTable(
 	],
 )
 
+export const userRelations = relations(users, ({ many }) => ({
+	profiles: many(profiles),
+}))
+
+export const profilesRelations = relations(profiles, ({ one }) => ({
+	user: one(users, {
+		fields: [profiles.userId],
+		references: [users.id],
+	}),
+}))
+
 export const friendshipStatusEnum = pgEnum('friendship_status', [
 	'pending',
 	'accepted',
@@ -123,7 +134,7 @@ export const postsRelations = relations(posts, ({ one }) => ({
 }))
 
 export const feedActivities = pgTable('feed_activities', {
-	id: uuid('id').unique().defaultRandom(),
+	id: uuid('id').primaryKey().unique().defaultRandom(),
 	profileId: uuid('profile_id').references(() => profiles.id, {
 		onDelete: 'cascade',
 	}),
@@ -135,6 +146,73 @@ export const feedActivitiesRelations = relations(feedActivities, ({ one }) => ({
 	post: one(posts, {
 		fields: [feedActivities.postId],
 		references: [posts.id],
+	}),
+}))
+
+export const messages = pgTable('messages', {
+	id: uuid().primaryKey().defaultRandom().notNull(),
+	senderId: uuid('sender_id')
+		.notNull()
+		.references(() => profiles.id, { onDelete: 'cascade' }),
+	conversationId: uuid('conversation_id').references(() => conversations.id, {
+		onDelete: 'cascade',
+	}),
+	content: text('content'),
+	isRead: boolean('is_read').default(false),
+	readAt: timestamp('read_at'),
+	createdAt: timestamp('created_at').defaultNow().notNull(),
+})
+
+export const conversations = pgTable('conversations', {
+	id: uuid('id').primaryKey().defaultRandom().notNull(),
+	title: text('title'),
+	isGroupChat: boolean('is_group_chat').default(false).notNull(),
+	createdAt: timestamp('created_at').defaultNow(),
+	updatedAt: timestamp('updated_at').defaultNow(),
+})
+
+export const participants = pgTable(
+	'participants',
+	{
+		conversationId: uuid('conversation_id')
+			.notNull()
+			.references(() => conversations.id, {
+				onDelete: 'cascade',
+			}),
+		profileId: uuid('profile_id')
+			.notNull()
+			.references(() => profiles.id, {
+				onDelete: 'cascade',
+			}),
+		joinedAt: timestamp().defaultNow(),
+	},
+	(table) => [primaryKey({ columns: [table.conversationId, table.profileId] })],
+)
+
+export const conversationsRelations = relations(conversations, ({ many }) => ({
+	participants: many(participants),
+	messages: many(messages),
+}))
+
+export const participantsRelations = relations(participants, ({ one }) => ({
+	conversation: one(conversations, {
+		fields: [participants.conversationId],
+		references: [conversations.id],
+	}),
+	profile: one(profiles, {
+		fields: [participants.profileId],
+		references: [profiles.id],
+	}),
+}))
+
+export const messagesRelations = relations(messages, ({ one }) => ({
+	conversation: one(conversations, {
+		fields: [messages.conversationId],
+		references: [conversations.id],
+	}),
+	sender: one(profiles, {
+		fields: [messages.senderId],
+		references: [profiles.id],
 	}),
 }))
 

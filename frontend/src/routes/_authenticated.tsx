@@ -1,6 +1,8 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
 import { authUserOptions } from '../hooks/useAuthUser'
 
+import { socket } from '../socket/client'
+
 export const Route = createFileRoute('/_authenticated')({
 	beforeLoad: async ({ context: { queryClient }, location }) => {
 		try {
@@ -15,5 +17,12 @@ export const Route = createFileRoute('/_authenticated')({
 				},
 			})
 		}
+	},
+	loader: ({ context }) => {
+		socket.connect()
+
+		const user = context.user
+
+		socket.send('isOnline', user?.activeProfileId)
 	},
 })

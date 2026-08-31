@@ -13,6 +13,7 @@ import { CreateUserDto } from './dtos/create-user.dto'
 import { hashSync } from 'bcryptjs'
 import { UpdateUserDto } from './dtos/update-user.dto'
 import { MailService } from 'src/mail/mail.service'
+import { profile } from 'console'
 
 @Injectable()
 export class UsersService {
@@ -27,10 +28,16 @@ export class UsersService {
 	}
 
 	async findOne(id: schema.User['id']) {
-		const [user] = await this.db
-			.select()
-			.from(schema.users)
-			.where(eq(schema.users.id, id))
+		const user = await this.db.query.users.findFirst({
+			where: eq(schema.users.id, id),
+			with: {
+				profiles: {
+					columns: {
+						id: true,
+					},
+				},
+			},
+		})
 
 		if (!user) {
 			throw new NotFoundException(`User with ID ${id} not found`)
