@@ -1,3 +1,4 @@
+import { UseGuards } from '@nestjs/common'
 import { OnEvent } from '@nestjs/event-emitter'
 import {
 	ConnectedSocket,
@@ -8,8 +9,10 @@ import {
 } from '@nestjs/websockets'
 
 import { Server, Socket } from 'socket.io'
+import { WsJwtAuthGuard } from 'src/auth/guards/ws-jwt-auth-guard'
 import { ConversationsService } from 'src/conversations/conversations.service'
 
+@UseGuards(WsJwtAuthGuard)
 @WebSocketGateway({
 	cors: {
 		origin: 'http://localhost:5173',

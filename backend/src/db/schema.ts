@@ -52,6 +52,17 @@ export const profiles = pgTable(
 	],
 )
 
+export const userRelations = relations(users, ({ many }) => ({
+	profiles: many(profiles),
+}))
+
+export const profilesRelations = relations(profiles, ({ one }) => ({
+	user: one(users, {
+		fields: [profiles.userId],
+		references: [users.id],
+	}),
+}))
+
 export const friendshipStatusEnum = pgEnum('friendship_status', [
 	'pending',
 	'accepted',
