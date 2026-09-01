@@ -95,7 +95,6 @@ export class ConversationsService {
 		return await this.db.transaction(async (tx) => {
 			let activeConversationId = conversationId
 
-			// 1. If no conversationId passed, check if a 1-on-1 conversation already exists between these users
 			if (!activeConversationId && receiverId) {
 				const existingConversation = await tx
 					.select({ conversationId: schema.participants.conversationId })
@@ -120,7 +119,6 @@ export class ConversationsService {
 					existingConversation[0]?.conversationId ?? undefined
 			}
 
-			// 2. If still no conversationId found, create a new conversation and add participants
 			if (!activeConversationId) {
 				const [newConversation] = await tx
 					.insert(schema.conversations)
@@ -144,7 +142,7 @@ export class ConversationsService {
 
 				await tx.insert(schema.participants).values([
 					{
-						conversationId: activeConversationId, // Deine generierte Konversations-ID
+						conversationId: activeConversationId,
 						profileId: senderId as string,
 					},
 					{
@@ -154,7 +152,6 @@ export class ConversationsService {
 				])
 			}
 
-			// 3. Create the message attached to the resolved conversation ID
 			const [createdMessage] = await tx
 				.insert(schema.messages)
 				.values({
@@ -168,7 +165,6 @@ export class ConversationsService {
 				throw new InternalServerErrorException('Failed to create message')
 			}
 
-			// 4. Touch updated_at on the conversation record
 			await tx
 				.update(schema.conversations)
 				.set({ updatedAt: new Date() })

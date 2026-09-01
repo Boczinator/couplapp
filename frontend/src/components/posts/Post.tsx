@@ -7,6 +7,14 @@ import { useAuthUser } from '../../hooks/useAuthUser'
 import { useParams } from '@tanstack/react-router'
 import { PostEditDropdown } from './PostEditDropdown'
 import { EditPostForm } from '../form/EditPostForm'
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from '../ui/card'
 
 type PostProps = {
 	id: string
@@ -26,7 +34,6 @@ export const Post = ({
 	createdAt,
 	className,
 }: PostProps) => {
-	const [isOptionsOpen, setIsOptionsOpen] = useState(false)
 	const [isEditFormOpen, setIsEditFormOpen] = useState(false)
 
 	const {
@@ -37,10 +44,6 @@ export const Post = ({
 		from: '/_authenticated/profile/$profileId',
 	})
 
-	const toggleOptions = () => {
-		setIsOptionsOpen(!isOptionsOpen)
-	}
-
 	const { date: createdAtDate, time: createdAtTime } = formatDate(
 		new Date(createdAt),
 	)
@@ -48,66 +51,64 @@ export const Post = ({
 	const { date: updatedAtDate } = formatDate(new Date(updatedAt))
 
 	return (
-		<div className={twMerge('bg-[#D1F5F0] px-5 py-5', className)}>
-			<div className="flex items-center justify-between mb-2.5">
-				<div className="flex gap-5 items-center">
-					<ProfileCard
-						name={author?.name}
-						image={author?.picture}
-						to="/profile/$profileId"
-						params={{ profileId: author?.id }}
-					/>
-					{receiver.id !== author.id && (
-						<>
-							<div className="text-lg">posted to</div>
-							<ProfileCard
-								name={receiver?.name}
-								image={receiver?.picture}
-								to="/profile/$profileId"
-								params={{ profileId: receiver?.id }}
-							/>
-						</>
-					)}
-				</div>
-				<div>
-					{createdAtDate} {createdAtTime}
-					{updatedAt && (
-						<span className="text-sm">(edited at {updatedAtDate})</span>
-					)}
-				</div>
-			</div>
-			{!isEditFormOpen && (
-				<div className="rounded-xl px-2.5 py-2.5 bg-white">{text}</div>
-			)}
-
-			{isEditFormOpen && (
-				<EditPostForm
-					onSuccess={() => setIsEditFormOpen(false)}
-					onAbort={() => setIsEditFormOpen(false)}
-					postId={id}
-					currentProfileId={profileId}
-					initialPostText={text}
-				/>
-			)}
-
-			{author.id === activeProfileId && (
-				<div className="relative flex flex-wrap justify-end">
-					<div
-						className="text-4xl text-black text-right cursor-pointer inline-block"
-						onClick={toggleOptions}
-					>
-						...
+		<Card className={twMerge(className)}>
+			<CardHeader>
+				<CardTitle>
+					<div className="flex gap-5 items-center">
+						<ProfileCard
+							name={author?.name}
+							image={author?.picture}
+							to="/profile/$profileId"
+							params={{ profileId: author?.id }}
+						/>
+						{receiver.id !== author.id && (
+							<>
+								<div className="text-sm">{`=>`}</div>
+								<ProfileCard
+									name={receiver?.name}
+									image={receiver?.picture}
+									to="/profile/$profileId"
+									params={{ profileId: receiver?.id }}
+								/>
+							</>
+						)}
 					</div>
+				</CardTitle>
+				<CardDescription>
+					<div>
+						{createdAtDate} {createdAtTime}
+						{updatedAt && (
+							<span className="text-sm pl-2">(edited at {updatedAtDate})</span>
+						)}
+					</div>
+				</CardDescription>
+			</CardHeader>
+			<CardContent>
+				{!isEditFormOpen && (
+					<div className="rounded-xl px-2.5 py-2.5 bg-secondary">{text}</div>
+				)}
 
-					<PostEditDropdown
-						isOpen={isOptionsOpen}
-						id={id}
-						profileId={profileId}
-						onClose={() => setIsOptionsOpen(false)}
-						onEditClick={() => setIsEditFormOpen(true)}
+				{isEditFormOpen && (
+					<EditPostForm
+						onSuccess={() => setIsEditFormOpen(false)}
+						onAbort={() => setIsEditFormOpen(false)}
+						postId={id}
+						currentProfileId={profileId}
+						initialPostText={text}
 					/>
-				</div>
+				)}
+			</CardContent>
+			{author.id === activeProfileId && (
+				<CardFooter>
+					<div className="relative flex flex-wrap justify-end">
+						<PostEditDropdown
+							id={id}
+							profileId={profileId}
+							onEditClick={() => setIsEditFormOpen(true)}
+						/>
+					</div>
+				</CardFooter>
 			)}
-		</div>
+		</Card>
 	)
 }

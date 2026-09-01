@@ -38,7 +38,7 @@ export const AuthenticatedHeader = () => {
 
 	return (
 		<header className="flex flex-col shadow-xl h-dvh w-1/5 overflow-y-auto pb-5">
-			<div className="flex sticky top-0 w-full bg-white z-10">
+			<div className="flex sticky top-0 w-full z-10">
 				<img src={logo} className="w-60 h-20 object-cover object-center" />
 			</div>
 			<div className="px-5 flex flex-col h-full">
@@ -85,7 +85,6 @@ export const AuthenticatedHeader = () => {
 						to="/profiles-selection"
 					/>
 					<button className="cursor-pointer" onClick={handleLogoutClick}>
-						{/* <SvgIcon /> */}
 						Logout
 					</button>
 				</div>

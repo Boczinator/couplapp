@@ -15,7 +15,9 @@ export const FriendsList = () => {
 		<div>
 			{friends && friends?.length > 0 ? (
 				<>
-					<h2 className="text-2xl font-bold mb-5">Deine Freunde</h2>
+					<h2 className="text-2xl text-primary  font-bold mb-5">
+						Deine Freunde
+					</h2>
 
 					<div className="flex flex-wrap flex-col gap-5">
 						{friends?.map((friend) => (
