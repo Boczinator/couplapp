@@ -13,6 +13,7 @@ import { DataImageTransferModal } from '../components/modal/DataImageTransferMod
 import { ProfileCard } from '../components/card/ProfileCard'
 import { PostForm } from '../components/form/PostForm'
 import { ProfilePosts } from '../components/posts/ProfilePosts'
+import { Tooltip } from '../components/ui/tooltip'
 
 export const ProfileView = () => {
 	const { profileId } = useParams({

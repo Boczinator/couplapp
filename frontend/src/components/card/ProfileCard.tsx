@@ -1,6 +1,7 @@
 import { Link, type LinkProps } from '@tanstack/react-router'
 import UserLogo from '../../assets/icons/avatar.svg'
 import type { HTMLAttributes } from 'react'
+import { Avatar, AvatarImage } from '../ui/avatar'
 
 type ProfileCardProps = {
 	name: string
@@ -18,7 +19,9 @@ export const ProfileCard = ({
 	return (
 		<Link {...props}>
 			<span className="flex items-center gap-2">
-				<img src={image || UserLogo} className="size-10"></img>
+				<Avatar size="lg">
+					<AvatarImage src={image || UserLogo}></AvatarImage>
+				</Avatar>
 				{name}
 			</span>
 			{children}

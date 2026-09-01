@@ -85,7 +85,6 @@ export const AuthenticatedHeader = () => {
 						to="/profiles-selection"
 					/>
 					<button className="cursor-pointer" onClick={handleLogoutClick}>
-						{/* <SvgIcon /> */}
 						Logout
 					</button>
 				</div>

@@ -2,6 +2,7 @@ import { useProfileOverview, useSwitchActiveProfile } from '../hooks/useProfile'
 import logo from '../assets/icons/avatar.svg'
 import { useNavigate } from '@tanstack/react-router'
 import { Route } from '../routes/_authenticated/_gateway/create-profile'
+import { Avatar, AvatarImage } from '../components/ui/avatar'
 
 export const ProfileSelectionView = () => {
 	const { profiles } = useProfileOverview()
@@ -20,9 +21,10 @@ export const ProfileSelectionView = () => {
 						className="cursor-pointer text-[#06202B] bg-gray-200 font-medium text-2xl hover:bg-[#7AE2CF] transition-colors px-5 py-3 flex gap-3 rounded-2xl items-center mb-5"
 						onClick={() => switchActiveProfile(profile.id)}
 					>
-						<span className="rounded-full border-white border-2 overflow-hidden size-13 bg-white">
-							<img src={profile.picture || logo} className="size-full" />
-						</span>
+						<Avatar size="xl">
+							<AvatarImage src={profile.picture || logo} />
+						</Avatar>
+
 						{profile.name}
 					</button>
 				</div>
