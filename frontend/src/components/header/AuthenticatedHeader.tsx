@@ -63,7 +63,7 @@ export const AuthenticatedHeader = () => {
 					>
 						My Friends
 						{incomingFriendRequestsAmount > 0 && (
-							<span className="text-sm p-1 font-bold bg-[#7AE2CF] rounded-full inline-block h-fit min-w-6 leading-4 text-center items-center">
+							<span className="text-sm p-1 font-bold bg-primary text-secondary rounded-full inline-block h-fit min-w-6 leading-4 text-center items-center">
 								{incomingFriendRequestsAmount}
 							</span>
 						)}
@@ -71,7 +71,7 @@ export const AuthenticatedHeader = () => {
 					<HeaderLink to="/profile/$profileId/inbox">
 						Messages
 						{unreadConversations?.length > 0 && (
-							<span className="text-sm p-1 font-bold bg-[#7AE2CF] rounded-full inline-block h-fit min-w-6 leading-4 text-center items-center">
+							<span className="text-sm p-1 font-bold bg-primary text-secondary rounded-full inline-block h-fit min-w-6 leading-4 text-center items-center">
 								{unreadConversations?.length}
 							</span>
 						)}

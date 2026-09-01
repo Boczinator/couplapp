@@ -8,7 +8,7 @@ export const HeaderLink = ({
 }: LinkProps & { className?: string }) => {
 	return (
 		<Link
-			className={twMerge('text-lg bg-red rounded-sm py-2 group', className)}
+			className={twMerge('text-md bg-red rounded-sm py-2 group', className)}
 			{...props}
 		>
 			<span className="group-hover:translate-x-0.75 transition-transform transform flex justify-between w-full flex-wrap">

@@ -19,8 +19,6 @@ export const Route = createFileRoute('/_authenticated')({
 		}
 	},
 	loader: ({ context }) => {
-		socket.connect()
-
 		const user = context.user
 
 		socket.send('isOnline', user?.activeProfileId)
