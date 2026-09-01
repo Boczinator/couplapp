@@ -28,7 +28,11 @@ export const PostForm = ({ receiverId, className }: PostForm) => {
 			<FormikProvider value={formik}>
 				<form onSubmit={formik.handleSubmit}>
 					<div className="w-1/2 mb-2.5">
-						<Textarea name="text" placeholder="Schreibe etwas..." />
+						<Textarea
+							name="text"
+							placeholder="Schreibe etwas..."
+							onChange={(e) => formik.setFieldValue('text', e.target.value)}
+						/>
 					</div>
 					<div className="w-1/2">
 						<Button className="w-full" type="submit">
