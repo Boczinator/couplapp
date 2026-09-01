@@ -1,7 +1,7 @@
 import { FormikProvider, useFormik } from 'formik'
 import { useCreatePost } from '../../hooks/usePosts'
-import { Button } from '../button/Button'
-import { TextAreaField } from '../input/TextAreaField'
+import { Textarea } from '../ui/textarea'
+import { Button } from '../ui/button'
 
 type PostForm = { receiverId: string } & React.ComponentPropsWithoutRef<'div'>
 
@@ -28,10 +28,12 @@ export const PostForm = ({ receiverId, className }: PostForm) => {
 			<FormikProvider value={formik}>
 				<form onSubmit={formik.handleSubmit}>
 					<div className="w-1/2 mb-2.5">
-						<TextAreaField name="text" label="Schreibe etwas..." />
+						<Textarea name="text" placeholder="Schreibe etwas..." />
 					</div>
 					<div className="w-1/2">
-						<Button type="submit">Posten</Button>
+						<Button className="w-full" type="submit">
+							Posten
+						</Button>
 					</div>
 				</form>
 			</FormikProvider>

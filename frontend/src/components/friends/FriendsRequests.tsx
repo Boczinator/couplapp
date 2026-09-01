@@ -25,7 +25,9 @@ export const FriendsRequests = ({ className }: FriendsRequestsProps) => {
 	return (
 		<div className={className}>
 			{friendRequests?.some((req) => req.direction === 'INCOMING') && (
-				<h1 className="text-2xl font-bold mb-5">Current Friend requests</h1>
+				<h1 className="text-2xl text-primary font-bold mb-5">
+					Current Friend requests
+				</h1>
 			)}
 
 			<div>
