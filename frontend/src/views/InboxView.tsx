@@ -1,5 +1,5 @@
-import { Button } from '../components/button/Button'
 import { ProfileCard } from '../components/card/ProfileCard'
+import { Button } from '../components/ui/button'
 import { useAuthUser } from '../hooks/useAuthUser'
 import { useFriendsList } from '../hooks/useFriends'
 import { useInbox } from '../hooks/useInbox'
@@ -19,7 +19,7 @@ export const InboxView = () => {
 	)
 
 	const friendsWithoutChat = friends?.filter((friend) =>
-		participants?.some((p) => friend.id === p.profileId),
+		participants?.some((p) => friend.id !== p.profileId),
 	)
 
 	console.log(conversations)

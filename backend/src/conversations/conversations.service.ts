@@ -65,6 +65,14 @@ export class ConversationsService {
 		return await this.db.query.messages.findMany({
 			where: eq(schema.messages.conversationId, conversationId),
 			orderBy: asc(schema.messages.createdAt),
+			with: {
+				sender: {
+					columns: {
+						id: true,
+						picture: true,
+					},
+				},
+			},
 		})
 	}
 

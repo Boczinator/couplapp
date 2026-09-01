@@ -10,9 +10,30 @@ import {
 } from '../../../hooks/useInbox'
 import { twMerge } from 'tailwind-merge'
 import { formatDate } from '../../../helpers/date'
-import { TextAreaField } from '../../../components/input/TextAreaField'
 import { FormikProvider, useFormik } from 'formik'
-import { Button } from '../../../components/button/Button'
+import { Button } from '../../../components/ui/button'
+import { Textarea } from '../../../components/ui/textarea'
+
+import {
+	Message,
+	MessageAvatar,
+	MessageContent,
+	MessageFooter,
+} from '../../../components/ui/message'
+import {
+	MessageScroller,
+	MessageScrollerButton,
+	MessageScrollerContent,
+	MessageScrollerItem,
+	MessageScrollerProvider,
+	MessageScrollerViewport,
+} from '../../../components/ui/message-scroller'
+import { Bubble, BubbleContent } from '../../../components/ui/bubble'
+import {
+	Avatar,
+	AvatarFallback,
+	AvatarImage,
+} from '../../../components/ui/avatar'
 
 export const Route = createFileRoute(
 	'/_authenticated/profile/$profileId/messages/$conversationId',
@@ -97,7 +118,6 @@ function RouteComponent() {
 		markConversationAsRead,
 	])
 
-	// FIX 3: Formik steuert nun das Absenden & den Zustand
 	const formik = useFormik({
 		initialValues: {
 			text: '',
@@ -110,11 +130,11 @@ function RouteComponent() {
 			socket.emit('message', {
 				senderId: activeProfileId,
 				receiverId: activeRecipientId,
-				conversationId: conversationId || undefined, // undefined statt null mitschicken
+				conversationId: conversationId || undefined,
 				content: values.text,
 			})
 
-			resetForm() // Leert das Feld nach erfolgreichem Senden
+			resetForm()
 		},
 	})
 
@@ -134,51 +154,59 @@ function RouteComponent() {
 					& du`}
 				</div>
 				<div className="flex-1 overflow-y-auto px-10 py-2.5">
-					{messages?.map((msg: any) =>
-						msg.senderId === activeProfileId ? (
-							<div key={msg.id} className="w-full flex justify-end">
-								<div className="w-1/3 mb-2.5 flex justify-end flex-wrap">
-									<div
-										className={twMerge(
-											'bg-[#D1F5F0] w-full px-5 py-2.5 rounded-2xl relative after:absolute after:block after:bg-inherit after:right-0 after:bottom-0 after:size-5 shadow-sm',
-										)}
-									>
-										{msg.content}
-									</div>
-									<span className="text-sm">
-										{formatDate(new Date(msg.createdAt)).time}
-									</span>
-								</div>
-							</div>
-						) : (
-							<div key={msg.id} className="w-full flex justify-start">
-								<div className="w-1/3 mb-2.5 flex justify-start flex-wrap">
-									<div
-										className={twMerge(
-											'bg-[#FFE2DE] w-full px-5 py-2.5 rounded-2xl relative after:absolute after:block after:bg-inherit after:left-0 after:bottom-0 after:size-5 shadow-sm',
-										)}
-									>
-										{msg.content}
-									</div>
-									<span className="text-sm">
-										{formatDate(new Date(msg.createdAt)).time}
-									</span>
-								</div>
-							</div>
-						),
-					)}
-					{!conversationId && (!messages || messages.length === 0) && (
-						<div className="text-gray-400">
-							Send a message to start chatting!
-						</div>
-					)}
+					<MessageScrollerProvider>
+						<MessageScroller>
+							<MessageScrollerViewport className="px-7.5">
+								<MessageScrollerContent>
+									{messages?.map((msg: any) => (
+										<MessageScrollerItem key={msg.id} messageId={msg.id}>
+											<Message
+												align={
+													msg.senderId === activeProfileId ? 'end' : 'start'
+												}
+											>
+												<MessageAvatar>
+													<Avatar>
+														<AvatarImage src={msg.sender.picture} alt="" />
+														<AvatarFallback>CN</AvatarFallback>
+													</Avatar>
+												</MessageAvatar>
+												<MessageContent>
+													<Bubble
+														variant={
+															msg.senderId === activeProfileId
+																? 'secondary'
+																: 'default'
+														}
+													>
+														<BubbleContent>{msg.content}</BubbleContent>
+													</Bubble>
+													<MessageFooter>
+														{formatDate(new Date(msg.createdAt)).time}
+													</MessageFooter>
+												</MessageContent>
+											</Message>
+										</MessageScrollerItem>
+									))}
+									{!conversationId && (!messages || messages.length === 0) && (
+										<div className="text-gray-400">
+											Send a message to start chatting!
+										</div>
+									)}
+								</MessageScrollerContent>
+							</MessageScrollerViewport>
+							<MessageScrollerButton />
+						</MessageScroller>
+					</MessageScrollerProvider>
 				</div>
 				<FormikProvider value={formik}>
 					<form onSubmit={formik.handleSubmit}>
 						<div className="px-10 pt-5">
 							{/* FIX 4: Bindung an Formik-Values und onChange-Handler */}
-							<TextAreaField
+							<Textarea
 								name="text"
+								placeholder="Type your message here."
+								className="mb-2.5"
 								value={formik.values.text}
 								onChange={formik.handleChange}
 								onKeyDown={(e) => {
@@ -187,9 +215,10 @@ function RouteComponent() {
 										formik.handleSubmit()
 									}
 								}}
-								label="Text"
 							/>
-							<Button type="submit">Send</Button>
+							<Button className="w-full" size="lg" type="submit">
+								Send
+							</Button>
 						</div>
 					</form>
 				</FormikProvider>
