@@ -4,8 +4,8 @@ import { FormikProvider, useFormik } from 'formik'
 import { TextField } from '../components/input/TextField'
 import { ToastTypes, useToast } from '../components/toast/ToastContext'
 import { useNavigate, useSearch } from '@tanstack/react-router'
-import { Button } from '../components/button/Button'
 import { Route } from '../routes/_public/login'
+import { Button } from '../components/ui/button'
 
 type LoginFormValues = {
 	email: string
@@ -96,7 +96,12 @@ export const LoginView = ({}) => {
 						</div>
 					</div>
 
-					<Button className="mb-10" type="submit" disabled={isLoading}>
+					<Button
+						className="mb-10 w-full"
+						size="lg"
+						type="submit"
+						disabled={isLoading}
+					>
 						Submit
 					</Button>
 				</form>

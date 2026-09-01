@@ -1,6 +1,5 @@
 import { Link, useParams } from '@tanstack/react-router'
 import { useCurrentProfile } from '../hooks/useProfile'
-import { Button } from '../components/button/Button'
 import {
 	useAcceptFriendRequest,
 	useInviteFriends,
@@ -13,7 +12,7 @@ import { DataImageTransferModal } from '../components/modal/DataImageTransferMod
 import { ProfileCard } from '../components/card/ProfileCard'
 import { PostForm } from '../components/form/PostForm'
 import { ProfilePosts } from '../components/posts/ProfilePosts'
-import { Tooltip } from '../components/ui/tooltip'
+import { Button } from '../components/ui/button'
 
 export const ProfileView = () => {
 	const { profileId } = useParams({
@@ -64,7 +63,7 @@ export const ProfileView = () => {
 										</button>
 									)}
 								</div>
-								<div className="text-2xl h-fit font-bold  text-[#ff6d56]">
+								<div className="text-2xl h-fit font-bold  text-foreground">
 									{profile.name} {profile.id === activeProfileId && '(me)'}
 								</div>
 							</div>
