@@ -4,6 +4,15 @@ import { useDebounce } from '../../hooks/useDebounce'
 import { useSearchProfiles } from '../../hooks/useSearchProfiles'
 import { TextField } from '../input/TextField'
 import { ProfileCard } from '../card/ProfileCard'
+import {
+	Combobox,
+	ComboboxContent,
+	ComboboxEmpty,
+	ComboboxInput,
+	ComboboxItem,
+	ComboboxList,
+} from '../ui/combobox'
+import { Avatar, AvatarImage } from '../ui/avatar'
 
 export const SearchBar = () => {
 	const navigate = useNavigate()
@@ -22,7 +31,39 @@ export const SearchBar = () => {
 	const { data: profiles, isLoading } = useSearchProfiles(debouncedTerm)
 
 	return (
-		<div className="w-full relative">
+		<Combobox items={profiles}>
+			<ComboboxInput
+				placeholder="Select a framework"
+				value={formik.values.searchTerm}
+				onChange={(e) => formik.setFieldValue('searchTerm', e.target.value)}
+				showTrigger={false}
+			/>
+			<ComboboxEmpty>No items found.</ComboboxEmpty>
+			<ComboboxContent>
+				<ComboboxEmpty>No items found.</ComboboxEmpty>
+				<ComboboxList>
+					{(profile) => (
+						<ComboboxItem
+							key={profile.id}
+							value={profile.id}
+							onClick={() =>
+								navigate({
+									to: '/profile/$profileId',
+									params: { profileId: String(profile.id) },
+								})
+							}
+						>
+							<Avatar>
+								<AvatarImage src={profile.picture} />
+							</Avatar>
+							{profile.name}
+						</ComboboxItem>
+					)}
+				</ComboboxList>
+			</ComboboxContent>
+		</Combobox>
+
+		/* <div className="w-full relative">
 			<FormikProvider value={formik}>
 				<form onSubmit={formik.handleSubmit}>
 					<TextField
@@ -61,6 +102,6 @@ export const SearchBar = () => {
 							))}
 					</div>
 				))}
-		</div>
+		</div> */
 	)
 }
