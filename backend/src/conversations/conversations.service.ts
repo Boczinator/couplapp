@@ -170,7 +170,22 @@ export class ConversationsService {
 				.set({ updatedAt: new Date() })
 				.where(eq(schema.conversations.id, activeConversationId))
 
-			return createdMessage
+			const sender = await tx.query.messages.findFirst({
+				where: eq(schema.messages.senderId, senderId),
+				with: {
+					sender: {
+						columns: {
+							id: true,
+							picture: true,
+						},
+					},
+				},
+			})
+
+			return {
+				...createdMessage,
+				sender,
+			}
 		})
 	}
 
