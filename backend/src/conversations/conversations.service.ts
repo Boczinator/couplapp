@@ -7,7 +7,7 @@ import {
 import { DRIZZLE_PROVIDER } from 'src/database/database.provider'
 import * as schema from '../db/schema'
 import { NodePgDatabase } from 'drizzle-orm/node-postgres'
-import { and, asc, desc, eq, isNull, ne } from 'drizzle-orm'
+import { and, asc, desc, eq, inArray, isNull, ne } from 'drizzle-orm'
 import { EventEmitter2 } from '@nestjs/event-emitter'
 
 @Injectable()
@@ -101,7 +101,8 @@ export class ConversationsService {
 					.from(schema.participants)
 					.where(
 						and(
-							eq(
+							eq(schema.participants.profileId, receiverId),
+							inArray(
 								schema.participants.conversationId,
 								tx
 									.select({
@@ -110,7 +111,6 @@ export class ConversationsService {
 									.from(schema.participants)
 									.where(eq(schema.participants.profileId, senderId)),
 							),
-							eq(schema.participants.profileId, receiverId),
 						),
 					)
 					.limit(1)

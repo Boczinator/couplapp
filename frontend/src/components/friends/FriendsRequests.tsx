@@ -4,8 +4,8 @@ import {
 	useFriendRequests,
 	useRemoveRelationship,
 } from '../../hooks/useFriends'
-import { Button } from '../button/Button'
 import { ProfileCard } from '../card/ProfileCard'
+import { Button } from '../ui/button'
 
 type FriendsRequestsProps = {
 	className: string
