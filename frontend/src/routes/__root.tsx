@@ -4,7 +4,7 @@ import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import { ToastProvider } from '../components/toast/ToastContext'
 import { ToastContainer } from '../components/toast/ToastContainer'
 
-interface MyRouterContext {
+export interface MyRouterContext {
 	queryClient: QueryClient
 }
 

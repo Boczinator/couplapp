@@ -1,15 +1,14 @@
 {
-	"files": [],
-	"references": [
-		{ "path": "./tsconfig.app.json" },
-		{ "path": "./tsconfig.node.json" }
-	],
 	"compilerOptions": {
-		"types": ["vite-plugin-svgr/client"],
-		"baseUrl": ".",
-		"paths": {
-			"@/*": ["./src/*"]
-		}
+		"target": "ES2023",
+		"lib": ["ES2023", "DOM", "DOM.Iterable"],
+		"module": "ESNext",
+		"moduleResolution": "bundler",
+		"jsx": "react-jsx",
+		"noEmit": true,
+		"skipLibCheck": true,
+		"strict": true
 	},
-	"include": ["**/*.ts", "**/*.tsx"]
+	"include": ["src/**/*.ts", "src/**/*.tsx", "vite.config.ts"],
+	"exclude": ["node_modules", "dist", "**/*.d.ts"]
 }

@@ -24,10 +24,15 @@ export const InboxView = () => {
 	const { data: conversations, isPending } = useInbox()
 
 	const participants =
-		conversations?.flatMap((c) => (c.isGroupChat ? [] : c.participants)) ?? []
+		conversations?.flatMap((conversation) =>
+			conversation.isGroupChat ? [] : conversation.participants,
+		) ?? []
 
 	const friendsWithoutChat = friends?.filter(
-		(friend) => !participants?.some((p) => friend.id === p.profileId),
+		(friend) =>
+			!participants?.some(
+				(participants) => friend.id === participants.profileId,
+			),
 	)
 
 	if (isPending) return <div>Loading...</div>
@@ -78,37 +83,6 @@ export const InboxView = () => {
 							</CardHeader>
 						</Card>
 					</Link>
-
-					/*{ <div>
-						<ProfileCard
-							className={clsx(
-								'flex items-center justify-between mb-10 bg-gray-50 p-5',
-								!conversation.messages[0].readAt &&
-									conversation.messages[0].senderId !== activeProfileId &&
-									'bg-[#ff6f59]! font-bold',
-							)}
-							key={conversation.id}
-							name={`${
-								conversation.participants.filter(
-									(p) => p.profileId !== activeProfileId,
-								)[0].profile.name
-							} & you`}
-							image={
-								conversation.participants.filter(
-									(p) => p.profileId !== activeProfileId,
-								)[0].profile.picture
-							}
-							to="/profile/$profileId/messages/$conversationId"
-							params={{ conversationId: conversation.id }}
-						>
-							<div className="flex items-center gap-5">
-								<div className="text-gray-400">
-									{conversation.messages[0].content}
-								</div>
-								<Button className="w-auto">Continue Conversation</Button>
-							</div>
-						</ProfileCard>
-					</div> }*/
 				))}
 			</div>
 			<div>
