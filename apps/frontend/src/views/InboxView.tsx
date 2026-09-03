@@ -62,7 +62,7 @@ export const InboxView = () => {
 								<CardTitle className="flex gap-3 items-center">
 									<AvatarGroup>
 										{conversation.participants.map((participant) => (
-											<Avatar>
+											<Avatar key={participant.id}>
 												<AvatarImage src={participant.profile.picture} />
 											</Avatar>
 										))}
