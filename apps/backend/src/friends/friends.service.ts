@@ -150,12 +150,12 @@ export class FriendsService {
 		})
 	}
 
-	async getAllFriends(profileId: string) {
+	async getAllFriends(targetUserId: string, currentUserId: string) {
 		const friendships = await this.db.query.friendships.findMany({
 			where: and(
 				or(
-					eq(schema.friendships.profileId1, profileId),
-					eq(schema.friendships.profileId2, profileId),
+					eq(schema.friendships.profileId1, targetUserId),
+					eq(schema.friendships.profileId2, targetUserId),
 				),
 				eq(schema.friendships.status, 'accepted'),
 			),

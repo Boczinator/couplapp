@@ -1,4 +1,4 @@
-import { useParams } from '@tanstack/react-router'
+import { Link, useParams } from '@tanstack/react-router'
 import { useCurrentProfile } from '../hooks/useProfile'
 import {
 	useAcceptFriendRequest,
@@ -109,37 +109,31 @@ export const ProfileView = () => {
 					<div className="flex flex-wrap"></div>
 
 					{profile?.friends && (
-						<div className="mb-10">
-							<h3 className="font-bold text-lg mb-2.5">{`${profile.name}´s friends`}</h3>
-							<AvatarGroup>
-								{profile.friends.map((friend) => (
-									<Avatar>
-										<AvatarImage src={friend?.picture} />
-										<AvatarFallback>
-											{friend.name?.charAt(0).toUpperCase()}
-										</AvatarFallback>
-									</Avatar>
-								))}
-								<AvatarGroupCount>+10</AvatarGroupCount>
-							</AvatarGroup>
+						<div className="mb-5">
+							<Link
+								className="mb-10"
+								to="/profile/$profileId/friends"
+								params={{ profileId }}
+							>
+								<h3 className="font-bold text-lg mb-2.5">{`${profile.name}´s friends`}</h3>
+								<AvatarGroup>
+									{profile.friends.map((friend) => (
+										<Avatar>
+											<AvatarImage src={friend?.picture} />
+											<AvatarFallback>
+												{friend.name?.charAt(0).toUpperCase()}
+											</AvatarFallback>
+										</Avatar>
+									))}
+									<AvatarGroupCount>+10</AvatarGroupCount>
+								</AvatarGroup>
+							</Link>
 						</div>
 					)}
 
 					<PostForm className="mb-5" receiverId={profile?.id} />
 					<ProfilePosts profileId={profileId} />
 				</div>
-				{/* <div className="w-1/4 px-2.5 gap-3 flex-col flex">
-					<h3 className="font-bold text-lg">{`${profile.name}´s friends`}</h3>
-					{profile?.friends &&
-						profile.friends.map((friend) => (
-							<ProfileCard
-								image={friend?.picture}
-								name={friend?.name}
-								to="/profile/$profileId"
-								params={{ profileId: friend.id }}
-							/>
-						))}
-				</div> */}
 			</div>
 			<DataImageTransferModal isOpen={isOpen} onClose={closeModal} />
 		</>
