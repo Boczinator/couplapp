@@ -1,5 +1,5 @@
 import { Link, useParams } from '@tanstack/react-router'
-import { useCurrentProfile } from '../hooks/useProfile'
+import { useCurrentProfile, useProfilePicture } from '../hooks/useProfile'
 import {
 	useAcceptFriendRequest,
 	useInviteFriends,
@@ -38,6 +38,8 @@ export const ProfileView = () => {
 	const { sendInvite } = useInviteFriends()
 	const { removeRelationship } = useRemoveRelationship()
 	const { acceptRequest } = useAcceptFriendRequest()
+
+	const { mutate: uploadProfilePicture } = useProfilePicture()
 
 	const [isOpen, setIsOpen] = useState(false)
 
@@ -145,7 +147,12 @@ export const ProfileView = () => {
 					<ProfilePosts profileId={profileId} />
 				</div>
 			</div>
-			<DataImageTransferModal open={isOpen} onOpenChange={closeModal} />
+			<DataImageTransferModal
+				onUpload={(files) => uploadProfilePicture(files[0])}
+				multiple={false}
+				open={isOpen}
+				onOpenChange={closeModal}
+			/>
 		</>
 	)
 }

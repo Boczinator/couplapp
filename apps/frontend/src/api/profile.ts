@@ -61,7 +61,7 @@ export const createProfile = async (profile: Profile) => {
 	}
 }
 
-export const updateProfilePicture = async (file) => {
+export const updateProfilePicture = async (file: File) => {
 	try {
 		const formData = new FormData()
 		formData.append('file', file)

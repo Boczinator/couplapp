@@ -1,6 +1,5 @@
 import { FormikProvider, useFormik } from 'formik'
 import { Modal } from './Modal'
-import { useProfilePicture } from '../../hooks/useProfile'
 import { Button } from '../ui/button'
 import { useState, useEffect } from 'react'
 
@@ -8,24 +7,30 @@ interface DataImageTransferModalProps {
 	open?: boolean
 	onOpenChange?: (open: boolean) => void
 	trigger?: React.ReactElement
+	onUpload?: (files: File[]) => void | Promise<void>
+	multiple: boolean
 }
 
 export const DataImageTransferModal = ({
 	open,
 	onOpenChange,
 	trigger,
+	multiple = false,
+	onUpload,
 }: DataImageTransferModalProps) => {
-	const [previewUrl, setPreviewUrl] = useState<string | null>(null)
-	const { mutate } = useProfilePicture()
+	const [previewUrls, setPreviewUrls] = useState<string[]>([])
 
 	const formik = useFormik({
 		initialValues: {
-			avatar: null as File | null,
+			avatars: [] as File[],
 		},
-		onSubmit: async ({ avatar }) => {
-			if (!avatar) return
+		onSubmit: async ({ avatars }) => {
+			if (avatars.length === 0) return
 			try {
-				mutate(avatar)
+				await onUpload?.(avatars)
+
+				setPreviewUrls([])
+				formik.setFieldValue('avatars', [])
 				onOpenChange?.(false)
 			} catch (error) {
 				console.error(error)
@@ -35,20 +40,30 @@ export const DataImageTransferModal = ({
 
 	useEffect(() => {
 		return () => {
-			if (previewUrl) URL.revokeObjectURL(previewUrl)
+			previewUrls.forEach((url) => URL.revokeObjectURL(url))
 		}
-	}, [previewUrl])
+	}, [previewUrls])
 
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const selectedFile = e.currentTarget.files?.[0] ?? null
+		const selectedFiles = Array.from(e.currentTarget.files ?? [])
 
-		if (selectedFile) {
-			formik.setFieldValue('avatar', selectedFile)
-			setPreviewUrl(URL.createObjectURL(selectedFile))
-		} else {
-			formik.setFieldValue('avatar', null)
-			setPreviewUrl(null)
+		if (selectedFiles.length > 0) {
+			const updatedFiles = [...formik.values.avatars, ...selectedFiles]
+			formik.setFieldValue('avatars', updatedFiles)
+
+			const newPreviews = selectedFiles.map((file) => URL.createObjectURL(file))
+			setPreviewUrls((prev) => [...prev, ...newPreviews])
 		}
+	}
+
+	const handleRemoveImage = (index: number) => {
+		URL.revokeObjectURL(previewUrls[index])
+
+		const updatedFiles = formik.values.avatars.filter((_, i) => i !== index)
+		const updatedPreviews = previewUrls.filter((_, i) => i !== index)
+
+		formik.setFieldValue('avatars', updatedFiles)
+		setPreviewUrls(updatedPreviews)
 	}
 
 	return (
@@ -56,8 +71,9 @@ export const DataImageTransferModal = ({
 			open={open}
 			onOpenChange={onOpenChange}
 			trigger={trigger}
-			title="Upload Profile Picture"
-			description="Choose a new photo to update your profile image."
+			title="Upload Images"
+			description="Choose one or more photos to upload."
+			className="sm:max-w-md"
 		>
 			<FormikProvider value={formik}>
 				<form
@@ -65,13 +81,24 @@ export const DataImageTransferModal = ({
 					onSubmit={formik.handleSubmit}
 					className="space-y-4"
 				>
-					{previewUrl && (
-						<div className="flex justify-center">
-							<img
-								className="size-48 object-cover rounded-full border border-border"
-								src={previewUrl}
-								alt="Profile preview"
-							/>
+					{previewUrls.length > 0 && (
+						<div className="grid grid-cols-3 gap-2 max-h-60 overflow-y-auto p-1">
+							{previewUrls.map((url, index) => (
+								<div key={url} className="relative group aspect-square">
+									<img
+										className="size-full object-cover rounded-md border border-border"
+										src={url}
+										alt={`Preview ${index + 1}`}
+									/>
+									<button
+										type="button"
+										onClick={() => handleRemoveImage(index)}
+										className="absolute top-1 right-1 bg-black/70 hover:bg-black text-white text-xs rounded-full size-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+									>
+										✕
+									</button>
+								</div>
+							))}
 						</div>
 					)}
 
@@ -79,7 +106,8 @@ export const DataImageTransferModal = ({
 						type="file"
 						name="avatar"
 						accept="image/*"
-						className="bg-secondary text-secondary-foreground rounded-sm w-full p-2 text-sm"
+						multiple={multiple}
+						className="bg-secondary text-secondary-foreground rounded-sm w-full p-2 text-sm cursor-pointer"
 						onChange={handleFileChange}
 					/>
 
@@ -87,9 +115,13 @@ export const DataImageTransferModal = ({
 						<Button
 							className="w-full"
 							type="submit"
-							disabled={!formik.values.avatar || formik.isSubmitting}
+							disabled={
+								formik.values.avatars.length === 0 || formik.isSubmitting
+							}
 						>
-							Upload
+							Upload{' '}
+							{formik.values.avatars.length > 0 &&
+								`(${formik.values.avatars.length})`}
 						</Button>
 					</div>
 				</form>

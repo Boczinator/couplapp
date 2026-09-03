@@ -116,7 +116,7 @@ export const useProfilePicture = () => {
 	const { addToast } = useToast()
 
 	const { mutate, isPending, isSuccess } = useMutation({
-		mutationFn: (file) => updateProfilePicture(file),
+		mutationFn: (file: File) => updateProfilePicture(file),
 		onSuccess: () => {
 			queryClient.invalidateQueries({
 				queryKey: ['profile', user?.activeProfileId],
