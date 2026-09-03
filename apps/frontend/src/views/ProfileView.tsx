@@ -1,4 +1,4 @@
-import { Link, useParams } from '@tanstack/react-router'
+import { useParams } from '@tanstack/react-router'
 import { useCurrentProfile } from '../hooks/useProfile'
 import {
 	useAcceptFriendRequest,
@@ -13,6 +13,13 @@ import { ProfileCard } from '../components/card/ProfileCard'
 import { PostForm } from '../components/form/PostForm'
 import { ProfilePosts } from '../components/posts/ProfilePosts'
 import { Button } from '../components/ui/button'
+import {
+	Avatar,
+	AvatarFallback,
+	AvatarGroup,
+	AvatarGroupCount,
+	AvatarImage,
+} from '../components/ui/avatar'
 
 export const ProfileView = () => {
 	const { profileId } = useParams({
@@ -43,8 +50,8 @@ export const ProfileView = () => {
 	return (
 		<>
 			<div className="flex flex-wrap">
-				<div className="w-3/4">
-					<div className="w-full h-[30vh] min-h-60 bg-gray-300 rounded-b-md mb-5 relative flex items-end">
+				<div className="w-full">
+					<div className="w-full h-[30vh] min-h-60 bg-secondary rounded-b-md mb-5 relative flex items-end">
 						<div className="flex flex-wrap justify-between w-full">
 							<div className="flex flex-1 flex-wrap gap-5 h-fit pl-2.5 pb-2.5 items-center">
 								<div className="size-30 group relative">
@@ -101,10 +108,27 @@ export const ProfileView = () => {
 
 					<div className="flex flex-wrap"></div>
 
+					{profile?.friends && (
+						<div className="mb-10">
+							<h3 className="font-bold text-lg mb-2.5">{`${profile.name}´s friends`}</h3>
+							<AvatarGroup>
+								{profile.friends.map((friend) => (
+									<Avatar>
+										<AvatarImage src={friend?.picture} />
+										<AvatarFallback>
+											{friend.name?.charAt(0).toUpperCase()}
+										</AvatarFallback>
+									</Avatar>
+								))}
+								<AvatarGroupCount>+10</AvatarGroupCount>
+							</AvatarGroup>
+						</div>
+					)}
+
 					<PostForm className="mb-5" receiverId={profile?.id} />
 					<ProfilePosts profileId={profileId} />
 				</div>
-				<div className="w-1/4 px-2.5 gap-3 flex-col flex">
+				{/* <div className="w-1/4 px-2.5 gap-3 flex-col flex">
 					<h3 className="font-bold text-lg">{`${profile.name}´s friends`}</h3>
 					{profile?.friends &&
 						profile.friends.map((friend) => (
@@ -115,7 +139,7 @@ export const ProfileView = () => {
 								params={{ profileId: friend.id }}
 							/>
 						))}
-				</div>
+				</div> */}
 			</div>
 			<DataImageTransferModal isOpen={isOpen} onClose={closeModal} />
 		</>

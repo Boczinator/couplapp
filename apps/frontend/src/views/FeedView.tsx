@@ -8,7 +8,7 @@ export const FeedView = () => {
 
 	return (
 		<div>
-			<h2 className="text-2xl text-primary font-bold mb-5">Your Feed</h2>
+			<h2 className="text-2xl font-bold mb-5">Your Feed</h2>
 			{feedData?.posts && <PostsList posts={feedData.posts} />}
 		</div>
 	)

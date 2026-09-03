@@ -33,7 +33,7 @@ export const SearchBar = () => {
 	return (
 		<Combobox items={profiles}>
 			<ComboboxInput
-				placeholder="Select a framework"
+				placeholder="Search..."
 				value={formik.values.searchTerm}
 				onChange={(e) => formik.setFieldValue('searchTerm', e.target.value)}
 				showTrigger={false}
@@ -62,46 +62,5 @@ export const SearchBar = () => {
 				</ComboboxList>
 			</ComboboxContent>
 		</Combobox>
-
-		/* <div className="w-full relative">
-			<FormikProvider value={formik}>
-				<form onSubmit={formik.handleSubmit}>
-					<TextField
-						className="w-full mb-0"
-						type="text"
-						name="searchTerm"
-						id="searchTerm"
-						placeholder="Search Term"
-						label="Search Term"
-						autoComplete="off"
-					/>
-				</form>
-			</FormikProvider>
-			{isLoading ||
-				(profiles && profiles.length > 0 && (
-					<div className="absolute bottom-0 bg-red-50 w-full transform translate-y-full px-5 py-5 rounded-b-2xl shadow-2xl">
-						{isLoading && <div>Searching...</div>}
-
-						{profiles &&
-							profiles.length > 0 &&
-							profiles.map((profile) => (
-								<button
-									key={profile.id}
-									className="first:pt-0 last:border-0 last:pb-0 py-2.5 w-full text-left border-b border-gray cursor-pointer"
-									type="button"
-									onClick={() => {
-										formik.setFieldValue('searchTerm', '')
-										navigate({
-											to: '/profile/$profileId',
-											params: { profileId: String(profile.id) },
-										})
-									}}
-								>
-									<ProfileCard name={profile.name} image={profile.picture} />
-								</button>
-							))}
-					</div>
-				))}
-		</div> */
 	)
 }

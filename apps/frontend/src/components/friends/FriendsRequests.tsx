@@ -8,10 +8,10 @@ import { ProfileCard } from '../card/ProfileCard'
 import { Button } from '../ui/button'
 
 type FriendsRequestsProps = {
-	className: string
+	className?: string
 }
 
-export const FriendsRequests = ({ className }: FriendsRequestsProps) => {
+export const FriendsRequests = (props: FriendsRequestsProps) => {
 	const {
 		user: { activeProfileId },
 	} = useAuthUser()
@@ -23,11 +23,9 @@ export const FriendsRequests = ({ className }: FriendsRequestsProps) => {
 	if (isPending) return <div>Fetching friend requests...</div>
 
 	return (
-		<div className={className}>
+		<div {...props}>
 			{friendRequests?.some((req) => req.direction === 'INCOMING') && (
-				<h1 className="text-2xl text-primary font-bold mb-5">
-					Current Friend requests
-				</h1>
+				<h1 className="text-2xl font-bold mb-5">Current Friend requests</h1>
 			)}
 
 			<div>

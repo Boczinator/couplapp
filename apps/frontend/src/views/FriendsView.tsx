@@ -4,7 +4,7 @@ import { FriendsRequests } from '../components/friends/FriendsRequests'
 export const FriendsView = () => {
 	return (
 		<>
-			<FriendsRequests className="mb-10" />
+			<FriendsRequests />
 			<FriendsList />
 		</>
 	)

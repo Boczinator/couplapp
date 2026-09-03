@@ -40,7 +40,7 @@ export const InboxView = () => {
 
 	return (
 		<>
-			<h2 className="text-2xl font-bold mb-10">Your Chats</h2>
+			<h2 className="text-2xl font-bold mb-5">Your Chats</h2>
 			<div className="mb-10">
 				{conversations?.map((conversation) => (
 					<Link

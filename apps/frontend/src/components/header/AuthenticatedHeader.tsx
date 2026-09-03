@@ -1,7 +1,6 @@
 import { HeaderLink } from '../link/HeaderLink'
 import logo from '../../assets/couplapp-logo-inline.png'
 import { useLogout } from '../../hooks/useLogout'
-import { Link } from '@tanstack/react-router'
 import { useCurrentProfile } from '../../hooks/useProfile'
 import { useAuthUser } from '../../hooks/useAuthUser'
 import { SearchBar } from '../search/SearchBar'
@@ -16,13 +15,10 @@ import {
 	SidebarGroupContent,
 	SidebarGroupLabel,
 	SidebarHeader,
-	SidebarInset,
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
-	SidebarProvider,
 	SidebarRail,
-	SidebarTrigger,
 } from '../ui/sidebar'
 //import { ReactComponent as SvgIcon } from '../../assets/icons/logout-svgrepo-com.svg?react'
 
@@ -55,7 +51,7 @@ export const AuthenticatedHeader = () => {
 	return (
 		<Sidebar>
 			<SidebarHeader>
-				<img src={logo} className="w-60 h-20 object-cover object-center" />
+				<img src={logo} className="px-10 py-5 w-full object-center" />
 				<SearchBar />
 			</SidebarHeader>
 			<SidebarContent>

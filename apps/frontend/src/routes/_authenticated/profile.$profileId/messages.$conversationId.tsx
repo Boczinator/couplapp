@@ -153,7 +153,7 @@ function RouteComponent() {
 					}
 					& du`}
 				</div>
-				<div className="flex-1 overflow-y-auto px-0 md:px-10 py-2.5">
+				<div className="flex-1 px-0 md:px-10 py-2.5">
 					<MessageScrollerProvider>
 						<MessageScroller>
 							<MessageScrollerViewport className="md:px-7.5">
