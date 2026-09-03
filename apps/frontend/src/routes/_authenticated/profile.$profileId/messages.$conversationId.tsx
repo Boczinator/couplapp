@@ -141,87 +141,83 @@ function RouteComponent() {
 	if (conversationId && isPending) return <div>Test</div>
 
 	return (
-		<>
-			<div className="flex flex-col h-full">
-				<div className="text-2xl font-bold pb-2.5 border-b">
-					{`${
-						conversationDetails?.title ||
-						conversationDetails?.participants?.filter(
-							(p: any) => p.profileId === activeRecipientId,
-						)[0]?.profile?.name ||
-						'Chat'
-					}
+		<div className="flex flex-col h-full overflow-hidden">
+			<div className="text-2xl font-bold pb-2.5 border-b">
+				{`${
+					conversationDetails?.title ||
+					conversationDetails?.participants?.filter(
+						(p: any) => p.profileId === activeRecipientId,
+					)[0]?.profile?.name ||
+					'Chat'
+				}
 					& du`}
-				</div>
-				<div className="flex-1 px-0 md:px-10 py-2.5">
-					<MessageScrollerProvider>
-						<MessageScroller>
-							<MessageScrollerViewport className="md:px-7.5">
-								<MessageScrollerContent>
-									{messages?.map((msg: any) => (
-										<MessageScrollerItem key={msg.id} messageId={msg.id}>
-											<Message
-												align={
-													msg.senderId === activeProfileId ? 'end' : 'start'
-												}
-											>
-												<MessageAvatar>
-													<Avatar>
-														<AvatarImage src={msg.sender.picture} alt="" />
-														<AvatarFallback>CN</AvatarFallback>
-													</Avatar>
-												</MessageAvatar>
-												<MessageContent>
-													<Bubble
-														variant={
-															msg.senderId === activeProfileId
-																? 'secondary'
-																: 'default'
-														}
-													>
-														<BubbleContent>{msg.content}</BubbleContent>
-													</Bubble>
-													<MessageFooter>
-														{formatDate(new Date(msg.createdAt)).time}
-													</MessageFooter>
-												</MessageContent>
-											</Message>
-										</MessageScrollerItem>
-									))}
-									{!conversationId && (!messages || messages.length === 0) && (
-										<div className="text-gray-400">
-											Send a message to start chatting!
-										</div>
-									)}
-								</MessageScrollerContent>
-							</MessageScrollerViewport>
-							<MessageScrollerButton />
-						</MessageScroller>
-					</MessageScrollerProvider>
-				</div>
-				<FormikProvider value={formik}>
-					<form onSubmit={formik.handleSubmit}>
-						<div className="md:px-10 pt-5">
-							<Textarea
-								name="text"
-								placeholder="Type your message here."
-								className="mb-2.5"
-								value={formik.values.text}
-								onChange={formik.handleChange}
-								onKeyDown={(e) => {
-									if (e.key === 'Enter' && !e.shiftKey) {
-										e.preventDefault()
-										formik.handleSubmit()
-									}
-								}}
-							/>
-							<Button className="w-full" size="lg" type="submit">
-								Send
-							</Button>
-						</div>
-					</form>
-				</FormikProvider>
 			</div>
-		</>
+			<div className="flex-1 px-0 md:px-10 py-2.5 flex flex-col min-h-0 overflow-hidden">
+				<MessageScrollerProvider>
+					<MessageScroller>
+						<MessageScrollerViewport className="md:px-7.5">
+							<MessageScrollerContent>
+								{messages?.map((msg: any) => (
+									<MessageScrollerItem key={msg.id} messageId={msg.id}>
+										<Message
+											align={msg.senderId === activeProfileId ? 'end' : 'start'}
+										>
+											<MessageAvatar>
+												<Avatar>
+													<AvatarImage src={msg.sender.picture} alt="" />
+													<AvatarFallback>CN</AvatarFallback>
+												</Avatar>
+											</MessageAvatar>
+											<MessageContent>
+												<Bubble
+													variant={
+														msg.senderId === activeProfileId
+															? 'secondary'
+															: 'default'
+													}
+												>
+													<BubbleContent>{msg.content}</BubbleContent>
+												</Bubble>
+												<MessageFooter>
+													{formatDate(new Date(msg.createdAt)).time}
+												</MessageFooter>
+											</MessageContent>
+										</Message>
+									</MessageScrollerItem>
+								))}
+								{!conversationId && (!messages || messages.length === 0) && (
+									<div className="text-gray-400">
+										Send a message to start chatting!
+									</div>
+								)}
+							</MessageScrollerContent>
+						</MessageScrollerViewport>
+						<MessageScrollerButton />
+					</MessageScroller>
+				</MessageScrollerProvider>
+			</div>
+			<FormikProvider value={formik}>
+				<form onSubmit={formik.handleSubmit} className="shrink-0">
+					<div className="md:px-10 pt-5">
+						<Textarea
+							name="text"
+							placeholder="Type your message here."
+							className="mb-2.5"
+							value={formik.values.text}
+							onChange={formik.handleChange}
+							onKeyDown={(e) => {
+								if (e.key === 'Enter' && !e.shiftKey) {
+									e.preventDefault()
+									formik.handleSubmit()
+								}
+							}}
+						/>
+						<Button className="w-full" size="lg" type="submit">
+							Send
+						</Button>
+					</div>
+				</form>
+			</FormikProvider>
+		</div>
 	)
 }

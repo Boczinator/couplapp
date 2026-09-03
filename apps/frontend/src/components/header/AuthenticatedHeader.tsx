@@ -19,7 +19,10 @@ import {
 	SidebarMenuButton,
 	SidebarMenuItem,
 	SidebarRail,
+	useSidebar,
 } from '../ui/sidebar'
+import { useRouterState } from '@tanstack/react-router'
+import { useEffect } from 'react'
 //import { ReactComponent as SvgIcon } from '../../assets/icons/logout-svgrepo-com.svg?react'
 
 export const AuthenticatedHeader = () => {
@@ -31,6 +34,16 @@ export const AuthenticatedHeader = () => {
 	const { friendRequests } = useFriendRequests(activeProfileId)
 	const { profile, isLoading } = useCurrentProfile(activeProfileId)
 	const { data: conversations } = useInbox(activeProfileId)
+
+	const { setOpenMobile } = useSidebar()
+
+	const pathname = useRouterState({
+		select: (state) => state.location.pathname,
+	})
+
+	useEffect(() => {
+		setOpenMobile(false)
+	}, [pathname])
 
 	const incomingFriendRequestsAmount = friendRequests?.filter(
 		(friendRequest) => friendRequest.direction === 'INCOMING',
