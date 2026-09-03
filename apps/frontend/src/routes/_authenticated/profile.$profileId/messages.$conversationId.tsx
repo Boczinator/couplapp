@@ -153,10 +153,10 @@ function RouteComponent() {
 					}
 					& du`}
 				</div>
-				<div className="flex-1 overflow-y-auto px-10 py-2.5">
+				<div className="flex-1 overflow-y-auto px-0 md:px-10 py-2.5">
 					<MessageScrollerProvider>
 						<MessageScroller>
-							<MessageScrollerViewport className="px-7.5">
+							<MessageScrollerViewport className="md:px-7.5">
 								<MessageScrollerContent>
 									{messages?.map((msg: any) => (
 										<MessageScrollerItem key={msg.id} messageId={msg.id}>
@@ -201,8 +201,7 @@ function RouteComponent() {
 				</div>
 				<FormikProvider value={formik}>
 					<form onSubmit={formik.handleSubmit}>
-						<div className="px-10 pt-5">
-							{/* FIX 4: Bindung an Formik-Values und onChange-Handler */}
+						<div className="md:px-10 pt-5">
 							<Textarea
 								name="text"
 								placeholder="Type your message here."
@@ -211,7 +210,7 @@ function RouteComponent() {
 								onChange={formik.handleChange}
 								onKeyDown={(e) => {
 									if (e.key === 'Enter' && !e.shiftKey) {
-										e.preventDefault() // Verhindert ungewollten Zeilenumbruch
+										e.preventDefault()
 										formik.handleSubmit()
 									}
 								}}
