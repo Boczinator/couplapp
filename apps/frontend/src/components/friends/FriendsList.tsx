@@ -1,21 +1,30 @@
+import { useParams } from '@tanstack/react-router'
 import { useAuthUser } from '../../hooks/useAuthUser'
 import { useFriendsList } from '../../hooks/useFriends'
 import { ProfileCard } from '../card/ProfileCard'
+import { useCurrentProfile } from '../../hooks/useProfile'
 
 export const FriendsList = () => {
+	const { profileId } = useParams({ strict: true })
 	const {
 		user: { activeProfileId },
 	} = useAuthUser()
 
-	const { friends, isPending } = useFriendsList(activeProfileId)
+	const isOwnProfile = profileId === activeProfileId
 
-	if (isPending) return <div>Loading friends...</div>
+	const { friends, isPending } = useFriendsList(profileId)
+
+	const { profile, isLoading: isPendingProfile } = useCurrentProfile(profileId)
+
+	if (isPending || isPendingProfile) return <div>Loading friends...</div>
 
 	return (
 		<div>
 			{friends && friends?.length > 0 ? (
 				<>
-					<h2 className="text-2xl  font-bold mb-5">Deine Freunde</h2>
+					<h2 className="text-2xl  font-bold mb-5">
+						{isOwnProfile ? 'Your friends' : `${profile.name}´s friends`}
+					</h2>
 
 					<div className="flex flex-wrap flex-col gap-5">
 						{friends?.map((friend) => (

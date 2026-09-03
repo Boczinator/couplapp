@@ -64,9 +64,9 @@ export const acceptFriendRequest = async (requesterId: string) => {
 	}
 }
 
-export const getFriends = async () => {
+export const getFriends = async (profileId: string) => {
 	try {
-		const result = await client.get('friends')
+		const result = await client.get(`friends/${profileId}`)
 
 		if (!result.ok) {
 			throw new Error(`Failed to accept requests: ${result.statusText}`)

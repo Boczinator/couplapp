@@ -26,9 +26,9 @@ export class FriendsController {
 		)
 	}
 
-	@Get('')
-	async getFriends(@Req() req: any) {
-		return await this.friendsService.getAllFriends(req.user.activeProfileId)
+	@Get(':profileId')
+	async getFriends(@Param('profileId') targetProfileId: string, @Req() req: any) {
+		return await this.friendsService.getAllFriends(targetProfileId)
 	}
 
 	@Post('invite')

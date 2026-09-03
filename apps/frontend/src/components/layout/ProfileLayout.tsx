@@ -12,9 +12,12 @@ export const ProfileLayout = () => {
 			<AuthenticatedHeader />
 
 			<SidebarInset className="flex flex-col h-full overflow-hidden">
-				<header className="flex justify-between h-auto py-2 border-b md:hidden pl-2.5 shrink-0">
-					<img src={logo} className="w-40 object-contain object-center" />
-					<SidebarTrigger className="md:hidden" />
+				<header className="flex justify-between h-auto py-2 border-b pl-2.5 shrink-0">
+					<img
+						src={logo}
+						className="md:hidden w-40 object-contain object-center"
+					/>
+					<SidebarTrigger />
 				</header>
 
 				<div className="flex-1 min-h-0 px-4 pt-7.5 md:px-10 md:py-10 flex flex-col overflow-y-auto">

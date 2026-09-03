@@ -106,7 +106,7 @@ export const useFriendsList = (profileId: string) => {
 	} = useQuery({
 		queryKey: ['friends', 'list', profileId],
 		queryFn: () => {
-			return getFriends()
+			return getFriends(profileId)
 		},
 	})
 
