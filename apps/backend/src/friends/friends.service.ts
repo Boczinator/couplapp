@@ -150,7 +150,7 @@ export class FriendsService {
 		})
 	}
 
-	async getAllFriends(targetUserId: string, currentUserId: string) {
+	async getAllFriends(targetUserId: string, currentUserId?: string) {
 		const friendships = await this.db.query.friendships.findMany({
 			where: and(
 				or(
@@ -167,7 +167,7 @@ export class FriendsService {
 
 		return friendships.map((friendship) => {
 			const friendProfile =
-				friendship.profileId1 === profileId
+				friendship.profileId1 === targetUserId
 					? friendship.profile2
 					: friendship.profile1
 
