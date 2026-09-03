@@ -1,7 +1,7 @@
 import { FormikProvider, useFormik } from 'formik'
 import { useEditPost } from '../../hooks/usePosts'
-import { TextAreaField } from '../input/TextAreaField'
-import { Button } from '../button/Button'
+import { Button } from '../ui/button'
+import { Textarea } from '../ui/textarea'
 
 type EditPostFormProps = {
 	postId: string
@@ -45,11 +45,22 @@ export const EditPostForm = ({
 	return (
 		<FormikProvider value={formik}>
 			<form onSubmit={formik.handleSubmit}>
-				<TextAreaField name="text" label="Text"></TextAreaField>
-				<Button className="mb-5" type="submit">
+				<Textarea
+					className="mb-5"
+					name="text"
+					placeholder="Type your post..."
+					value={formik.values.text}
+					onChange={formik.handleChange}
+				></Textarea>
+				<Button className="mb-2.5 w-full" type="submit">
 					Update Post
 				</Button>
-				<Button type="button" variant="red" onClick={onAbort}>
+				<Button
+					className="w-full"
+					type="button"
+					variant="destructive"
+					onClick={onAbort}
+				>
 					Dismiss
 				</Button>
 			</form>

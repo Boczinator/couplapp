@@ -4,6 +4,7 @@ import { Button } from '../components/ui/button'
 import {
 	Card,
 	CardAction,
+	CardContent,
 	CardDescription,
 	CardHeader,
 	CardTitle,
@@ -39,7 +40,7 @@ export const InboxView = () => {
 
 	return (
 		<>
-			<h2 className="text-2xl  font-bold mb-10">Your Chats</h2>
+			<h2 className="text-2xl font-bold mb-5">Your Chats</h2>
 			<div className="mb-10">
 				{conversations?.map((conversation) => (
 					<Link
@@ -77,7 +78,7 @@ export const InboxView = () => {
 								<CardDescription>
 									{conversation.messages[0].content}
 								</CardDescription>
-								<CardAction>
+								<CardAction className="hidden md:block">
 									<Button>Continue conversation</Button>
 								</CardAction>
 							</CardHeader>
