@@ -122,6 +122,10 @@ export const useProfilePicture = () => {
 				queryKey: ['profile', user?.activeProfileId],
 			})
 
+			queryClient.invalidateQueries({
+				queryKey: ['profiles', 'posts', user?.activeProfileId],
+			})
+
 			addToast({
 				type: 'success',
 				message: 'Profile Picture updated successfully',

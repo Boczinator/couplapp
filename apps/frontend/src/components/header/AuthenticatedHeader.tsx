@@ -73,9 +73,9 @@ export const AuthenticatedHeader = () => {
 					<SidebarGroupContent>
 						<SidebarMenu>
 							<SidebarMenuItem>
-								<SidebarMenuButton>
+								<SidebarMenuButton className="w-full">
 									<HeaderLink
-										to="/profile/$profileId"
+										to="/profile/$profileId/feed"
 										params={{ profileId: profile?.id }}
 									>
 										Home
@@ -83,12 +83,12 @@ export const AuthenticatedHeader = () => {
 								</SidebarMenuButton>
 							</SidebarMenuItem>
 							<SidebarMenuItem>
-								<SidebarMenuButton className="w-full">
+								<SidebarMenuButton>
 									<HeaderLink
-										to="/profile/$profileId/feed"
+										to="/profile/$profileId"
 										params={{ profileId: profile?.id }}
 									>
-										My Feed
+										My Profile
 									</HeaderLink>
 								</SidebarMenuButton>
 							</SidebarMenuItem>

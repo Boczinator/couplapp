@@ -9,7 +9,6 @@ import { useAuthUser } from '../hooks/useAuthUser'
 import UserLogo from '../assets/icons/avatar.svg'
 import { useState } from 'react'
 import { DataImageTransferModal } from '../components/modal/DataImageTransferModal'
-import { ProfileCard } from '../components/card/ProfileCard'
 import { PostForm } from '../components/form/PostForm'
 import { ProfilePosts } from '../components/posts/ProfilePosts'
 import { Button } from '../components/ui/button'
@@ -20,6 +19,11 @@ import {
 	AvatarGroupCount,
 	AvatarImage,
 } from '../components/ui/avatar'
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from '../components/ui/tooltip'
 
 export const ProfileView = () => {
 	const { profileId } = useParams({
@@ -55,19 +59,25 @@ export const ProfileView = () => {
 						<div className="flex flex-wrap justify-between w-full">
 							<div className="flex flex-1 flex-wrap gap-5 h-fit pl-2.5 pb-2.5 items-center">
 								<div className="size-30 group relative">
-									<div className="overflow-hidden bg-red-200 rounded-full size-full shadow-lg">
-										<img
-											className="object-cover size-full"
-											src={profile?.picture ?? UserLogo}
-										></img>
-									</div>
-									{profile?.isOwner && (
-										<button
-											onClick={openModal}
-											className="absolute bottom-2 left-1/2 translate-y-full -translate-x-1/2 z-0 hidden group-hover:block p-2 bg-white text-sm border-2 border-[#FF6D56] shadow-xl cursor-pointer before:absolute before:top-0 before:left-1/2 before:-translate-y-1/2 before:-translate-x-1/2 before:-z-10 before:size-4 before:rotate-45 before:bg-white before:border-2 before:border-[#FF6D56]"
-										>
-											Bearbeiten
-										</button>
+									{profile.isOwner ? (
+										<Tooltip>
+											<TooltipTrigger onClick={openModal} className="size-full">
+												<div className="overflow-hidden bg-red-200 rounded-full size-full shadow-lg">
+													<img
+														className="object-cover size-full"
+														src={profile?.picture ?? UserLogo}
+													></img>
+												</div>
+											</TooltipTrigger>
+											<TooltipContent>Bearbeiten</TooltipContent>
+										</Tooltip>
+									) : (
+										<div className="overflow-hidden bg-red-200 rounded-full size-full shadow-lg">
+											<img
+												className="object-cover size-full"
+												src={profile?.picture ?? UserLogo}
+											></img>
+										</div>
 									)}
 								</div>
 								<div className="text-2xl h-fit font-bold  text-foreground">
@@ -135,7 +145,7 @@ export const ProfileView = () => {
 					<ProfilePosts profileId={profileId} />
 				</div>
 			</div>
-			<DataImageTransferModal isOpen={isOpen} onClose={closeModal} />
+			<DataImageTransferModal open={isOpen} onOpenChange={closeModal} />
 		</>
 	)
 }

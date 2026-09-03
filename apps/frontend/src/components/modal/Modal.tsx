@@ -1,26 +1,45 @@
 import type React from 'react'
+import { Dialog as DialogPrimitive } from '@base-ui/react/dialog'
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from '../ui/dialog'
 
-export type ModalProps = {
-	isOpen: boolean
-	children: React.ReactNode
-	onClose: () => void
+export interface ModalProps extends DialogPrimitive.Root.Props {
+	trigger?: React.ReactElement
+	title?: React.ReactNode
+	description?: React.ReactNode
+	children?: React.ReactNode
+	className?: string
 }
 
-export const Modal = ({ isOpen, onClose, children }: ModalProps) => {
+export const Modal = ({
+	children,
+	trigger,
+	title,
+	description,
+	className,
+	...props
+}: ModalProps) => {
 	return (
-		isOpen && (
-			<div
-				className="bg-white/50 backdrop-blur-none fixed size-full z-90 left-0 top-0"
-				onClick={() => onClose}
-			>
-				<div
-					className="absolute left-1/2 -translate-1/2 top-1/2 bg-white max-w-300 px-7.5 py-5"
-					onClick={(e) => e.stopPropagation()}
-				>
-					<div onClick={onClose}>Close</div>
-					{children}
-				</div>
-			</div>
-		)
+		<Dialog {...props}>
+			{trigger && <DialogTrigger render={trigger} />}
+
+			<DialogContent className={className ?? 'sm:max-w-sm'}>
+				{(title || description) && (
+					<DialogHeader>
+						{title && <DialogTitle>{title}</DialogTitle>}
+						{description && (
+							<DialogDescription>{description}</DialogDescription>
+						)}
+					</DialogHeader>
+				)}
+				{children}
+			</DialogContent>
+		</Dialog>
 	)
 }
