@@ -21,7 +21,10 @@ import { UpdateProfileDto } from './dtos/update-profile.dto'
 import { GetProfileQueryDto } from './dtos/get-profile-query.dto'
 import 'multer'
 import { FileInterceptor } from '@nestjs/platform-express'
-import { ProfileResponseDto } from './dtos/response-profile.dto'
+import {
+	LightProfileResponseDto,
+	ProfileResponseDto,
+} from './dtos/response-profile.dto'
 import { ProfileResponse, PublicProfile } from './profiles.types'
 import { ApiOkResponse } from '@nestjs/swagger'
 
@@ -38,6 +41,11 @@ export class ProfilesController {
 	}
 
 	@Get('overview')
+	@ApiOkResponse({
+		type: LightProfileResponseDto,
+		isArray: true,
+		description: 'Returns a level-one flat array of light profile items.',
+	})
 	async getLight(@Req() req: Request & { user: { id: string } }) {
 		const updatedProfile = await this.profileService.findAllLight(req.user.id)
 

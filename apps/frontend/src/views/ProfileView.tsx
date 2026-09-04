@@ -131,7 +131,7 @@ export const ProfileView = () => {
 								<AvatarGroup>
 									{profile.friends.map((friend) => (
 										<Avatar>
-											<AvatarImage src={friend?.picture} />
+											<AvatarImage src={friend?.picture || undefined} />
 											<AvatarFallback>
 												{friend.name?.charAt(0).toUpperCase()}
 											</AvatarFallback>

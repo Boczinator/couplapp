@@ -1,29 +1,16 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty, PickType } from '@nestjs/swagger'
+import { ProfileDto } from './profile.dto'
 
-export class FriendReferenceDto {
-	@ApiProperty() id!: string
-	@ApiProperty() name!: string
-	@ApiProperty({ nullable: true }) picture!: string | null
-}
+export class LightProfileResponseDto extends PickType(ProfileDto, [
+	'id',
+	'name',
+	'picture',
+] as const) {}
 
-export class ProfileResponseDto {
-	@ApiProperty() isPrivate!: boolean
+export class ProfileResponseDto extends ProfileDto {
 	@ApiProperty() isOwner!: boolean
 	@ApiProperty({ required: false, nullable: true }) friendship?: any
 
-	@ApiProperty() id!: string
-	@ApiProperty() name!: string
-	@ApiProperty({ nullable: true }) picture!: string | null
-
-	@ApiProperty({ required: false }) userId?: string
-	@ApiProperty({ required: false, nullable: true }) bannerPicture?:
-		| string
-		| null
-	@ApiProperty({ required: false, nullable: true }) location?: string | null
-	@ApiProperty({ required: false, nullable: true }) bio?: string | null
-	@ApiProperty({ required: false }) createdAt?: Date
-	@ApiProperty({ required: false, nullable: true }) updatedAt?: Date | null
-
-	@ApiProperty({ type: [FriendReferenceDto], required: false })
-	friends?: FriendReferenceDto[]
+	@ApiProperty({ type: [ProfileDto], required: false })
+	friends?: Pick<ProfileDto, 'id' | 'name' | 'picture'>[]
 }

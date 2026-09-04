@@ -13,6 +13,8 @@ import {
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth-guard'
 import { FriendsService } from './friends.service'
 import { InviteFriendDto } from './dto/invite-friend.dto'
+import { ProfileDto } from 'src/profiles/dtos/profile.dto'
+import { ApiOkResponse } from '@nestjs/swagger'
 
 @UseGuards(JwtAuthGuard)
 @Controller('friends')
@@ -27,7 +29,15 @@ export class FriendsController {
 	}
 
 	@Get(':profileId')
-	async getFriends(@Param('profileId') targetProfileId: string, @Req() req: any) {
+	@ApiOkResponse({
+		type: ProfileDto,
+		isArray: true,
+		description: 'Returns a level-one flat array of profile items.',
+	})
+	async getFriends(
+		@Param('profileId') targetProfileId: string,
+		@Req() req: any,
+	): Promise<ProfileDto[]> {
 		return await this.friendsService.getAllFriends(targetProfileId)
 	}
 

@@ -474,26 +474,41 @@ export interface components {
     schemas: {
         LoginUserDto: Record<string, never>;
         CreateUserDto: Record<string, never>;
-        FriendReferenceDto: {
+        LightProfileResponseDto: {
             id: string;
             name: string;
-            picture: Record<string, never> | null;
+            picture: string | null;
         };
-        ProfileResponseDto: {
-            isPrivate: boolean;
-            isOwner: boolean;
-            friendship?: Record<string, never> | null;
+        ProfileDto: {
             id: string;
             name: string;
-            picture: Record<string, never> | null;
+            picture: string | null;
             userId?: string;
-            bannerPicture?: Record<string, never> | null;
+            bannerPicture: string | null;
             location?: Record<string, never> | null;
             bio?: Record<string, never> | null;
             /** Format: date-time */
             createdAt?: string;
-            updatedAt?: Record<string, never> | null;
-            friends?: components["schemas"]["FriendReferenceDto"][];
+            /** Format: date-time */
+            updatedAt?: string | null;
+            isPrivate: Record<string, never>;
+        };
+        ProfileResponseDto: {
+            id: string;
+            name: string;
+            picture: string | null;
+            userId?: string;
+            bannerPicture: string | null;
+            location?: Record<string, never> | null;
+            bio?: Record<string, never> | null;
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string | null;
+            isPrivate: Record<string, never>;
+            isOwner: boolean;
+            friendship?: Record<string, never> | null;
+            friends?: components["schemas"]["ProfileDto"][];
         };
         UpdateProfileDto: Record<string, never>;
         InviteFriendDto: Record<string, never>;
@@ -719,7 +734,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["LightProfileResponseDto"];
+                };
             };
         };
     };
@@ -810,11 +827,14 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Returns a level-one flat array of profile items. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["ProfileDto"][];
+                };
             };
         };
     };

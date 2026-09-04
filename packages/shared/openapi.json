@@ -7,14 +7,7 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
+            "description": ""
           }
         },
         "tags": [
@@ -94,14 +87,7 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
+            "description": ""
           }
         },
         "tags": [
@@ -165,14 +151,7 @@
         },
         "responses": {
           "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
+            "description": ""
           }
         },
         "tags": [
@@ -209,7 +188,14 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LightProfileResponseDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -220,22 +206,7 @@
     "/profiles/{id}": {
       "get": {
         "operationId": "ProfilesController_getById",
-        "parameters": [
-          {
-            "name": "includes",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "enum": [
-                  "friends"
-                ]
-              }
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "",
@@ -276,14 +247,7 @@
         },
         "responses": {
           "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
+            "description": ""
           }
         },
         "tags": [
@@ -297,14 +261,7 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
+            "description": ""
           }
         },
         "tags": [
@@ -341,7 +298,17 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Returns a level-one flat array of profile items.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProfileDto"
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -417,14 +384,7 @@
         },
         "responses": {
           "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
+            "description": ""
           }
         },
         "tags": [
@@ -520,16 +480,7 @@
     "/posts/{id}": {
       "delete": {
         "operationId": "PostsController_remove",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": ""
@@ -663,44 +614,13 @@
     "schemas": {
       "LoginUserDto": {
         "type": "object",
-        "properties": {
-          "email": {
-            "type": "string"
-          },
-          "password": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "email",
-          "password"
-        ]
+        "properties": {}
       },
       "CreateUserDto": {
         "type": "object",
-        "properties": {
-          "firstName": {
-            "type": "string"
-          },
-          "lastName": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string",
-            "format": "email"
-          },
-          "password": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "firstName",
-          "lastName",
-          "email",
-          "password"
-        ]
+        "properties": {}
       },
-      "FriendReferenceDto": {
+      "LightProfileResponseDto": {
         "type": "object",
         "properties": {
           "id": {
@@ -720,19 +640,9 @@
           "picture"
         ]
       },
-      "ProfileResponseDto": {
+      "ProfileDto": {
         "type": "object",
         "properties": {
-          "isPrivate": {
-            "type": "boolean"
-          },
-          "isOwner": {
-            "type": "boolean"
-          },
-          "friendship": {
-            "type": "object",
-            "nullable": true
-          },
           "id": {
             "type": "string"
           },
@@ -751,11 +661,11 @@
             "nullable": true
           },
           "location": {
-            "type": "string",
+            "type": "object",
             "nullable": true
           },
           "bio": {
-            "type": "string",
+            "type": "object",
             "nullable": true
           },
           "createdAt": {
@@ -767,19 +677,79 @@
             "type": "string",
             "nullable": true
           },
+          "isPrivate": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "picture",
+          "bannerPicture",
+          "isPrivate"
+        ]
+      },
+      "ProfileResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "picture": {
+            "type": "string",
+            "nullable": true
+          },
+          "userId": {
+            "type": "string"
+          },
+          "bannerPicture": {
+            "type": "string",
+            "nullable": true
+          },
+          "location": {
+            "type": "object",
+            "nullable": true
+          },
+          "bio": {
+            "type": "object",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true
+          },
+          "isPrivate": {
+            "type": "object"
+          },
+          "isOwner": {
+            "type": "boolean"
+          },
+          "friendship": {
+            "type": "object",
+            "nullable": true
+          },
           "friends": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/FriendReferenceDto"
+              "$ref": "#/components/schemas/ProfileDto"
             }
           }
         },
         "required": [
-          "isPrivate",
-          "isOwner",
           "id",
           "name",
-          "picture"
+          "picture",
+          "bannerPicture",
+          "isPrivate",
+          "isOwner"
         ]
       },
       "UpdateProfileDto": {
@@ -788,71 +758,19 @@
       },
       "InviteFriendDto": {
         "type": "object",
-        "properties": {
-          "receiverId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "receiverId"
-        ]
+        "properties": {}
       },
       "CreateProfileDto": {
         "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "picture": {
-            "type": "string",
-            "nullable": true
-          },
-          "bannerPicture": {
-            "type": "string",
-            "nullable": true
-          },
-          "bio": {
-            "type": "string",
-            "nullable": true
-          },
-          "location": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "required": [
-          "name",
-          "picture",
-          "bannerPicture",
-          "bio",
-          "location"
-        ]
+        "properties": {}
       },
       "CreatePostDto": {
         "type": "object",
-        "properties": {
-          "text": {
-            "type": "string"
-          },
-          "receiverId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "text",
-          "receiverId"
-        ]
+        "properties": {}
       },
       "UpdatePostDto": {
         "type": "object",
-        "properties": {
-          "text": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "text"
-        ]
+        "properties": {}
       }
     }
   }

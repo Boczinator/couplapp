@@ -23,7 +23,7 @@ export const FriendsList = () => {
 			{friends && friends?.length > 0 ? (
 				<>
 					<h2 className="text-2xl  font-bold mb-5">
-						{isOwnProfile ? 'Your friends' : `${profile.name}´s friends`}
+						{isOwnProfile ? 'Your friends' : `${profile?.name}´s friends`}
 					</h2>
 
 					<div className="flex flex-wrap flex-col gap-5">

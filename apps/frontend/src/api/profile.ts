@@ -16,11 +16,13 @@ export const updateProfile = async (profileId: string) => {
 	}
 }
 
-export const getProfileOverview = async () => {
+export const getProfileOverview = async (): Promise<
+	components['schemas']['LightProfileResponseDto'][]
+> => {
 	try {
-		const profile = await client.get('profiles/overview')
+		const profiles = await client.get('profiles/overview')
 
-		return await profile.json()
+		return await profiles.json()
 	} catch (error) {
 		console.log(error)
 		throw error
