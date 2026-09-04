@@ -1,19 +1,27 @@
-import { FriendshipRelation } from '../profiles.types'
+import { ApiProperty } from '@nestjs/swagger'
 
-export class ProfileResponseDto {
-	isOwner!: boolean
-	isPrivate!: boolean
-	friendship?: FriendshipRelation | null
-	profile!: Profile
+export class FriendReferenceDto {
+	@ApiProperty() id!: string
+	@ApiProperty() name!: string
+	@ApiProperty({ nullable: true }) picture!: string | null
 }
 
-export class Profile {
-	id!: string
-	name!: string
-	bio?: string | null
-	location?: string | null
-	bannerPicture?: string | null
-	picture?: string | null
-	createdAt!: Date
-	updatedAt!: Date
+export class ProfileResponseDto {
+	@ApiProperty() isPrivate!: boolean
+	@ApiProperty() isOwner!: boolean
+	@ApiProperty({ required: false, nullable: true }) friendship?: any
+	@ApiProperty() id!: string
+	@ApiProperty() name!: string
+	@ApiProperty({ nullable: true }) picture!: string | null
+
+	@ApiProperty({ required: false }) userId?: string
+	@ApiProperty({ required: false, nullable: true }) bannerPicture?:
+		| string
+		| null
+	@ApiProperty({ required: false, nullable: true }) location?: string | null
+	@ApiProperty({ required: false, nullable: true }) bio?: string | null
+	@ApiProperty({ required: false }) createdAt?: Date
+	@ApiProperty({ required: false, nullable: true }) updatedAt?: Date | null
+	@ApiProperty({ type: [FriendReferenceDto], required: false })
+	friends?: FriendReferenceDto[]
 }

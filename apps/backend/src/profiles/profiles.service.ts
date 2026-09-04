@@ -81,22 +81,18 @@ export class ProfilesService {
 
 		if (isPrivate) {
 			return {
+				...data,
 				isPrivate: true as const,
 				isOwner,
 				friendship,
-				profile: {
-					id: data.id,
-					name: data.name,
-					picture: data.picture,
-				},
 			}
 		}
 
 		return {
+			...data,
 			isPrivate: false as const,
 			isOwner,
 			friendship,
-			profile: data,
 			...(friends && {
 				friends: friends.map((friend) => ({
 					id: friend.id,

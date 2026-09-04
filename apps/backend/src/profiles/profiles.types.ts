@@ -13,16 +13,14 @@ export type PrivateProfile = {
 	isPrivate: boolean
 	isOwner: boolean
 	friendship?: Friendship | null | undefined
-	profile: Pick<BaseProfile, 'id' | 'name' | 'picture'>
-}
+} & Pick<BaseProfile, 'id' | 'name' | 'picture'>
 
 export type PublicProfile = {
 	isPrivate: boolean
 	isOwner: boolean
 	friendship?: Friendship | null | undefined
-	profile: BaseProfile
 	friends?: FriendReference[]
-}
+} & BaseProfile
 
 export type ProfileResponse = PrivateProfile | PublicProfile
 

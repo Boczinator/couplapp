@@ -48,7 +48,7 @@ export class ProfilesController {
 		@Param('id') id: schema.Profile['id'],
 		@Req() req: Request & { user: { id: string; activeProfileId: string } },
 		@Query() query: GetProfileQueryDto,
-	): Promise<ProfileResponse> {
+	): Promise<ProfileResponseDto> {
 		const data = await this.profileService.findOne(
 			id,
 			req.user.id,
@@ -65,31 +65,27 @@ export class ProfilesController {
 				isPrivate: true,
 				isOwner: data.isOwner,
 				friendship: data.friendship,
-				profile: {
-					id: data.profile.id,
-					name: data.profile.name,
-					picture: data.profile.picture,
-				},
+				id: data.id,
+				name: data.name,
+				picture: data.picture,
 			}
 		}
 
-		const publicData = data as PublicProfile
+		const publicData = data as ProfileResponseDto
 
 		return {
+			...publicData,
 			isPrivate: false,
 			isOwner: publicData.isOwner,
 			friendship: publicData.friendship,
-			profile: {
-				id: publicData.profile.id,
-				userId: publicData.profile.userId,
-				name: publicData.profile.name,
-				picture: publicData.profile.picture,
-				bannerPicture: publicData.profile.bannerPicture, // 🚀 No more compilation error!
-				location: publicData.profile.location,
-				bio: publicData.profile.bio,
-				createdAt: publicData.profile.createdAt,
-				updatedAt: publicData.profile.updatedAt,
-			},
+			id: publicData.id,
+			name: publicData.name,
+			picture: publicData.picture,
+			bannerPicture: publicData.bannerPicture,
+			location: publicData.location,
+			bio: publicData.bio,
+			createdAt: publicData.createdAt,
+			updatedAt: publicData.updatedAt,
 			...(publicData.friends && { friends: publicData.friends }),
 		}
 	}
