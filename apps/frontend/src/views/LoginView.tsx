@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
-import { loginUser } from '../api/auth'
 import { FormikProvider, useFormik } from 'formik'
 import { TextField } from '../components/input/TextField'
 import { ToastTypes, useToast } from '../components/toast/ToastContext'
 import { useNavigate, useSearch } from '@tanstack/react-router'
 import { Route } from '../routes/_public/login'
 import { Button } from '../components/ui/button'
+import { useLogin } from '@/hooks/useLogin'
+import { components } from '@couplapp/shared'
 
 type LoginFormValues = {
 	email: string
@@ -17,9 +18,11 @@ export const LoginView = ({}) => {
 	const navigate = useNavigate()
 	const search = useSearch({ from: Route.id })
 
+	const { mutateAsync: loginUser } = useLogin()
+
 	const { addToast } = useToast()
 
-	const formik = useFormik({
+	const formik = useFormik<components['schemas']['LoginUserDto']>({
 		initialValues: {
 			email: '',
 			password: '',
@@ -28,7 +31,7 @@ export const LoginView = ({}) => {
 			setIsLoading(true)
 
 			try {
-				await loginUser(email, password)
+				await loginUser({ email, password })
 
 				navigate({ to: '/profiles-selection', from: '/login' })
 
@@ -37,12 +40,11 @@ export const LoginView = ({}) => {
 					type: ToastTypes.Success,
 				})
 			} catch (error: any) {
-				console.log(error)
-
 				addToast({
 					message: error.message,
 					type: ToastTypes.Error,
 				})
+				console.log(error)
 			} finally {
 				setIsLoading(false)
 			}

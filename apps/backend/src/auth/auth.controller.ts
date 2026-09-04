@@ -14,16 +14,21 @@ import { JwtRefreshGuard } from './guards/jwt-refresh-guard'
 import { JwtAuthGuard } from './guards/jwt-auth-guard'
 import { AuthUserDto } from './dto/auth-user.dto'
 import { ApiOkResponse } from '@nestjs/swagger'
+import { LoginResponseDto } from './dto/response-login.dto'
 
 @Controller('auth')
 export class AuthController {
 	constructor(private readonly authService: AuthService) {}
 
 	@Post('login')
+	@ApiOkResponse({
+		type: LoginResponseDto,
+		description: 'Returns success object for login.',
+	})
 	async login(
 		@Body() { email, password }: LoginUserDto,
 		@Res({ passthrough: true }) res: Response,
-	) {
+	): Promise<LoginResponseDto> {
 		const user = await this.authService.validateUser({
 			email,
 			password,

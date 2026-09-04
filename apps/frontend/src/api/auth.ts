@@ -1,13 +1,18 @@
 import { components } from '@couplapp/shared'
 import { client } from './client'
+import { LoginPayload } from './types'
 
-export const loginUser = async (email: string, password: string) =>
-	await client.post('/auth/login', {
-		json: {
-			email,
-			password,
-		},
-	})
+export const loginUser = async (payload: LoginPayload) => {
+	try {
+		const result = await client.post('/auth/login', {
+			json: payload,
+		})
+
+		return result.json()
+	} catch (error) {
+		throw error
+	}
+}
 
 export const logoutUser = async () => {
 	try {

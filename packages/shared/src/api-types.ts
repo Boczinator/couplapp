@@ -472,7 +472,24 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        LoginUserDto: Record<string, never>;
+        LoginUserDto: {
+            /**
+             * @description The registered email address of the account
+             * @example seb.boczek@gmail.com
+             */
+            email: string;
+            /**
+             * @description The plain-text authentication password
+             * @example SuperPassword$3213!
+             */
+            password: string;
+        };
+        LoginResponseDto: {
+            /** @example true */
+            success: boolean;
+            /** @example User logged in successfully */
+            message: string;
+        };
         AuthUserDto: {
             /** @example 8c91c9d0-6dfd-4ffe-a07d-sdad12312 */
             id: string;
@@ -678,11 +695,14 @@ export interface operations {
             };
         };
         responses: {
-            201: {
+            /** @description Returns success object for login. */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["LoginResponseDto"];
+                };
             };
         };
     };

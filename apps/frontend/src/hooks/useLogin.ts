@@ -1,11 +1,15 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { loginUser } from '../api/auth'
-import { queryClient } from '../App'
+import { LoginPayload, LoginResponse } from '@/api/types'
 
 export const useLogin = () => {
-	return useMutation({
-		mutationFn: (data) => {
-			return loginUser(data.email, data.password)
+	const queryClient = useQueryClient()
+
+	return useMutation<LoginResponse, Error, LoginPayload>({
+		mutationFn: async (payload) => {
+			const data = await loginUser(payload)
+
+			return data as LoginResponse
 		},
 		onSuccess: (user) => {
 			queryClient.setQueryData(['user-auth'], user)

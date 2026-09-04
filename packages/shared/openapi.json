@@ -7,7 +7,14 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -30,8 +37,15 @@
           }
         },
         "responses": {
-          "201": {
-            "description": ""
+          "200": {
+            "description": "Returns success object for login.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponseDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -158,7 +172,14 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -216,7 +237,22 @@
     "/profiles/{id}": {
       "get": {
         "operationId": "ProfilesController_getById",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "includes",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "friends"
+                ]
+              }
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -257,7 +293,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -271,7 +314,14 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -404,7 +454,14 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -507,7 +564,16 @@
     "/posts/{id}": {
       "delete": {
         "operationId": "PostsController_remove",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": ""
@@ -668,7 +734,40 @@
     "schemas": {
       "LoginUserDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "seb.boczek@gmail.com",
+            "description": "The registered email address of the account"
+          },
+          "password": {
+            "type": "string",
+            "example": "SuperPassword$3213!",
+            "description": "The plain-text authentication password"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "LoginResponseDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "User logged in successfully"
+          }
+        },
+        "required": [
+          "success",
+          "message"
+        ]
       },
       "AuthUserDto": {
         "type": "object",
@@ -726,7 +825,27 @@
       },
       "CreateUserDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "firstName",
+          "lastName",
+          "email",
+          "password"
+        ]
       },
       "LightProfileResponseDto": {
         "type": "object",
@@ -769,11 +888,11 @@
             "nullable": true
           },
           "location": {
-            "type": "object",
+            "type": "string",
             "nullable": true
           },
           "bio": {
-            "type": "object",
+            "type": "string",
             "nullable": true
           },
           "createdAt": {
@@ -786,14 +905,14 @@
             "nullable": true
           },
           "isPrivate": {
-            "type": "object"
+            "type": "boolean",
+            "nullable": true
           }
         },
         "required": [
           "id",
           "name",
           "picture",
-          "bannerPicture",
           "isPrivate"
         ]
       },
@@ -818,11 +937,11 @@
             "nullable": true
           },
           "location": {
-            "type": "object",
+            "type": "string",
             "nullable": true
           },
           "bio": {
-            "type": "object",
+            "type": "string",
             "nullable": true
           },
           "createdAt": {
@@ -835,7 +954,8 @@
             "nullable": true
           },
           "isPrivate": {
-            "type": "object"
+            "type": "boolean",
+            "nullable": true
           },
           "isOwner": {
             "type": "boolean"
@@ -855,7 +975,6 @@
           "id",
           "name",
           "picture",
-          "bannerPicture",
           "isPrivate",
           "isOwner"
         ]
@@ -868,12 +987,12 @@
         "type": "object",
         "properties": {
           "status": {
-            "type": "string",
             "enum": [
               "pending",
               "accepted",
               "blocked"
             ],
+            "type": "string",
             "example": "pending"
           },
           "direction": {
@@ -893,19 +1012,71 @@
       },
       "InviteFriendDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "receiverId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "receiverId"
+        ]
       },
       "CreateProfileDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "picture": {
+            "type": "string",
+            "nullable": true
+          },
+          "bannerPicture": {
+            "type": "string",
+            "nullable": true
+          },
+          "bio": {
+            "type": "string",
+            "nullable": true
+          },
+          "location": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "name",
+          "picture",
+          "bannerPicture",
+          "bio",
+          "location"
+        ]
       },
       "CreatePostDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "receiverId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "text",
+          "receiverId"
+        ]
       },
       "UpdatePostDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "text"
+        ]
       },
       "ConversationParticipantDto": {
         "type": "object",
@@ -919,9 +1090,10 @@
             "example": "conv_12345-6dfd-4ffe-a07d-b26d1024f883"
           },
           "joinedAt": {
-            "type": "object",
-            "example": "2026-08-06T06:52:20.204Z",
-            "nullable": true
+            "format": "date-time",
+            "type": "string",
+            "nullable": true,
+            "example": "2026-08-06T06:52:20.204Z"
           },
           "profile": {
             "$ref": "#/components/schemas/ProfileDto"
@@ -952,24 +1124,24 @@
           },
           "conversationId": {
             "type": "string",
-            "example": "conv_12345",
-            "nullable": true
+            "nullable": true,
+            "example": "conv_12345"
           },
           "content": {
             "type": "string",
-            "example": "Hey there!",
-            "nullable": true
+            "nullable": true,
+            "example": "Hey there!"
           },
           "isRead": {
             "type": "boolean",
-            "example": false,
-            "nullable": true
+            "nullable": true,
+            "example": false
           },
           "readAt": {
             "format": "date-time",
             "type": "string",
-            "example": "2026-08-06T06:55:00.000Z",
-            "nullable": true
+            "nullable": true,
+            "example": "2026-08-06T06:55:00.000Z"
           }
         },
         "required": [
@@ -990,23 +1162,25 @@
             "example": "conv_12345-6dfd-4ffe-a07d-b26d1024f883"
           },
           "title": {
-            "type": "object",
-            "example": "Project Group Chat",
-            "nullable": true
+            "type": "string",
+            "nullable": true,
+            "example": "Project Group Chat"
           },
           "isGroupChat": {
             "type": "boolean",
             "example": false
           },
           "createdAt": {
-            "type": "object",
-            "example": "2026-08-06T06:52:20.204Z",
-            "nullable": true
+            "format": "date-time",
+            "type": "string",
+            "nullable": true,
+            "example": "2026-08-06T06:52:20.204Z"
           },
           "updatedAt": {
-            "type": "object",
-            "example": "2026-08-06T06:52:20.204Z",
-            "nullable": true
+            "format": "date-time",
+            "type": "string",
+            "nullable": true,
+            "example": "2026-08-06T06:52:20.204Z"
           },
           "participants": {
             "type": "array",
@@ -1039,23 +1213,25 @@
             "example": "conv_12345-6dfd-4ffe-a07d-b26d1024f883"
           },
           "title": {
-            "type": "object",
-            "example": "Project Group Chat",
-            "nullable": true
+            "type": "string",
+            "nullable": true,
+            "example": "Project Group Chat"
           },
           "isGroupChat": {
             "type": "boolean",
             "example": false
           },
           "createdAt": {
-            "type": "object",
-            "example": "2026-08-06T06:52:20.204Z",
-            "nullable": true
+            "format": "date-time",
+            "type": "string",
+            "nullable": true,
+            "example": "2026-08-06T06:52:20.204Z"
           },
           "updatedAt": {
-            "type": "object",
-            "example": "2026-08-06T06:52:20.204Z",
-            "nullable": true
+            "format": "date-time",
+            "type": "string",
+            "nullable": true,
+            "example": "2026-08-06T06:52:20.204Z"
           },
           "participants": {
             "type": "array",
@@ -1107,24 +1283,24 @@
           },
           "conversationId": {
             "type": "string",
-            "example": "conv_12345",
-            "nullable": true
+            "nullable": true,
+            "example": "conv_12345"
           },
           "content": {
             "type": "string",
-            "example": "Hey there!",
-            "nullable": true
+            "nullable": true,
+            "example": "Hey there!"
           },
           "isRead": {
             "type": "boolean",
-            "example": false,
-            "nullable": true
+            "nullable": true,
+            "example": false
           },
           "readAt": {
             "format": "date-time",
             "type": "string",
-            "example": "2026-08-06T06:55:00.000Z",
-            "nullable": true
+            "nullable": true,
+            "example": "2026-08-06T06:55:00.000Z"
           },
           "sender": {
             "$ref": "#/components/schemas/MessageSenderDto"
