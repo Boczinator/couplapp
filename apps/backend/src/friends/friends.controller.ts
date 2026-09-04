@@ -15,6 +15,7 @@ import { FriendsService } from './friends.service'
 import { InviteFriendDto } from './dto/invite-friend.dto'
 import { ProfileDto } from 'src/profiles/dtos/profile.dto'
 import { ApiOkResponse } from '@nestjs/swagger'
+import { FriendRequestDto } from './dto/response-friend-request.dto'
 
 @UseGuards(JwtAuthGuard)
 @Controller('friends')
@@ -22,7 +23,12 @@ export class FriendsController {
 	constructor(private readonly friendsService: FriendsService) {}
 
 	@Get('requests')
-	async getRequests(@Req() req: any) {
+	@ApiOkResponse({
+		type: FriendRequestDto,
+		isArray: true,
+		description: 'Returns all friend requests for authenticated profile.',
+	})
+	async getRequests(@Req() req: any): Promise<FriendRequestDto[]> {
 		return await this.friendsService.getAllRequestsByProfileId(
 			req.user.activeProfileId,
 		)

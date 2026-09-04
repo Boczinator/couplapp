@@ -29,7 +29,7 @@ export const TextAreaField = ({
 				)}
 				htmlFor={field.name}
 			>
-				{label || placeholder}
+				{label}
 			</label>
 			<textarea
 				className="text-sm text-black bg-white border-black py-1.5 px-1 border w-full rounded-sm"

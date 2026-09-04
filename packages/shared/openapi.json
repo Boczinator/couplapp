@@ -285,7 +285,17 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Returns all friend requests for authenticated profile.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FriendRequestDto"
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -826,6 +836,33 @@
       "UpdateProfileDto": {
         "type": "object",
         "properties": {}
+      },
+      "FriendRequestDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "accepted",
+              "blocked"
+            ],
+            "example": "pending"
+          },
+          "direction": {
+            "type": "string",
+            "example": "incoming",
+            "description": "Direction of the request (e.g., incoming or outgoing)"
+          },
+          "profile": {
+            "$ref": "#/components/schemas/ProfileDto"
+          }
+        },
+        "required": [
+          "status",
+          "direction",
+          "profile"
+        ]
       },
       "InviteFriendDto": {
         "type": "object",

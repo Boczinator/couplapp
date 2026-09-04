@@ -537,6 +537,19 @@ export interface components {
             friends?: components["schemas"]["ProfileDto"][];
         };
         UpdateProfileDto: Record<string, never>;
+        FriendRequestDto: {
+            /**
+             * @example pending
+             * @enum {string}
+             */
+            status: "pending" | "accepted" | "blocked";
+            /**
+             * @description Direction of the request (e.g., incoming or outgoing)
+             * @example incoming
+             */
+            direction: string;
+            profile: components["schemas"]["ProfileDto"];
+        };
         InviteFriendDto: Record<string, never>;
         CreateProfileDto: Record<string, never>;
         CreatePostDto: Record<string, never>;
@@ -838,11 +851,14 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Returns all friend requests for authenticated profile. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["FriendRequestDto"][];
+                };
             };
         };
     };

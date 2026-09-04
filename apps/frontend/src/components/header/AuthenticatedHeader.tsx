@@ -57,7 +57,7 @@ export const AuthenticatedHeader = () => {
 		logout()
 	}
 
-	if (isLoading) return <div>Is Loading...</div>
+	if (isLoading || !profile) return <div>Is Loading...</div>
 
 	return (
 		<Sidebar>

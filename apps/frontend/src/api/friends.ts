@@ -35,7 +35,9 @@ export const removeRelation = async (receiverId: string) => {
 	}
 }
 
-export const getAllRequests = async () => {
+export const getAllRequests = async (): Promise<
+	components['schemas']['FriendRequestDto'][]
+> => {
 	try {
 		const result = await client.get(`friends/requests`)
 
