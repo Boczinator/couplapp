@@ -16,18 +16,18 @@ export const useInbox = () => {
 	})
 }
 
-export const useConversationMessages = (conversationId: string) => {
+export const useConversationMessages = (conversationId: string | null) => {
 	return useQuery({
 		queryKey: ['messages', conversationId],
-		queryFn: () => getConversationMessages(conversationId),
+		queryFn: () => getConversationMessages(conversationId!),
 		enabled: !!conversationId,
 	})
 }
 
-export const useConversationDetails = (conversationId: string) => {
+export const useConversationDetails = (conversationId?: string | null) => {
 	return useQuery({
 		queryKey: ['conversation-details', conversationId],
-		queryFn: () => getConversationDetails(conversationId),
+		queryFn: () => getConversationDetails(conversationId!),
 		enabled: !!conversationId,
 	})
 }

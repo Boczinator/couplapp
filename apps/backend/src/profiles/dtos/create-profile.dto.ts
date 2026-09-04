@@ -1,22 +1,11 @@
-import { IsOptional, IsString } from 'class-validator'
+import { PickType } from '@nestjs/swagger'
+import { ProfileDto } from './profile.dto'
 
-export class CreateProfileDto {
-	@IsString()
-	name!: string
-
-	@IsOptional()
-	@IsString()
-	picture!: string | null
-
-	@IsOptional()
-	@IsString()
-	bannerPicture!: string | null
-
-	@IsOptional()
-	@IsString()
-	bio!: string | null
-
-	@IsOptional()
-	@IsString()
-	location!: string | null
-}
+export class CreateProfileDto extends PickType(ProfileDto, [
+	'name',
+	'bio',
+	'picture',
+	'bannerPicture',
+	'location',
+	'isPrivate',
+]) {}

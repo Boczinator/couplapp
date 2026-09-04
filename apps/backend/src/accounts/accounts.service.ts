@@ -30,6 +30,7 @@ export class AccountsService {
 					picture: null,
 					bannerPicture: null,
 					location: null,
+					isPrivate: newUser.isPrivate,
 				},
 				newUser.id,
 				tx,

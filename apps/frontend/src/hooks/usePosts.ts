@@ -6,7 +6,7 @@ import {
 	updatePost,
 	type PostPayload,
 } from '../api/posts'
-import { useActiveProfileId, useAuthUser } from './useAuthUser'
+import { useActiveProfileId } from './useAuthUser'
 import { useToast } from '../components/toast/ToastContext'
 
 export const useProfilePosts = (profileId: string) => {

@@ -1,5 +1,5 @@
 import { Link, type LinkProps } from '@tanstack/react-router'
-import UserLogo from '../../assets/icons/avatar.svg'
+import UserLogo from '../../assets/icons/avatar.svg?inline'
 import type { HTMLAttributes } from 'react'
 import { Avatar, AvatarImage } from '../ui/avatar'
 

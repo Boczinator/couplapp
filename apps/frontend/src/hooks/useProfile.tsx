@@ -7,10 +7,10 @@ import {
 	updateProfilePicture,
 } from '../api/profile'
 import { useNavigate } from '@tanstack/react-router'
-import type { Profile } from '../api/types'
 import { queryClient } from '../api/queryClient'
 import { useActiveProfileId } from './useAuthUser'
 import { useToast } from '../components/toast/ToastContext'
+import { components } from '@couplapp/shared'
 
 export const useProfileOverview = () => {
 	const { data, isLoading } = useQuery({
@@ -90,7 +90,7 @@ export const useCreateProfile = () => {
 		isSuccess,
 	} = useMutation({
 		mutationKey: ['create-profile'],
-		mutationFn: (profile: Profile) => {
+		mutationFn: (profile: components['schemas']['CreateProfileDto']) => {
 			return createNewProfile(profile)
 		},
 		onSuccess: (data) => {

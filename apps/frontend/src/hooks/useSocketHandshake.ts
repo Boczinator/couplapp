@@ -5,6 +5,7 @@ import { useToast } from '../components/toast/ToastContext'
 import { useQueryClient } from '@tanstack/react-query'
 import { useParams } from '@tanstack/react-router'
 import { client } from '../api/client'
+import { components } from '@couplapp/shared'
 
 export const useSocketHandshake = () => {
 	const activeProfileId = useActiveProfileId()
@@ -45,7 +46,9 @@ export const useSocketHandshake = () => {
 
 		socket.connect()
 
-		const handleIncomingMessage = (message) => {
+		const handleIncomingMessage = (
+			message: components['schemas']['ChatMessageDto'],
+		) => {
 			queryClient.invalidateQueries({
 				queryKey: ['inbox'],
 			})

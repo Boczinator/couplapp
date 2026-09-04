@@ -1035,21 +1035,23 @@
             "type": "string",
             "nullable": true
           },
+          "location": {
+            "type": "string",
+            "nullable": true
+          },
           "bio": {
             "type": "string",
             "nullable": true
           },
-          "location": {
-            "type": "string",
+          "isPrivate": {
+            "type": "boolean",
             "nullable": true
           }
         },
         "required": [
           "name",
           "picture",
-          "bannerPicture",
-          "bio",
-          "location"
+          "isPrivate"
         ]
       },
       "CreatePostDto": {

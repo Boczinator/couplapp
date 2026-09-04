@@ -1,11 +1,14 @@
 import { useParams } from '@tanstack/react-router'
-import { useActiveProfileId, useAuthUser } from '../../hooks/useAuthUser'
+import { useActiveProfileId } from '../../hooks/useAuthUser'
 import { useFriendsList } from '../../hooks/useFriends'
 import { ProfileCard } from '../card/ProfileCard'
 import { useCurrentProfile } from '../../hooks/useProfile'
 
 export const FriendsList = () => {
-	const { profileId } = useParams({ strict: true })
+	const { profileId } = useParams({
+		from: '/_authenticated/profile/$profileId',
+	})
+
 	const activeProfileId = useActiveProfileId()
 
 	const isOwnProfile = profileId === activeProfileId
