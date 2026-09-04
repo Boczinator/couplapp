@@ -80,7 +80,7 @@ function RouteComponent() {
 
 			queryClient.invalidateQueries({ queryKey: ['inbox'] })
 
-			if (!conversationId) {
+			if (!conversationId && activeProfileId) {
 				navigate({
 					to: '/profile/$profileId/messages/$conversationId',
 					params: {
@@ -184,7 +184,7 @@ function RouteComponent() {
 									</MessageScrollerItem>
 								))}
 								{!conversationId && (!messages || messages.length === 0) && (
-									<div className="text-gray-400">
+									<div className="text-foreground">
 										Send a message to start chatting!
 									</div>
 								)}
