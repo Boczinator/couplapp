@@ -1,5 +1,5 @@
 import { Transform } from 'class-transformer'
-import { IsArray, IsIn, IsOptional, IsString } from 'class-validator'
+import { IsArray, IsIn, IsOptional } from 'class-validator'
 
 export class GetProfileQueryDto {
 	@IsOptional()

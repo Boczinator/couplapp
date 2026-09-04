@@ -3,7 +3,11 @@
 	"tasks": {
 		"build": {
 			"dependsOn": ["^build"],
-			"outputs": ["dist/**", "build/**"]
+			"outputs": ["dist/**", "build/**", "src/api-types.ts"]
+		},
+		"@repo/shared#generate": {
+			"inputs": ["openapi.json"],
+			"outputs": ["src/api-types.ts"]
 		},
 		"check-types": {
 			"dependsOn": ["^check-types"]
