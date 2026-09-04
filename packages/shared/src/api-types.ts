@@ -528,13 +528,13 @@ export interface components {
             picture: string | null;
             userId?: string;
             bannerPicture: string | null;
-            location?: Record<string, never> | null;
-            bio?: Record<string, never> | null;
+            location?: string | null;
+            bio?: string | null;
             /** Format: date-time */
             createdAt?: string;
             /** Format: date-time */
             updatedAt?: string | null;
-            isPrivate: Record<string, never>;
+            isPrivate: boolean;
         };
         ProfileResponseDto: {
             id: string;
@@ -542,13 +542,13 @@ export interface components {
             picture: string | null;
             userId?: string;
             bannerPicture: string | null;
-            location?: Record<string, never> | null;
-            bio?: Record<string, never> | null;
+            location?: string | null;
+            bio?: string | null;
             /** Format: date-time */
             createdAt?: string;
             /** Format: date-time */
             updatedAt?: string | null;
-            isPrivate: Record<string, never>;
+            isPrivate: boolean;
             isOwner: boolean;
             friendship?: Record<string, never> | null;
             friends?: components["schemas"]["ProfileDto"][];
@@ -568,7 +568,14 @@ export interface components {
             profile: components["schemas"]["ProfileDto"];
         };
         InviteFriendDto: Record<string, never>;
-        CreateProfileDto: Record<string, never>;
+        CreateProfileDto: {
+            name: string;
+            picture: string | null;
+            bannerPicture: string | null;
+            location?: string | null;
+            bio?: string | null;
+            isPrivate: boolean;
+        };
         CreatePostDto: Record<string, never>;
         UpdatePostDto: Record<string, never>;
         ConversationParticipantDto: {

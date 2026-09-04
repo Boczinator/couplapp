@@ -38,7 +38,6 @@ export type Post = {
 }
 
 export const createPost = async (post: PostPayload, receiverId: string) => {
-	console.log({ post, receiverId })
 	try {
 		const result = await client.post('posts/create', {
 			json: { ...post, receiverId },
@@ -46,7 +45,7 @@ export const createPost = async (post: PostPayload, receiverId: string) => {
 
 		return await result.json()
 	} catch (error) {
-		console.error(error)
+		throw error
 	}
 }
 
@@ -58,7 +57,6 @@ export const getPostsByProfileId = async (
 
 		return posts.json()
 	} catch (error) {
-		console.error(error)
 		throw error
 	}
 }
@@ -69,7 +67,7 @@ export const removePost = async (postId: string) => {
 
 		return result.json()
 	} catch (error) {
-		console.error(error)
+		throw error
 	}
 }
 
@@ -81,6 +79,6 @@ export const updatePost = async (postId: string, post: PostPayload) => {
 
 		return result.json()
 	} catch (error) {
-		console.log(error)
+		throw error
 	}
 }

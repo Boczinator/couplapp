@@ -2,7 +2,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, useNavigate, useParams } from '@tanstack/react-router'
 import { useEffect } from 'react'
 import { socket } from '../../../socket/client'
-import { useActiveProfileId, useAuthUser } from '../../../hooks/useAuthUser'
+import { useActiveProfileId } from '../../../hooks/useAuthUser'
 import {
 	useConversationDetails,
 	useConversationMessages,

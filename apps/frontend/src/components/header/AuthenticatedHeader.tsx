@@ -98,11 +98,12 @@ export const AuthenticatedHeader = () => {
 										params={{ profileId: profile?.id }}
 									>
 										My Friends
-										{incomingFriendRequestsAmount > 0 && (
-											<span className="text-sm p-1 font-bold bg-primary text-secondary rounded-full inline-block h-fit min-w-6 leading-4 text-center items-center">
-												{incomingFriendRequestsAmount}
-											</span>
-										)}
+										{!!incomingFriendRequestsAmount &&
+											incomingFriendRequestsAmount > 0 && (
+												<span className="text-sm p-1 font-bold bg-primary text-secondary rounded-full inline-block h-fit min-w-6 leading-4 text-center items-center">
+													{incomingFriendRequestsAmount}
+												</span>
+											)}
 									</HeaderLink>
 								</SidebarMenuButton>
 							</SidebarMenuItem>
@@ -113,11 +114,12 @@ export const AuthenticatedHeader = () => {
 										params={{ profileId: profile?.id }}
 									>
 										Messages
-										{unreadConversations?.length > 0 && (
-											<span className="text-sm p-1 font-bold bg-primary text-secondary rounded-full inline-block h-fit min-w-6 leading-4 text-center items-center">
-												{unreadConversations?.length}
-											</span>
-										)}
+										{!!unreadConversations &&
+											unreadConversations?.length > 0 && (
+												<span className="text-sm p-1 font-bold bg-primary text-secondary rounded-full inline-block h-fit min-w-6 leading-4 text-center items-center">
+													{unreadConversations?.length}
+												</span>
+											)}
 									</HeaderLink>
 								</SidebarMenuButton>
 							</SidebarMenuItem>

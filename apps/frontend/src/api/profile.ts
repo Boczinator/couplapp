@@ -1,5 +1,4 @@
 import { client } from './client'
-import type { Profile } from './types'
 import type { components } from '@couplapp/shared'
 /**
  * Update profile information.
@@ -59,7 +58,7 @@ export const switchProfile = async (
 }
 
 export const createProfile = async (
-	profile: Profile,
+	profile: components['schemas']['CreateProfileDto'],
 ): Promise<components['schemas']['ProfileDto']> => {
 	try {
 		const createdProfile = await client.post('accounts/profiles/create', {
