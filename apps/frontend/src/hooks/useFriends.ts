@@ -79,16 +79,17 @@ export const useAcceptFriendRequest = () => {
 	}
 }
 
-export const useFriendRequests = (profileId: string) => {
+export const useFriendRequests = (profileId?: string) => {
 	const {
 		data: friendRequests,
 		isPending,
 		isError,
 	} = useQuery({
-		queryKey: ['friends', 'requests', profileId],
+		queryKey: ['friends', 'requests', profileId!],
 		queryFn: () => {
 			return getAllRequests()
 		},
+		enabled: !!profileId,
 	})
 
 	return {
@@ -98,7 +99,7 @@ export const useFriendRequests = (profileId: string) => {
 	}
 }
 
-export const useFriendsList = (profileId: string) => {
+export const useFriendsList = (profileId?: string) => {
 	const {
 		data: friends,
 		isPending,
@@ -106,8 +107,9 @@ export const useFriendsList = (profileId: string) => {
 	} = useQuery({
 		queryKey: ['friends', 'list', profileId],
 		queryFn: () => {
-			return getFriends(profileId)
+			return getFriends(profileId!)
 		},
+		enabled: !!profileId,
 	})
 
 	return {

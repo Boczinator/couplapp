@@ -1,4 +1,4 @@
-import { useAuthUser } from '../../hooks/useAuthUser'
+import { useActiveProfileId, useAuthUser } from '../../hooks/useAuthUser'
 import {
 	useAcceptFriendRequest,
 	useFriendRequests,
@@ -12,9 +12,7 @@ type FriendsRequestsProps = {
 }
 
 export const FriendsRequests = (props: FriendsRequestsProps) => {
-	const {
-		user: { activeProfileId },
-	} = useAuthUser()
+	const activeProfileId = useActiveProfileId()
 
 	const { friendRequests, isPending } = useFriendRequests(activeProfileId)
 	const { removeRelationship } = useRemoveRelationship()

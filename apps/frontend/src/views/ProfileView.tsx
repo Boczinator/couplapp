@@ -5,7 +5,7 @@ import {
 	useInviteFriends,
 	useRemoveRelationship,
 } from '../hooks/useFriends'
-import { useAuthUser } from '../hooks/useAuthUser'
+import { useActiveProfileId, useAuthUser } from '../hooks/useAuthUser'
 import UserLogo from '../assets/icons/avatar.svg'
 import { useState } from 'react'
 import { DataImageTransferModal } from '../components/modal/DataImageTransferModal'
@@ -30,9 +30,7 @@ export const ProfileView = () => {
 		from: '/_authenticated/profile/$profileId',
 	})
 
-	const {
-		user: { activeProfileId },
-	} = useAuthUser()
+	const activeProfileId = useActiveProfileId()
 
 	const { profile, isLoading } = useCurrentProfile(profileId)
 	const { sendInvite } = useInviteFriends()
@@ -51,7 +49,7 @@ export const ProfileView = () => {
 		setIsOpen(true)
 	}
 
-	if (isLoading || !profile) return <div>Is Loading...</div>
+	if (isLoading || !profile || !activeProfileId) return <div>Is Loading...</div>
 
 	return (
 		<>

@@ -473,6 +473,32 @@ export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
         LoginUserDto: Record<string, never>;
+        AuthUserDto: {
+            /** @example 8c91c9d0-6dfd-4ffe-a07d-sdad12312 */
+            id: string;
+            /** @example john.doe@gmail.com */
+            email: string;
+            /** @example John */
+            firstName: string;
+            /** @example Doe */
+            lastName: string;
+            /** @example true */
+            isVerified: boolean;
+            /** @example user */
+            role: string;
+            /**
+             * Format: date-time
+             * @example 2026-08-06T06:52:20.204Z
+             */
+            createdAt: string;
+            /**
+             * Format: date-time
+             * @example 2026-08-06T06:52:20.204Z
+             */
+            updatedAt: string;
+            /** @example 8c91c9d0-6dfd-4fwee-a07d-sdad12312 */
+            activeProfileId: string;
+        };
         CreateUserDto: Record<string, never>;
         LightProfileResponseDto: {
             id: string;
@@ -622,11 +648,14 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Returns current authenticated in user. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["AuthUserDto"];
+                };
             };
         };
     };
@@ -730,12 +759,13 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Returns a level-one flat array of light profile items. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["LightProfileResponseDto"];
+                    "application/json": components["schemas"]["LightProfileResponseDto"][];
                 };
             };
         };
@@ -946,11 +976,14 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Returns the newly switched destiny profile. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["ProfileDto"];
+                };
             };
         };
     };

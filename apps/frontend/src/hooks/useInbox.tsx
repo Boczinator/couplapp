@@ -5,12 +5,10 @@ import {
 	getInbox,
 	markConversationAsRead,
 } from '../api/conversations'
-import { useAuthUser } from './useAuthUser'
+import { useActiveProfileId } from './useAuthUser'
 
 export const useInbox = () => {
-	const {
-		user: { activeProfileId },
-	} = useAuthUser()
+	const activeProfileId = useActiveProfileId()
 
 	return useQuery({
 		queryKey: ['inbox', activeProfileId],

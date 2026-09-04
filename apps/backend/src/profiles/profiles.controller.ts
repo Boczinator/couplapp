@@ -25,7 +25,6 @@ import {
 	LightProfileResponseDto,
 	ProfileResponseDto,
 } from './dtos/response-profile.dto'
-import { ProfileResponse, PublicProfile } from './profiles.types'
 import { ApiOkResponse } from '@nestjs/swagger'
 
 @UseGuards(JwtAuthGuard)

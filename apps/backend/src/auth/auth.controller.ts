@@ -12,12 +12,12 @@ import { LoginUserDto } from './login-user.dto'
 import { type Response } from 'express'
 import { JwtRefreshGuard } from './guards/jwt-refresh-guard'
 import { JwtAuthGuard } from './guards/jwt-auth-guard'
+import { AuthUserDto } from './dto/auth-user.dto'
+import { ApiOkResponse } from '@nestjs/swagger'
 
 @Controller('auth')
 export class AuthController {
-	constructor(
-		private readonly authService: AuthService,
-	) {}
+	constructor(private readonly authService: AuthService) {}
 
 	@Post('login')
 	async login(
@@ -86,7 +86,11 @@ export class AuthController {
 
 	@UseGuards(JwtAuthGuard)
 	@Get('me')
-	async getProfile(@Req() req: any) {
+	@ApiOkResponse({
+		type: AuthUserDto,
+		description: 'Returns current authenticated in user.',
+	})
+	async getProfile(@Req() req: any): Promise<AuthUserDto> {
 		return req.user
 	}
 }

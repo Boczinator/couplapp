@@ -1,3 +1,4 @@
+import { components } from '@couplapp/shared'
 import { client } from './client'
 
 export const loginUser = async (email: string, password: string) =>
@@ -18,13 +19,16 @@ export const logoutUser = async () => {
 	}
 }
 
-export const getUserMe = async () => {
+export const getUserMe = async (): Promise<
+	components['schemas']['AuthUserDto']
+> => {
 	try {
-		const data = await client.get('/auth/me').json()
+		const data = await client.get('/auth/me')
 
-		return data
+		return data.json()
 	} catch (error) {
 		console.log(error)
+		throw error
 	}
 }
 

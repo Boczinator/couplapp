@@ -87,7 +87,14 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Returns current authenticated in user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthUserDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -188,11 +195,14 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Returns a level-one flat array of light profile items.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LightProfileResponseDto"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LightProfileResponseDto"
+                  }
                 }
               }
             }
@@ -431,7 +441,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Returns the newly switched destiny profile.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -615,6 +632,60 @@
       "LoginUserDto": {
         "type": "object",
         "properties": {}
+      },
+      "AuthUserDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "8c91c9d0-6dfd-4ffe-a07d-sdad12312"
+          },
+          "email": {
+            "type": "string",
+            "example": "john.doe@gmail.com"
+          },
+          "firstName": {
+            "type": "string",
+            "example": "John"
+          },
+          "lastName": {
+            "type": "string",
+            "example": "Doe"
+          },
+          "isVerified": {
+            "type": "boolean",
+            "example": true
+          },
+          "role": {
+            "type": "string",
+            "example": "user"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2026-08-06T06:52:20.204Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2026-08-06T06:52:20.204Z"
+          },
+          "activeProfileId": {
+            "type": "string",
+            "example": "8c91c9d0-6dfd-4fwee-a07d-sdad12312"
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "firstName",
+          "lastName",
+          "isVerified",
+          "role",
+          "createdAt",
+          "updatedAt",
+          "activeProfileId"
+        ]
       },
       "CreateUserDto": {
         "type": "object",

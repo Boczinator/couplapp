@@ -13,6 +13,8 @@ import type { Response } from 'express'
 import { CreateProfileDto } from 'src/profiles/dtos/create-profile.dto'
 import { CreateUserDto } from 'src/users/dtos/create-user.dto'
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth-guard'
+import { ProfileDto } from 'src/profiles/dtos/profile.dto'
+import { ApiOkResponse } from '@nestjs/swagger'
 
 @Controller('accounts')
 export class AccountsController {
@@ -39,11 +41,15 @@ export class AccountsController {
 
 	@UseGuards(JwtAuthGuard)
 	@Patch('profiles/switch/:id')
+	@ApiOkResponse({
+		type: ProfileDto,
+		description: 'Returns the newly switched destiny profile.',
+	})
 	async switchProfile(
 		@Param('id') id: string,
 		@Req() req: Request & { user: { id: string } },
 		@Res({ passthrough: true }) res: Response,
-	) {
+	): Promise<ProfileDto> {
 		return await this.accountsService.switchProfileAndTokens(
 			req.user.id,
 			id,

@@ -3,7 +3,7 @@ import { ProfileCard } from '../card/ProfileCard'
 import { formatDate } from '../../helpers/date'
 import { useState } from 'react'
 import type { Author, Receiver } from '../../api/posts'
-import { useAuthUser } from '../../hooks/useAuthUser'
+import { useActiveProfileId } from '../../hooks/useAuthUser'
 import { useParams } from '@tanstack/react-router'
 import { PostEditDropdown } from './PostEditDropdown'
 import { EditPostForm } from '../form/EditPostForm'
@@ -36,9 +36,7 @@ export const Post = ({
 }: PostProps) => {
 	const [isEditFormOpen, setIsEditFormOpen] = useState(false)
 
-	const {
-		user: { activeProfileId },
-	} = useAuthUser()
+	const activeProfileId = useActiveProfileId()
 
 	const { profileId } = useParams({
 		from: '/_authenticated/profile/$profileId',

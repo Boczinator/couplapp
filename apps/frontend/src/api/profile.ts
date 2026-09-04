@@ -46,7 +46,9 @@ export const getProfile = async (
 	}
 }
 
-export const switchProfile = async (profileId: string) => {
+export const switchProfile = async (
+	profileId: string,
+): Promise<components['schemas']['ProfileDto']> => {
 	try {
 		const profile = await client.patch(`accounts/profiles/switch/${profileId}`)
 

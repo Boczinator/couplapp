@@ -4,21 +4,18 @@ import { Button } from '../components/ui/button'
 import {
 	Card,
 	CardAction,
-	CardContent,
 	CardDescription,
 	CardHeader,
 	CardTitle,
 } from '../components/ui/card'
-import { useAuthUser } from '../hooks/useAuthUser'
+import { useActiveProfileId } from '../hooks/useAuthUser'
 import { useFriendsList } from '../hooks/useFriends'
 import { useInbox } from '../hooks/useInbox'
 import { Avatar, AvatarGroup, AvatarImage } from '../components/ui/avatar'
 import clsx from 'clsx'
 
 export const InboxView = () => {
-	const {
-		user: { activeProfileId },
-	} = useAuthUser()
+	const activeProfileId = useActiveProfileId()
 
 	const { friends } = useFriendsList(activeProfileId)
 
@@ -36,7 +33,7 @@ export const InboxView = () => {
 			),
 	)
 
-	if (isPending) return <div>Loading...</div>
+	if (isPending || !activeProfileId) return <div>Loading...</div>
 
 	return (
 		<>
