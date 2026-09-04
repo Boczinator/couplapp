@@ -569,7 +569,17 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Returns all conversations from authenticated profile with first message for preview.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InboxConversationDto"
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -583,7 +593,14 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Returns the conversation details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConversationDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -597,7 +614,17 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Returns all messages from requested conversation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ChatMessageWithSenderDto"
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -879,6 +906,240 @@
       "UpdatePostDto": {
         "type": "object",
         "properties": {}
+      },
+      "ConversationParticipantDto": {
+        "type": "object",
+        "properties": {
+          "profileId": {
+            "type": "string",
+            "example": "prof_8c91c9d0-6dfd-4ffe-a07d-b26d1024f883"
+          },
+          "conversationId": {
+            "type": "string",
+            "example": "conv_12345-6dfd-4ffe-a07d-b26d1024f883"
+          },
+          "joinedAt": {
+            "type": "object",
+            "example": "2026-08-06T06:52:20.204Z",
+            "nullable": true
+          },
+          "profile": {
+            "$ref": "#/components/schemas/ProfileDto"
+          }
+        },
+        "required": [
+          "profileId",
+          "conversationId",
+          "joinedAt",
+          "profile"
+        ]
+      },
+      "ChatMessageDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "c91c9d0-6dfd-4ffe-a07d-b26d1024f883"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2026-08-06T06:52:20.204Z"
+          },
+          "senderId": {
+            "type": "string",
+            "example": "prof_8c91c9d0"
+          },
+          "conversationId": {
+            "type": "string",
+            "example": "conv_12345",
+            "nullable": true
+          },
+          "content": {
+            "type": "string",
+            "example": "Hey there!",
+            "nullable": true
+          },
+          "isRead": {
+            "type": "boolean",
+            "example": false,
+            "nullable": true
+          },
+          "readAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2026-08-06T06:55:00.000Z",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "senderId",
+          "conversationId",
+          "content",
+          "isRead",
+          "readAt"
+        ]
+      },
+      "InboxConversationDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "conv_12345-6dfd-4ffe-a07d-b26d1024f883"
+          },
+          "title": {
+            "type": "object",
+            "example": "Project Group Chat",
+            "nullable": true
+          },
+          "isGroupChat": {
+            "type": "boolean",
+            "example": false
+          },
+          "createdAt": {
+            "type": "object",
+            "example": "2026-08-06T06:52:20.204Z",
+            "nullable": true
+          },
+          "updatedAt": {
+            "type": "object",
+            "example": "2026-08-06T06:52:20.204Z",
+            "nullable": true
+          },
+          "participants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConversationParticipantDto"
+            }
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChatMessageDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "isGroupChat",
+          "createdAt",
+          "updatedAt",
+          "participants",
+          "messages"
+        ]
+      },
+      "ConversationDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "conv_12345-6dfd-4ffe-a07d-b26d1024f883"
+          },
+          "title": {
+            "type": "object",
+            "example": "Project Group Chat",
+            "nullable": true
+          },
+          "isGroupChat": {
+            "type": "boolean",
+            "example": false
+          },
+          "createdAt": {
+            "type": "object",
+            "example": "2026-08-06T06:52:20.204Z",
+            "nullable": true
+          },
+          "updatedAt": {
+            "type": "object",
+            "example": "2026-08-06T06:52:20.204Z",
+            "nullable": true
+          },
+          "participants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConversationParticipantDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "isGroupChat",
+          "createdAt",
+          "updatedAt",
+          "participants"
+        ]
+      },
+      "MessageSenderDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "picture": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "picture"
+        ]
+      },
+      "ChatMessageWithSenderDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "c91c9d0-6dfd-4ffe-a07d-b26d1024f883"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2026-08-06T06:52:20.204Z"
+          },
+          "senderId": {
+            "type": "string",
+            "example": "prof_8c91c9d0"
+          },
+          "conversationId": {
+            "type": "string",
+            "example": "conv_12345",
+            "nullable": true
+          },
+          "content": {
+            "type": "string",
+            "example": "Hey there!",
+            "nullable": true
+          },
+          "isRead": {
+            "type": "boolean",
+            "example": false,
+            "nullable": true
+          },
+          "readAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2026-08-06T06:55:00.000Z",
+            "nullable": true
+          },
+          "sender": {
+            "$ref": "#/components/schemas/MessageSenderDto"
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "senderId",
+          "conversationId",
+          "content",
+          "isRead",
+          "readAt",
+          "sender"
+        ]
       }
     }
   }

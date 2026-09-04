@@ -3,13 +3,13 @@ import {
 	Inject,
 	Injectable,
 	InternalServerErrorException,
+	NotFoundException,
 } from '@nestjs/common'
 import { DRIZZLE_PROVIDER } from 'src/database/database.provider'
 import * as schema from '../db/schema'
 import { NodePgDatabase } from 'drizzle-orm/node-postgres'
 import { and, asc, desc, eq, inArray, isNull, ne } from 'drizzle-orm'
 import { EventEmitter2 } from '@nestjs/event-emitter'
-
 @Injectable()
 export class ConversationsService {
 	constructor(
@@ -49,7 +49,7 @@ export class ConversationsService {
 	}
 
 	async getConversationDetails(conversationId: string) {
-		return await this.db.query.conversations.findFirst({
+		const conversation = await this.db.query.conversations.findFirst({
 			where: eq(schema.conversations.id, conversationId),
 			with: {
 				participants: {
@@ -59,6 +59,14 @@ export class ConversationsService {
 				},
 			},
 		})
+
+		if (!conversation) {
+			throw new NotFoundException(
+				`Conversation with id ${conversationId} not found`,
+			)
+		}
+
+		return conversation
 	}
 
 	async getConversationMessages(conversationId: string) {

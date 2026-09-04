@@ -54,12 +54,13 @@ export const switchProfile = async (
 
 		return await profile.json()
 	} catch (error) {
-		console.log(error)
 		throw error
 	}
 }
 
-export const createProfile = async (profile: Profile) => {
+export const createProfile = async (
+	profile: Profile,
+): Promise<components['schemas']['ProfileDto']> => {
 	try {
 		const createdProfile = await client.post('accounts/profiles/create', {
 			json: profile,
@@ -67,7 +68,6 @@ export const createProfile = async (profile: Profile) => {
 
 		return await createdProfile.json()
 	} catch (error) {
-		console.log(error)
 		throw error
 	}
 }
@@ -83,6 +83,6 @@ export const updateProfilePicture = async (file: File) => {
 
 		return await result.json()
 	} catch (error) {
-		console.log(error)
+		throw error
 	}
 }

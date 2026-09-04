@@ -554,6 +554,91 @@ export interface components {
         CreateProfileDto: Record<string, never>;
         CreatePostDto: Record<string, never>;
         UpdatePostDto: Record<string, never>;
+        ConversationParticipantDto: {
+            /** @example prof_8c91c9d0-6dfd-4ffe-a07d-b26d1024f883 */
+            profileId: string;
+            /** @example conv_12345-6dfd-4ffe-a07d-b26d1024f883 */
+            conversationId: string;
+            /** @example 2026-08-06T06:52:20.204Z */
+            joinedAt: Record<string, never> | null;
+            profile: components["schemas"]["ProfileDto"];
+        };
+        ChatMessageDto: {
+            /** @example c91c9d0-6dfd-4ffe-a07d-b26d1024f883 */
+            id: string;
+            /**
+             * Format: date-time
+             * @example 2026-08-06T06:52:20.204Z
+             */
+            createdAt: string;
+            /** @example prof_8c91c9d0 */
+            senderId: string;
+            /** @example conv_12345 */
+            conversationId: string | null;
+            /** @example Hey there! */
+            content: string | null;
+            /** @example false */
+            isRead: boolean | null;
+            /**
+             * Format: date-time
+             * @example 2026-08-06T06:55:00.000Z
+             */
+            readAt: string | null;
+        };
+        InboxConversationDto: {
+            /** @example conv_12345-6dfd-4ffe-a07d-b26d1024f883 */
+            id: string;
+            /** @example Project Group Chat */
+            title: Record<string, never> | null;
+            /** @example false */
+            isGroupChat: boolean;
+            /** @example 2026-08-06T06:52:20.204Z */
+            createdAt: Record<string, never> | null;
+            /** @example 2026-08-06T06:52:20.204Z */
+            updatedAt: Record<string, never> | null;
+            participants: components["schemas"]["ConversationParticipantDto"][];
+            messages: components["schemas"]["ChatMessageDto"][];
+        };
+        ConversationDto: {
+            /** @example conv_12345-6dfd-4ffe-a07d-b26d1024f883 */
+            id: string;
+            /** @example Project Group Chat */
+            title: Record<string, never> | null;
+            /** @example false */
+            isGroupChat: boolean;
+            /** @example 2026-08-06T06:52:20.204Z */
+            createdAt: Record<string, never> | null;
+            /** @example 2026-08-06T06:52:20.204Z */
+            updatedAt: Record<string, never> | null;
+            participants: components["schemas"]["ConversationParticipantDto"][];
+        };
+        MessageSenderDto: {
+            id: string;
+            picture: string | null;
+        };
+        ChatMessageWithSenderDto: {
+            /** @example c91c9d0-6dfd-4ffe-a07d-b26d1024f883 */
+            id: string;
+            /**
+             * Format: date-time
+             * @example 2026-08-06T06:52:20.204Z
+             */
+            createdAt: string;
+            /** @example prof_8c91c9d0 */
+            senderId: string;
+            /** @example conv_12345 */
+            conversationId: string | null;
+            /** @example Hey there! */
+            content: string | null;
+            /** @example false */
+            isRead: boolean | null;
+            /**
+             * Format: date-time
+             * @example 2026-08-06T06:55:00.000Z
+             */
+            readAt: string | null;
+            sender: components["schemas"]["MessageSenderDto"];
+        };
     };
     responses: never;
     parameters: never;
@@ -1107,11 +1192,14 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Returns all conversations from authenticated profile with first message for preview. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["InboxConversationDto"][];
+                };
             };
         };
     };
@@ -1124,11 +1212,14 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Returns the conversation details. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["ConversationDto"];
+                };
             };
         };
     };
@@ -1141,11 +1232,14 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Returns all messages from requested conversation. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["ChatMessageWithSenderDto"][];
+                };
             };
         };
     };

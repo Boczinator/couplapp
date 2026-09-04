@@ -60,8 +60,10 @@ export const InboxView = () => {
 								<CardTitle className="flex gap-3 items-center">
 									<AvatarGroup>
 										{conversation.participants.map((participant) => (
-											<Avatar key={participant.id}>
-												<AvatarImage src={participant.profile.picture} />
+											<Avatar key={participant.profile.id}>
+												<AvatarImage
+													src={participant.profile.picture || undefined}
+												/>
 											</Avatar>
 										))}
 									</AvatarGroup>
@@ -73,7 +75,7 @@ export const InboxView = () => {
 									} & you`}
 								</CardTitle>
 								<CardDescription>
-									{conversation.messages[0].content}
+									{conversation?.messages[0]?.content}
 								</CardDescription>
 								<CardAction className="hidden md:block">
 									<Button>Continue conversation</Button>
