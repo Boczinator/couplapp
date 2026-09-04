@@ -474,6 +474,27 @@ export interface components {
     schemas: {
         LoginUserDto: Record<string, never>;
         CreateUserDto: Record<string, never>;
+        FriendReferenceDto: {
+            id: string;
+            name: string;
+            picture: Record<string, never> | null;
+        };
+        ProfileResponseDto: {
+            isPrivate: boolean;
+            isOwner: boolean;
+            friendship?: Record<string, never> | null;
+            id: string;
+            name: string;
+            picture: Record<string, never> | null;
+            userId?: string;
+            bannerPicture?: Record<string, never> | null;
+            location?: Record<string, never> | null;
+            bio?: Record<string, never> | null;
+            /** Format: date-time */
+            createdAt?: string;
+            updatedAt?: Record<string, never> | null;
+            friends?: components["schemas"]["FriendReferenceDto"][];
+        };
         UpdateProfileDto: Record<string, never>;
         InviteFriendDto: Record<string, never>;
         CreateProfileDto: Record<string, never>;
@@ -715,7 +736,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["ProfileResponseDto"];
+                };
             };
         };
     };

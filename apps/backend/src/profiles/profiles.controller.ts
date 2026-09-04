@@ -23,6 +23,7 @@ import 'multer'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { ProfileResponseDto } from './dtos/response-profile.dto'
 import { ProfileResponse, PublicProfile } from './profiles.types'
+import { ApiOkResponse } from '@nestjs/swagger'
 
 @UseGuards(JwtAuthGuard)
 @Controller('profiles')
@@ -44,6 +45,7 @@ export class ProfilesController {
 	}
 
 	@Get(':id')
+	@ApiOkResponse({ type: ProfileResponseDto })
 	async getById(
 		@Param('id') id: schema.Profile['id'],
 		@Req() req: Request & { user: { id: string; activeProfileId: string } },
@@ -67,7 +69,7 @@ export class ProfilesController {
 				friendship: data.friendship,
 				id: data.id,
 				name: data.name,
-				picture: data.picture,
+				picture: data.picture || '',
 			}
 		}
 

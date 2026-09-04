@@ -12,6 +12,7 @@ export const updateProfile = async (profileId: string) => {
 		return await updatedProfile.json()
 	} catch (error) {
 		console.log(error)
+		throw error
 	}
 }
 
@@ -22,10 +23,13 @@ export const getProfileOverview = async () => {
 		return await profile.json()
 	} catch (error) {
 		console.log(error)
+		throw error
 	}
 }
 
-export const getProfile = async (profileId: string) => {
+export const getProfile = async (
+	profileId: string,
+): Promise<components['schemas']['ProfileResponseDto']> => {
 	try {
 		const profile = await client.get(`profiles/${profileId}`, {
 			searchParams: {
@@ -36,6 +40,7 @@ export const getProfile = async (profileId: string) => {
 		return await profile.json()
 	} catch (error) {
 		console.log(error)
+		throw error
 	}
 }
 
@@ -46,6 +51,7 @@ export const switchProfile = async (profileId: string) => {
 		return await profile.json()
 	} catch (error) {
 		console.log(error)
+		throw error
 	}
 }
 
@@ -58,6 +64,7 @@ export const createProfile = async (profile: Profile) => {
 		return await createdProfile.json()
 	} catch (error) {
 		console.log(error)
+		throw error
 	}
 }
 

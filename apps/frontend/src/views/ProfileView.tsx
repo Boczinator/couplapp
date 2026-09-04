@@ -51,7 +51,7 @@ export const ProfileView = () => {
 		setIsOpen(true)
 	}
 
-	if (isLoading) return <div>Is Loading...</div>
+	if (isLoading || !profile) return <div>Is Loading...</div>
 
 	return (
 		<>
@@ -61,7 +61,7 @@ export const ProfileView = () => {
 						<div className="flex flex-wrap justify-between w-full">
 							<div className="flex flex-1 flex-wrap gap-5 h-fit pl-2.5 pb-2.5 items-center">
 								<div className="size-30 group relative">
-									{profile.isOwner ? (
+									{profile?.isOwner ? (
 										<Tooltip>
 											<TooltipTrigger onClick={openModal} className="size-full">
 												<div className="overflow-hidden bg-red-200 rounded-full size-full shadow-lg">

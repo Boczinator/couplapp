@@ -1,5 +1,6 @@
-import { FriendsService } from './friends.service'
-
-export type Friendship = Awaited<
-	ReturnType<InstanceType<typeof FriendsService>['getStatus']>
->
+export type FriendshipResponse = {
+	profileId1: string
+	profileId2: string
+	status: 'pending' | 'accepted' | 'blocked'
+	actionProfileId: string
+} | null
