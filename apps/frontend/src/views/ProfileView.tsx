@@ -5,7 +5,7 @@ import {
 	useInviteFriends,
 	useRemoveRelationship,
 } from '../hooks/useFriends'
-import { useAuthUser } from '../hooks/useAuthUser'
+import { useActiveProfileId, useAuthUser } from '../hooks/useAuthUser'
 import UserLogo from '../assets/icons/avatar.svg'
 import { useState } from 'react'
 import { DataImageTransferModal } from '../components/modal/DataImageTransferModal'
@@ -30,9 +30,7 @@ export const ProfileView = () => {
 		from: '/_authenticated/profile/$profileId',
 	})
 
-	const {
-		user: { activeProfileId },
-	} = useAuthUser()
+	const activeProfileId = useActiveProfileId()
 
 	const { profile, isLoading } = useCurrentProfile(profileId)
 	const { sendInvite } = useInviteFriends()
@@ -51,7 +49,7 @@ export const ProfileView = () => {
 		setIsOpen(true)
 	}
 
-	if (isLoading) return <div>Is Loading...</div>
+	if (isLoading || !profile || !activeProfileId) return <div>Is Loading...</div>
 
 	return (
 		<>
@@ -61,7 +59,7 @@ export const ProfileView = () => {
 						<div className="flex flex-wrap justify-between w-full">
 							<div className="flex flex-1 flex-wrap gap-5 h-fit pl-2.5 pb-2.5 items-center">
 								<div className="size-30 group relative">
-									{profile.isOwner ? (
+									{profile?.isOwner ? (
 										<Tooltip>
 											<TooltipTrigger onClick={openModal} className="size-full">
 												<div className="overflow-hidden bg-red-200 rounded-full size-full shadow-lg">
@@ -131,7 +129,7 @@ export const ProfileView = () => {
 								<AvatarGroup>
 									{profile.friends.map((friend) => (
 										<Avatar>
-											<AvatarImage src={friend?.picture} />
+											<AvatarImage src={friend?.picture || undefined} />
 											<AvatarFallback>
 												{friend.name?.charAt(0).toUpperCase()}
 											</AvatarFallback>

@@ -5,7 +5,7 @@ import { Avatar, AvatarImage } from '../ui/avatar'
 
 type ProfileCardProps = {
 	name: string
-	image?: string
+	image?: string | null
 	children?: React.ReactNode
 } & LinkProps &
 	HTMLAttributes<HTMLDivElement>

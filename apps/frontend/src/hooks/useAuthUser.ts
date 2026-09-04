@@ -17,3 +17,8 @@ export const useAuthUser = () => {
 		error,
 	}
 }
+
+export const useActiveProfileId = (): string | undefined => {
+	const { user } = useAuthUser()
+	return user?.activeProfileId
+}

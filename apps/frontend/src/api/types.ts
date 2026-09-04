@@ -1,7 +1,4 @@
-export type Profile = {
-	name: string
-	bio?: string
-	picture?: string
-	bannerPicture?: string
-	isPrivate?: boolean
-}
+import { components } from "@couplapp/shared"
+
+export type LoginPayload = components['schemas']['LoginUserDto']
+export type LoginResponse = components['schemas']['LoginResponseDto']

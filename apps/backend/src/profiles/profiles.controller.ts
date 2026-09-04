@@ -4,6 +4,7 @@ import {
 	FileTypeValidator,
 	Get,
 	MaxFileSizeValidator,
+	NotFoundException,
 	Param,
 	ParseFilePipe,
 	Patch,
@@ -20,6 +21,11 @@ import { UpdateProfileDto } from './dtos/update-profile.dto'
 import { GetProfileQueryDto } from './dtos/get-profile-query.dto'
 import 'multer'
 import { FileInterceptor } from '@nestjs/platform-express'
+import {
+	LightProfileResponseDto,
+	ProfileResponseDto,
+} from './dtos/response-profile.dto'
+import { ApiOkResponse } from '@nestjs/swagger'
 
 @UseGuards(JwtAuthGuard)
 @Controller('profiles')
@@ -34,6 +40,11 @@ export class ProfilesController {
 	}
 
 	@Get('overview')
+	@ApiOkResponse({
+		type: LightProfileResponseDto,
+		isArray: true,
+		description: 'Returns a level-one flat array of light profile items.',
+	})
 	async getLight(@Req() req: Request & { user: { id: string } }) {
 		const updatedProfile = await this.profileService.findAllLight(req.user.id)
 
@@ -41,19 +52,51 @@ export class ProfilesController {
 	}
 
 	@Get(':id')
+	@ApiOkResponse({ type: ProfileResponseDto })
 	async getById(
 		@Param('id') id: schema.Profile['id'],
 		@Req() req: Request & { user: { id: string; activeProfileId: string } },
 		@Query() query: GetProfileQueryDto,
-	) {
-		const profile = await this.profileService.findOne(
+	): Promise<ProfileResponseDto> {
+		const data = await this.profileService.findOne(
 			id,
 			req.user.id,
 			req.user.activeProfileId,
 			query,
 		)
 
-		return profile
+		if (!data) {
+			throw new NotFoundException('Profile not found')
+		}
+
+		if (data.isPrivate === true) {
+			return {
+				isPrivate: true,
+				isOwner: data.isOwner,
+				friendship: data.friendship,
+				id: data.id,
+				name: data.name,
+				picture: data.picture || '',
+			}
+		}
+
+		const publicData = data as ProfileResponseDto
+
+		return {
+			...publicData,
+			isPrivate: false,
+			isOwner: publicData.isOwner,
+			friendship: publicData.friendship,
+			id: publicData.id,
+			name: publicData.name,
+			picture: publicData.picture,
+			bannerPicture: publicData.bannerPicture,
+			location: publicData.location,
+			bio: publicData.bio,
+			createdAt: publicData.createdAt,
+			updatedAt: publicData.updatedAt,
+			...(publicData.friends && { friends: publicData.friends }),
+		}
 	}
 
 	@Patch('avatar')

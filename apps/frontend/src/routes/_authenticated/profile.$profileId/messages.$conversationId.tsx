@@ -2,7 +2,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, useNavigate, useParams } from '@tanstack/react-router'
 import { useEffect } from 'react'
 import { socket } from '../../../socket/client'
-import { useAuthUser } from '../../../hooks/useAuthUser'
+import { useActiveProfileId, useAuthUser } from '../../../hooks/useAuthUser'
 import {
 	useConversationDetails,
 	useConversationMessages,
@@ -53,9 +53,7 @@ function RouteComponent() {
 	const navigate = useNavigate()
 	const queryClient = useQueryClient()
 
-	const {
-		user: { activeProfileId },
-	} = useAuthUser()
+	const activeProfileId = useActiveProfileId()
 
 	const { data: conversationDetails, isPending } =
 		useConversationDetails(conversationId)

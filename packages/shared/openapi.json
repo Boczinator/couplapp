@@ -1,0 +1,1322 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/": {
+      "get": {
+        "operationId": "AppController_getHello",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "operationId": "AuthController_login",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns success object for login.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/verify-registration-token": {
+      "post": {
+        "operationId": "AuthController_verifyRegistrationToken",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "operationId": "AuthController_refresh",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "operationId": "AuthController_logout",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "operationId": "AuthController_getProfile",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Returns current authenticated in user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthUserDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/users": {
+      "get": {
+        "operationId": "UsersController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      },
+      "delete": {
+        "operationId": "UsersController_removeUser",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "operationId": "UsersController_findUser",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/create": {
+      "post": {
+        "operationId": "UsersController_createUser",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/profiles/search": {
+      "get": {
+        "operationId": "ProfilesController_search",
+        "parameters": [
+          {
+            "name": "query",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Profiles"
+        ]
+      }
+    },
+    "/profiles/overview": {
+      "get": {
+        "operationId": "ProfilesController_getLight",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Returns a level-one flat array of light profile items.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LightProfileResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Profiles"
+        ]
+      }
+    },
+    "/profiles/{id}": {
+      "get": {
+        "operationId": "ProfilesController_getById",
+        "parameters": [
+          {
+            "name": "includes",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "friends"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Profiles"
+        ]
+      },
+      "patch": {
+        "operationId": "ProfilesController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProfileDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Profiles"
+        ]
+      }
+    },
+    "/profiles/avatar": {
+      "patch": {
+        "operationId": "ProfilesController_updateAvatar",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Profiles"
+        ]
+      }
+    },
+    "/friends/requests": {
+      "get": {
+        "operationId": "FriendsController_getRequests",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Returns all friend requests for authenticated profile.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FriendRequestDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Friends"
+        ]
+      }
+    },
+    "/friends/{profileId}": {
+      "get": {
+        "operationId": "FriendsController_getFriends",
+        "parameters": [
+          {
+            "name": "profileId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a level-one flat array of profile items.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProfileDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Friends"
+        ]
+      }
+    },
+    "/friends/invite": {
+      "post": {
+        "operationId": "FriendsController_invite",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InviteFriendDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Friends"
+        ]
+      }
+    },
+    "/friends/remove/{receiverId}": {
+      "delete": {
+        "operationId": "FriendsController_remove",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Friends"
+        ]
+      }
+    },
+    "/friends/accept/{requesterId}": {
+      "patch": {
+        "operationId": "FriendsController_accept",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Friends"
+        ]
+      }
+    },
+    "/accounts/register": {
+      "post": {
+        "operationId": "AccountsController_register",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Accounts"
+        ]
+      }
+    },
+    "/accounts/profiles/create": {
+      "post": {
+        "operationId": "AccountsController_createProfile",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProfileDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Accounts"
+        ]
+      }
+    },
+    "/accounts/profiles/switch/{id}": {
+      "patch": {
+        "operationId": "AccountsController_switchProfile",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the newly switched destiny profile.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Accounts"
+        ]
+      }
+    },
+    "/posts/{profileId}": {
+      "get": {
+        "operationId": "PostsController_getPostsByProfile",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Posts"
+        ]
+      }
+    },
+    "/posts/create": {
+      "post": {
+        "operationId": "PostsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePostDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Posts"
+        ]
+      }
+    },
+    "/posts/{id}": {
+      "delete": {
+        "operationId": "PostsController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Posts"
+        ]
+      },
+      "patch": {
+        "operationId": "PostsController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePostDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Posts"
+        ]
+      }
+    },
+    "/feed": {
+      "get": {
+        "operationId": "FeedController_getFeed",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Feed"
+        ]
+      }
+    },
+    "/conversations": {
+      "get": {
+        "operationId": "ConversationsController_getInbox",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Returns all conversations from authenticated profile with first message for preview.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InboxConversationDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Conversations"
+        ]
+      }
+    },
+    "/conversations/{conversationId}/details": {
+      "get": {
+        "operationId": "ConversationsController_getConversationDetails",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Returns the conversation details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConversationDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Conversations"
+        ]
+      }
+    },
+    "/conversations/{conversationId}/messages": {
+      "get": {
+        "operationId": "ConversationsController_getConversationMessages",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Returns all messages from requested conversation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ChatMessageWithSenderDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Conversations"
+        ]
+      }
+    },
+    "/conversations/{conversationId}/read": {
+      "patch": {
+        "operationId": "ConversationsController_readConversation",
+        "parameters": [
+          {
+            "name": "conversationId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Conversations"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "CouplApp API",
+    "description": "",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "schemas": {
+      "LoginUserDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "seb.boczek@gmail.com",
+            "description": "The registered email address of the account"
+          },
+          "password": {
+            "type": "string",
+            "example": "SuperPassword$3213!",
+            "description": "The plain-text authentication password"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "LoginResponseDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "User logged in successfully"
+          }
+        },
+        "required": [
+          "success",
+          "message"
+        ]
+      },
+      "AuthUserDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "8c91c9d0-6dfd-4ffe-a07d-sdad12312"
+          },
+          "email": {
+            "type": "string",
+            "example": "john.doe@gmail.com"
+          },
+          "firstName": {
+            "type": "string",
+            "example": "John"
+          },
+          "lastName": {
+            "type": "string",
+            "example": "Doe"
+          },
+          "isVerified": {
+            "type": "boolean",
+            "example": true
+          },
+          "role": {
+            "type": "string",
+            "example": "user"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2026-08-06T06:52:20.204Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2026-08-06T06:52:20.204Z"
+          },
+          "activeProfileId": {
+            "type": "string",
+            "example": "8c91c9d0-6dfd-4fwee-a07d-sdad12312"
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "firstName",
+          "lastName",
+          "isVerified",
+          "role",
+          "createdAt",
+          "updatedAt",
+          "activeProfileId"
+        ]
+      },
+      "CreateUserDto": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "firstName",
+          "lastName",
+          "email",
+          "password"
+        ]
+      },
+      "LightProfileResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "picture": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "picture"
+        ]
+      },
+      "ProfileDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "picture": {
+            "type": "string",
+            "nullable": true
+          },
+          "userId": {
+            "type": "string"
+          },
+          "bannerPicture": {
+            "type": "string",
+            "nullable": true
+          },
+          "location": {
+            "type": "string",
+            "nullable": true
+          },
+          "bio": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true
+          },
+          "isPrivate": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "picture",
+          "isPrivate"
+        ]
+      },
+      "ProfileResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "picture": {
+            "type": "string",
+            "nullable": true
+          },
+          "userId": {
+            "type": "string"
+          },
+          "bannerPicture": {
+            "type": "string",
+            "nullable": true
+          },
+          "location": {
+            "type": "string",
+            "nullable": true
+          },
+          "bio": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true
+          },
+          "isPrivate": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "isOwner": {
+            "type": "boolean"
+          },
+          "friendship": {
+            "type": "object",
+            "nullable": true
+          },
+          "friends": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProfileDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "picture",
+          "isPrivate",
+          "isOwner"
+        ]
+      },
+      "UpdateProfileDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "FriendRequestDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "pending",
+              "accepted",
+              "blocked"
+            ],
+            "type": "string",
+            "example": "pending"
+          },
+          "direction": {
+            "type": "string",
+            "example": "incoming",
+            "description": "Direction of the request (e.g., incoming or outgoing)"
+          },
+          "profile": {
+            "$ref": "#/components/schemas/ProfileDto"
+          }
+        },
+        "required": [
+          "status",
+          "direction",
+          "profile"
+        ]
+      },
+      "InviteFriendDto": {
+        "type": "object",
+        "properties": {
+          "receiverId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "receiverId"
+        ]
+      },
+      "CreateProfileDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "picture": {
+            "type": "string",
+            "nullable": true
+          },
+          "bannerPicture": {
+            "type": "string",
+            "nullable": true
+          },
+          "bio": {
+            "type": "string",
+            "nullable": true
+          },
+          "location": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "name",
+          "picture",
+          "bannerPicture",
+          "bio",
+          "location"
+        ]
+      },
+      "CreatePostDto": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "receiverId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "text",
+          "receiverId"
+        ]
+      },
+      "UpdatePostDto": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "text"
+        ]
+      },
+      "ConversationParticipantDto": {
+        "type": "object",
+        "properties": {
+          "profileId": {
+            "type": "string",
+            "example": "prof_8c91c9d0-6dfd-4ffe-a07d-b26d1024f883"
+          },
+          "conversationId": {
+            "type": "string",
+            "example": "conv_12345-6dfd-4ffe-a07d-b26d1024f883"
+          },
+          "joinedAt": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true,
+            "example": "2026-08-06T06:52:20.204Z"
+          },
+          "profile": {
+            "$ref": "#/components/schemas/ProfileDto"
+          }
+        },
+        "required": [
+          "profileId",
+          "conversationId",
+          "joinedAt",
+          "profile"
+        ]
+      },
+      "ChatMessageDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "c91c9d0-6dfd-4ffe-a07d-b26d1024f883"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2026-08-06T06:52:20.204Z"
+          },
+          "senderId": {
+            "type": "string",
+            "example": "prof_8c91c9d0"
+          },
+          "conversationId": {
+            "type": "string",
+            "nullable": true,
+            "example": "conv_12345"
+          },
+          "content": {
+            "type": "string",
+            "nullable": true,
+            "example": "Hey there!"
+          },
+          "isRead": {
+            "type": "boolean",
+            "nullable": true,
+            "example": false
+          },
+          "readAt": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true,
+            "example": "2026-08-06T06:55:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "senderId",
+          "conversationId",
+          "content",
+          "isRead",
+          "readAt"
+        ]
+      },
+      "InboxConversationDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "conv_12345-6dfd-4ffe-a07d-b26d1024f883"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true,
+            "example": "Project Group Chat"
+          },
+          "isGroupChat": {
+            "type": "boolean",
+            "example": false
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true,
+            "example": "2026-08-06T06:52:20.204Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true,
+            "example": "2026-08-06T06:52:20.204Z"
+          },
+          "participants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConversationParticipantDto"
+            }
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChatMessageDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "isGroupChat",
+          "createdAt",
+          "updatedAt",
+          "participants",
+          "messages"
+        ]
+      },
+      "ConversationDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "conv_12345-6dfd-4ffe-a07d-b26d1024f883"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true,
+            "example": "Project Group Chat"
+          },
+          "isGroupChat": {
+            "type": "boolean",
+            "example": false
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true,
+            "example": "2026-08-06T06:52:20.204Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true,
+            "example": "2026-08-06T06:52:20.204Z"
+          },
+          "participants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConversationParticipantDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "isGroupChat",
+          "createdAt",
+          "updatedAt",
+          "participants"
+        ]
+      },
+      "MessageSenderDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "picture": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "picture"
+        ]
+      },
+      "ChatMessageWithSenderDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "c91c9d0-6dfd-4ffe-a07d-b26d1024f883"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2026-08-06T06:52:20.204Z"
+          },
+          "senderId": {
+            "type": "string",
+            "example": "prof_8c91c9d0"
+          },
+          "conversationId": {
+            "type": "string",
+            "nullable": true,
+            "example": "conv_12345"
+          },
+          "content": {
+            "type": "string",
+            "nullable": true,
+            "example": "Hey there!"
+          },
+          "isRead": {
+            "type": "boolean",
+            "nullable": true,
+            "example": false
+          },
+          "readAt": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true,
+            "example": "2026-08-06T06:55:00.000Z"
+          },
+          "sender": {
+            "$ref": "#/components/schemas/MessageSenderDto"
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "senderId",
+          "conversationId",
+          "content",
+          "isRead",
+          "readAt",
+          "sender"
+        ]
+      }
+    }
+  }
+}

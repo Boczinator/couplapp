@@ -17,6 +17,8 @@ import { GetProfileQueryDto } from './dtos/get-profile-query.dto'
 import { randomUUID } from 'crypto'
 import { FilesService } from 'src/files/files.service'
 import { ConfigService } from '@nestjs/config'
+import { ProfileResponse, PublicProfile } from './profiles.types'
+// import { ProfileQueryResult } from './profiles.types'
 
 @Injectable()
 export class ProfilesService {
@@ -55,56 +57,49 @@ export class ProfilesService {
 		currentUserId: string,
 		activeProfileId: string,
 		query: GetProfileQueryDto,
-	) {
-		let userProfile
+	): Promise<ProfileResponse> {
+		const data = await this.db.query.profiles.findFirst({
+			where: eq(schema.profiles.id, id),
+		})
 
-		const includeFriends = query.includes?.includes('friends')
-
-		try {
-			userProfile = await this.db.query.profiles.findFirst({
-				where: () => eq(schema.profiles.id, id),
-			})
-		} catch (error) {
-			throw new InternalServerErrorException({
-				cause: error,
-			})
-		}
-
-		if (!userProfile) {
+		if (!data) {
 			throw new NotFoundException(`User profile with given Id ${id} not found`)
 		}
 
-		const isOwner = userProfile.id === activeProfileId
-
-		const friendshipPromise = activeProfileId
-			? this.friendsService.getStatus(activeProfileId, userProfile.id)
-			: Promise.resolve(undefined)
-
-		const friendsPromise = includeFriends
-			? this.friendsService.getAllFriends(id)
-			: Promise.resolve(undefined)
+		const includeFriends = query.includes?.includes('friends')
+		const isOwner = data.id === activeProfileId
+		const isPrivate = data.isPrivate === true && !isOwner
 
 		const [friendship, friends] = await Promise.all([
-			friendshipPromise,
-			friendsPromise,
+			activeProfileId
+				? this.friendsService.getStatus(activeProfileId, data.id)
+				: Promise.resolve(undefined),
+			includeFriends && !isPrivate
+				? this.friendsService.getAllFriends(id)
+				: Promise.resolve(undefined),
 		])
 
-		const isPrivate =
-			userProfile.isPrivate && userProfile.id !== activeProfileId
+		if (isPrivate) {
+			return {
+				...data,
+				isPrivate: true as const,
+				isOwner,
+				friendship,
+			}
+		}
 
 		return {
-			...(!isPrivate
-				? {
-						...userProfile,
-						isOwner,
-						friendship,
-						...(includeFriends && { friends }),
-					}
-				: {
-						...{ name: userProfile.name, picture: userProfile.picture },
-						isOwner,
-						friendship,
-					}),
+			...data,
+			isPrivate: false as const,
+			isOwner,
+			friendship,
+			...(friends && {
+				friends: friends.map((friend) => ({
+					id: friend.id,
+					name: friend.name,
+					picture: friend.picture,
+				})),
+			}),
 		}
 	}
 

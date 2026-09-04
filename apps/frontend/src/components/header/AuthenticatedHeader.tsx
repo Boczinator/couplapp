@@ -2,7 +2,7 @@ import { HeaderLink } from '../link/HeaderLink'
 import logo from '../../assets/couplapp-logo-inline.png'
 import { useLogout } from '../../hooks/useLogout'
 import { useCurrentProfile } from '../../hooks/useProfile'
-import { useAuthUser } from '../../hooks/useAuthUser'
+import { useActiveProfileId, useAuthUser } from '../../hooks/useAuthUser'
 import { SearchBar } from '../search/SearchBar'
 import { useFriendRequests } from '../../hooks/useFriends'
 import { ProfileCard } from '../card/ProfileCard'
@@ -27,13 +27,11 @@ import { useEffect } from 'react'
 
 export const AuthenticatedHeader = () => {
 	const { logout } = useLogout()
-	const {
-		user: { activeProfileId },
-	} = useAuthUser()
+	const activeProfileId = useActiveProfileId()
 
 	const { friendRequests } = useFriendRequests(activeProfileId)
 	const { profile, isLoading } = useCurrentProfile(activeProfileId)
-	const { data: conversations } = useInbox(activeProfileId)
+	const { data: conversations } = useInbox()
 
 	const { setOpenMobile } = useSidebar()
 
@@ -59,7 +57,7 @@ export const AuthenticatedHeader = () => {
 		logout()
 	}
 
-	if (isLoading) return <div>Is Loading...</div>
+	if (isLoading || !profile) return <div>Is Loading...</div>
 
 	return (
 		<Sidebar>

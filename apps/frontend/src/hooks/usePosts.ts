@@ -6,7 +6,7 @@ import {
 	updatePost,
 	type PostPayload,
 } from '../api/posts'
-import { useAuthUser } from './useAuthUser'
+import { useActiveProfileId, useAuthUser } from './useAuthUser'
 import { useToast } from '../components/toast/ToastContext'
 
 export const useProfilePosts = (profileId: string) => {
@@ -17,9 +17,8 @@ export const useProfilePosts = (profileId: string) => {
 }
 
 export const useCreatePost = () => {
-	const {
-		user: { activeProfileId },
-	} = useAuthUser()
+	const activeProfileId = useActiveProfileId()
+
 	const queryClient = useQueryClient()
 
 	return useMutation({
@@ -43,9 +42,8 @@ export const useCreatePost = () => {
 }
 
 export const useRemovePost = (currentProfile: string) => {
-	const {
-		user: { activeProfileId },
-	} = useAuthUser()
+	const activeProfileId = useActiveProfileId()
+
 	const queryClient = useQueryClient()
 	const { addToast } = useToast()
 
@@ -71,9 +69,8 @@ export const useRemovePost = (currentProfile: string) => {
 }
 
 export const useEditPost = (currentProfileId: string) => {
-	const {
-		user: { activeProfileId },
-	} = useAuthUser()
+	const activeProfileId = useActiveProfileId()
+
 	const queryClient = useQueryClient()
 	const { addToast } = useToast()
 

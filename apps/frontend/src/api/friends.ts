@@ -1,3 +1,4 @@
+import { components } from '@couplapp/shared'
 import { client } from './client'
 
 export const sendFriendInvite = async (receiverId: string) => {
@@ -34,7 +35,9 @@ export const removeRelation = async (receiverId: string) => {
 	}
 }
 
-export const getAllRequests = async () => {
+export const getAllRequests = async (): Promise<
+	components['schemas']['FriendRequestDto'][]
+> => {
 	try {
 		const result = await client.get(`friends/requests`)
 
@@ -64,7 +67,9 @@ export const acceptFriendRequest = async (requesterId: string) => {
 	}
 }
 
-export const getFriends = async (profileId: string) => {
+export const getFriends = async (
+	profileId: string,
+): Promise<components['schemas']['ProfileDto'][]> => {
 	try {
 		const result = await client.get(`friends/${profileId}`)
 

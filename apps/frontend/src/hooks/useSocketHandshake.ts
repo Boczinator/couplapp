@@ -1,15 +1,13 @@
 import { useEffect } from 'react'
 import { socket } from '../socket/client'
-import { useAuthUser } from './useAuthUser'
+import { useActiveProfileId } from './useAuthUser'
 import { useToast } from '../components/toast/ToastContext'
 import { useQueryClient } from '@tanstack/react-query'
 import { useParams } from '@tanstack/react-router'
 import { client } from '../api/client'
 
 export const useSocketHandshake = () => {
-	const {
-		user: { activeProfileId },
-	} = useAuthUser()
+	const activeProfileId = useActiveProfileId()
 
 	const queryClient = useQueryClient()
 

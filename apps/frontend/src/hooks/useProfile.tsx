@@ -9,7 +9,7 @@ import {
 import { useNavigate } from '@tanstack/react-router'
 import type { Profile } from '../api/types'
 import { queryClient } from '../api/queryClient'
-import { useAuthUser } from './useAuthUser'
+import { useActiveProfileId } from './useAuthUser'
 import { useToast } from '../components/toast/ToastContext'
 
 export const useProfileOverview = () => {
@@ -26,11 +26,11 @@ export const useProfileOverview = () => {
 	}
 }
 
-export const useCurrentProfile = (profileId: string) => {
+export const useCurrentProfile = (profileId?: string) => {
 	const { data: profile, isLoading } = useQuery({
 		queryKey: ['profile', profileId],
 		queryFn: () => {
-			return getProfile(profileId)
+			return getProfile(profileId!)
 		},
 		enabled: !!profileId,
 	})
@@ -112,18 +112,19 @@ export const useCreateProfile = () => {
 
 export const useProfilePicture = () => {
 	const queryClient = useQueryClient()
-	const { user } = useAuthUser()
+	const activeProfileId = useActiveProfileId()
+
 	const { addToast } = useToast()
 
 	const { mutate, isPending, isSuccess } = useMutation({
 		mutationFn: (file: File) => updateProfilePicture(file),
 		onSuccess: () => {
 			queryClient.invalidateQueries({
-				queryKey: ['profile', user?.activeProfileId],
+				queryKey: ['profile', activeProfileId],
 			})
 
 			queryClient.invalidateQueries({
-				queryKey: ['profiles', 'posts', user?.activeProfileId],
+				queryKey: ['profiles', 'posts', activeProfileId],
 			})
 
 			addToast({

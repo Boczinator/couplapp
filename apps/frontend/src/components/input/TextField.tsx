@@ -1,8 +1,5 @@
 import { useField } from 'formik'
-import {
-	useState,
-	type InputHTMLAttributes,
-} from 'react'
+import { useState, type InputHTMLAttributes } from 'react'
 import { twMerge } from 'tailwind-merge'
 
 type TextField = {
@@ -32,7 +29,7 @@ export const TextField = ({
 				)}
 				htmlFor={field.name}
 			>
-				{label || placeholder}
+				{label}
 			</label>
 			<input
 				className="text-sm text-black bg-white border-black py-1.5 px-1 border w-full rounded-sm"

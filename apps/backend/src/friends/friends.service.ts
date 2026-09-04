@@ -10,6 +10,7 @@ import { DRIZZLE_PROVIDER } from 'src/database/database.provider'
 import * as schema from 'src/db/schema'
 import type { Friendships } from 'src/db/schema'
 import { sortUuids } from 'src/helper/sort'
+import { FriendshipResponse } from './friends.types'
 
 @Injectable()
 export class FriendsService {
@@ -98,7 +99,10 @@ export class FriendsService {
 		}
 	}
 
-	async getStatus(currentProfileId: string, targetProfileId: string) {
+	async getStatus(
+		currentProfileId: string,
+		targetProfileId: string,
+	): Promise<FriendshipResponse> {
 		const [profileId1, profileId2] = sortUuids(
 			currentProfileId,
 			targetProfileId,
