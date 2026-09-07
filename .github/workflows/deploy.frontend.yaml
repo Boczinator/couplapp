@@ -41,7 +41,14 @@ jobs:
         run: test -f apps/frontend/.vercel/output/static/index.html && find apps/frontend/.vercel/output/static -maxdepth 2 -type f | sort
 
       - name: Deploy Project Artifacts to Vercel
-        run: npx vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }} --cwd apps/frontend
+        run: |
+          deployment_output=$(npx vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }} --cwd apps/frontend)
+          printf '%s\n' "${deployment_output}"
+          deployment_url=$(printf '%s\n' "${deployment_output}" | grep -Eo 'https://[^[:space:]]+\.vercel\.app' | tail -n 1)
+          echo "Vercel deployment URL: ${deployment_url}"
+          test -n "${deployment_url}"
+          curl --fail --silent --show-error --location "https://${deployment_url}" > /tmp/frontend.html
+          grep -q '<div id="root"></div>' /tmp/frontend.html
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
