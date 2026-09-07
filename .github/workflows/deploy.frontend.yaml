@@ -13,9 +13,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # ─── NATIVE PNPM EMULATION (NO BUGGY PLUGINS) ─────────────
       - name: Enable Corepack for pnpm
-        # Corepack is built into Node 22/24 and manages pnpm flawlessly
         run: corepack enable
 
       - name: Setup Node.js
@@ -34,7 +32,10 @@ jobs:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
       - name: Build Project Artifacts
-        run: npx vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        # ─── UPDATED THIS LINE ─────────────────────────────────────────────
+        # Replace 'frontend' with your exact apps/frontend/package.json name
+        run: npx vercel build --prod --token=${{ secrets.VERCEL_TOKEN }} --turbo-args="--filter=frontend"
+        # ───────────────────────────────────────────────────────────────────
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
