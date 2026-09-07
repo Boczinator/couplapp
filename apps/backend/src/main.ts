@@ -36,17 +36,19 @@ async function bootstrap() {
 
 	const document = SwaggerModule.createDocument(app, config)
 
-	const outputPath = path.resolve(
-		process.cwd(),
-		'../../packages/shared/openapi.json',
-	)
+	if (process.env.NODE_ENV !== 'production') {
+		const outputPath = path.resolve(
+			process.cwd(),
+			'../../packages/shared/openapi.json',
+		)
 
-	const dir = path.dirname(outputPath)
-	if (!fs.existsSync(dir)) {
-		fs.mkdirSync(dir, { recursive: true })
+		const dir = path.dirname(outputPath)
+		if (!fs.existsSync(dir)) {
+			fs.mkdirSync(dir, { recursive: true })
+		}
+
+		fs.writeFileSync(outputPath, JSON.stringify(document, null, 2))
 	}
-
-	fs.writeFileSync(outputPath, JSON.stringify(document, null, 2))
 
 	SwaggerModule.setup('api/docs', app, document)
 
