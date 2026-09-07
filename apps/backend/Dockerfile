@@ -69,5 +69,7 @@ COPY --from=builder --chown=nestjs:nodejs /app/${APP_PATH}/drizzle.config.ts ./$
 
 # Expose your NestJS server port (used for both HTTP APIs and Socket.io)
 EXPOSE 3000
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
+	CMD wget --no-verbose --tries=1 --spider http://127.0.0.1:3000/api || exit 1
 
 CMD ["node", "apps/backend/dist/main.js"]

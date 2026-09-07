@@ -27,7 +27,7 @@ export class CloudStorageService {
 
 		this.r2BaseUrl =
 			environment === 'production'
-				? this.configService.getOrThrow('ENVIRONMENT')
+				? this.configService.getOrThrow('R2_PUBLIC_DOMAIN')
 				: 'https://pub-f053dcfe219b4e1383c7e31a9d298396.r2.dev'
 	}
 
