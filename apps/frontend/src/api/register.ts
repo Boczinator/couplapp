@@ -1,3 +1,4 @@
+import { components } from '@couplapp/shared'
 import { client } from './client'
 
 export type CreateUserInput = {
@@ -22,7 +23,9 @@ export const registerUser = async (input: CreateUserInput) => {
 	}
 }
 
-export const verifyRegisterToken = async (token: string) => {
+export const verifyRegisterToken = async (
+	token: string,
+): Promise<components['schemas']['RegistrationTokenVerificationDto']> => {
 	try {
 		const response = await client.post('auth/verify-registration-token', {
 			json: {
@@ -30,10 +33,8 @@ export const verifyRegisterToken = async (token: string) => {
 			},
 		})
 
-		if (response) {
-			return await response.json()
-		}
+		return await response.json()
 	} catch (error) {
-		console.log(error)
+		throw error
 	}
 }

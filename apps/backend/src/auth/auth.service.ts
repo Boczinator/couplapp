@@ -160,7 +160,7 @@ export class AuthService {
 
 		const [user] = await this.db
 			.update(schema.users)
-			.set({ isVerified: true })
+			.set({ isVerified: true, optInToken: null })
 			.where(eq(schema.users.optInToken, token))
 			.returning()
 
@@ -171,11 +171,9 @@ export class AuthService {
 			}
 		}
 
-		if (!user) {
-			return {
-				success: false,
-				message: 'Token either expired or not found',
-			}
+		return {
+			success: false,
+			message: 'Token either expired or user not found',
 		}
 	}
 }

@@ -3,6 +3,7 @@ import { useState, type InputHTMLAttributes } from 'react'
 import { twMerge } from 'tailwind-merge'
 
 type TextAreaProps = {
+	name: string
 	label: string
 	className?: string
 } & InputHTMLAttributes<HTMLTextAreaElement>

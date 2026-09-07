@@ -97,12 +97,14 @@ export const ProfileView = () => {
 										Send invite
 									</Button>
 								)}
-
 								{profile?.friendship?.status === 'pending' &&
+									profile.friendship.actionProfileId &&
 									(profile?.friendship?.actionProfileId !== activeProfileId ? (
 										<Button
 											onClick={() =>
-												acceptRequest(profile?.friendship?.actionProfileId)
+												acceptRequest(
+													profile?.friendship?.actionProfileId ?? '',
+												)
 											}
 										>
 											Accept friend request

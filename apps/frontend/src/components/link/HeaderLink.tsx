@@ -14,7 +14,11 @@ export const HeaderLink = ({
 			)}
 			{...props}
 		>
-			<span className="flex justify-between w-full flex-wrap">{children}</span>
+			{(linkState) => (
+				<span className="flex justify-between w-full flex-wrap">
+					{typeof children === 'function' ? children(linkState) : children}
+				</span>
+			)}
 		</Link>
 	)
 }

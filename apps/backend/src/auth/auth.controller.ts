@@ -15,6 +15,7 @@ import { JwtAuthGuard } from './guards/jwt-auth-guard'
 import { AuthUserDto } from './dto/auth-user.dto'
 import { ApiOkResponse } from '@nestjs/swagger'
 import { LoginResponseDto } from './dto/response-login.dto'
+import { RegistrationTokenVerificationDto } from './dto/response-verify-token.dto'
 
 @Controller('auth')
 export class AuthController {
@@ -56,10 +57,15 @@ export class AuthController {
 	}
 
 	@Post('verify-registration-token')
-	async verifyRegistrationToken(@Body() { token }: { token: string }) {
-		const data = await this.authService.verifyEmailToken(token)
-
-		return data
+	@ApiOkResponse({
+		type: RegistrationTokenVerificationDto,
+		description:
+			'Returns object with status and message for registration token verification',
+	})
+	async verifyRegistrationToken(
+		@Body() { token }: { token: string },
+	): Promise<RegistrationTokenVerificationDto> {
+		return await this.authService.verifyEmailToken(token)
 	}
 
 	@UseGuards(JwtRefreshGuard)

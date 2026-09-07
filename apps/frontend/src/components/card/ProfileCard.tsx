@@ -1,6 +1,6 @@
 import { Link, type LinkProps } from '@tanstack/react-router'
-import UserLogo from '../../assets/icons/avatar.svg?inline'
-import type { HTMLAttributes } from 'react'
+import UserLogo from '../../assets/icons/avatar.svg'
+import type { AnchorHTMLAttributes } from 'react'
 import { Avatar, AvatarImage } from '../ui/avatar'
 
 type ProfileCardProps = {
@@ -8,7 +8,7 @@ type ProfileCardProps = {
 	image?: string | null
 	children?: React.ReactNode
 } & LinkProps &
-	HTMLAttributes<HTMLDivElement>
+	Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof LinkProps>
 
 export const ProfileCard = ({
 	image,
