@@ -1,40 +1,53 @@
-name: Build and Deploy Frontend to Vercel
+name: Deploy Frontend to Vercel
 
 on:
-  release:
-    types: [published] # Triggers strictly when you publish a GitHub Release
+  push:
+    branches:
+      - main
+    paths:
+      # Only run if code changes inside your frontend app or shared workspace layers
+      - 'apps/frontend/**'
+      - 'packages/**'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/deploy-frontend.yml'
 
 jobs:
   deploy-ui:
-    name: Build UI via Turborepo & Push to Vercel
+    name: Build and Push UI
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      # ─── SETUP PNPM NATIVELY ─────────────────────────────────
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9 # Matches your local pnpm version (e.g., 9 or 10)
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'npm'
+          cache: 'pnpm' # ◄ Swapped from npm to pnpm cache profiling
 
-      - name: Install Monorepo Dependencies
-        run: npm ci
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile # ◄ Clean pnpm deployment flag
 
-      - name: Pull Vercel Environment Configuration
+      - name: Pull Vercel Environment Information
         run: npx vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
-      - name: Build Production Assets
-        # Compiles only the Vite frontend using Turborepo's strict filtering rules
+      - name: Build Project Artifacts
+        # Uses your Turborepo filtering to build only the frontend using pnpm
         run: npx vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
-      - name: Deploy Prebuilt Artifacts to Vercel Edge
+      - name: Deploy Project Artifacts to Vercel
         run: npx vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
