@@ -33,8 +33,9 @@ jobs:
 
       - name: Build Project Artifacts
         # ─── UPDATED THIS LINE ─────────────────────────────────────────────
-        # Replace 'frontend' with your exact apps/frontend/package.json name
-        run: npx vercel build --prod --token=${{ secrets.VERCEL_TOKEN }} --turbo-args="--filter=frontend"
+        # Overrides the default root build with a strict scoped Turbo build command.
+        # Replace 'frontend' with your exact apps/frontend/package.json name if different.
+        run: npx vercel build --prod --token=${{ secrets.VERCEL_TOKEN }} --command="pnpm turbo run build --filter=frontend"
         # ───────────────────────────────────────────────────────────────────
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
