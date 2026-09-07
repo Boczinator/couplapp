@@ -2,9 +2,11 @@
 FROM node:22-alpine AS pruner
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
-RUN npm i -g turbo
 
-# Set this to the exact "name" string inside apps/backend/package.json
+# Enable Corepack to use your repository's native pnpm version
+RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN pnpm add -g turbo
+
 ENV APP_NAME="backend"
 
 COPY . .
@@ -16,10 +18,15 @@ FROM node:22-alpine AS builder
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
+# Enable Corepack for pnpm installation
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
 # Copy pruned lockfiles and package manifests to cache installation layers
 COPY --from=pruner /app/out/json/ .
-COPY --from=pruner /app/out/package-lock.json ./package-lock.json
-RUN npm ci
+COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+
+# Install dependencies using pnpm
+RUN pnpm install --frozen-lockfile
 
 # Copy the actual pruned source files and configurations
 COPY --from=pruner /app/out/full/ .
@@ -27,7 +34,7 @@ COPY turbo.json turbo.json
 
 # Build the NestJS app (and any dependent local packages automatically)
 ENV APP_NAME="backend"
-RUN npx turbo run build --filter=$APP_NAME...
+RUN pnpm turbo run build --filter=$APP_NAME...
 
 # --- Stage 3: Production Runtime Environment ---
 FROM node:22-alpine AS runner
@@ -36,6 +43,10 @@ WORKDIR /app
 # Create a secure, non-root system user for safety
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nestjs
+
+# Enable Corepack for pnpm in runtime (required if running npx/pnpm commands in CMD)
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
 USER nestjs
 
 ENV NODE_ENV=production
@@ -44,8 +55,8 @@ ENV APP_PATH="apps/backend"
 
 # Copy package manifests and install production-only dependencies
 COPY --from=builder --chown=nestjs:nodejs /app/out/json/ .
-COPY --from=builder --chown=nestjs:nodejs /app/out/package-lock.json ./package-lock.json
-RUN npm ci --only=production
+COPY --from=builder --chown=nestjs:nodejs /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+RUN pnpm install --prod --frozen-lockfile
 
 # Copy compiled JavaScript code from the builder stage matching your subfolder path
 COPY --from=builder --chown=nestjs:nodejs /app/${APP_PATH}/dist ./${APP_PATH}/dist
@@ -59,4 +70,4 @@ EXPOSE 3000
 
 # Step 1: Run Drizzle Kit migration against Supabase
 # Step 2: Boot up the NestJS runtime server 
-CMD npx drizzle-kit migrate --config=apps/backend/drizzle.config.ts && node apps/backend/dist/main
+CMD pnpm drizzle-kit migrate --config=apps/backend/drizzle.config.ts && node apps/backend/dist/main
