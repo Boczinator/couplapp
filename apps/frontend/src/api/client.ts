@@ -1,7 +1,8 @@
 import ky from 'ky'
 
 const baseClient = ky.extend({
-	baseUrl: 'http://localhost:3000',
+	baseUrl: import.meta.env.VITE_PUBLIC_BACKEND_URL,
+	prefix: import.meta.env.VITE_PUBLIC_BACKEND_API_PREFIX,
 	credentials: 'include',
 })
 

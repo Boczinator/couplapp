@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.0",
   "paths": {
-    "/": {
+    "/api": {
       "get": {
         "operationId": "AppController_getHello",
         "parameters": [],
@@ -22,7 +22,7 @@
         ]
       }
     },
-    "/auth/login": {
+    "/api/auth/login": {
       "post": {
         "operationId": "AuthController_login",
         "parameters": [],
@@ -53,7 +53,7 @@
         ]
       }
     },
-    "/auth/verify-registration-token": {
+    "/api/auth/verify-registration-token": {
       "post": {
         "operationId": "AuthController_verifyRegistrationToken",
         "parameters": [],
@@ -74,7 +74,7 @@
         ]
       }
     },
-    "/auth/refresh": {
+    "/api/auth/refresh": {
       "post": {
         "operationId": "AuthController_refresh",
         "parameters": [],
@@ -88,7 +88,7 @@
         ]
       }
     },
-    "/auth/logout": {
+    "/api/auth/logout": {
       "post": {
         "operationId": "AuthController_logout",
         "parameters": [],
@@ -102,7 +102,7 @@
         ]
       }
     },
-    "/auth/me": {
+    "/api/auth/me": {
       "get": {
         "operationId": "AuthController_getProfile",
         "parameters": [],
@@ -123,7 +123,7 @@
         ]
       }
     },
-    "/users": {
+    "/api/users": {
       "get": {
         "operationId": "UsersController_findAll",
         "parameters": [],
@@ -149,7 +149,7 @@
         ]
       }
     },
-    "/users/{id}": {
+    "/api/users/{id}": {
       "get": {
         "operationId": "UsersController_findUser",
         "parameters": [],
@@ -163,7 +163,7 @@
         ]
       }
     },
-    "/users/create": {
+    "/api/users/create": {
       "post": {
         "operationId": "UsersController_createUser",
         "parameters": [],
@@ -194,7 +194,7 @@
         ]
       }
     },
-    "/profiles/search": {
+    "/api/profiles/search": {
       "get": {
         "operationId": "ProfilesController_search",
         "parameters": [
@@ -217,7 +217,7 @@
         ]
       }
     },
-    "/profiles/overview": {
+    "/api/profiles/overview": {
       "get": {
         "operationId": "ProfilesController_getLight",
         "parameters": [],
@@ -241,7 +241,7 @@
         ]
       }
     },
-    "/profiles/{id}": {
+    "/api/profiles/{id}": {
       "get": {
         "operationId": "ProfilesController_getById",
         "parameters": [
@@ -315,7 +315,7 @@
         ]
       }
     },
-    "/profiles/avatar": {
+    "/api/profiles/avatar": {
       "patch": {
         "operationId": "ProfilesController_updateAvatar",
         "parameters": [],
@@ -336,7 +336,7 @@
         ]
       }
     },
-    "/friends/requests": {
+    "/api/friends/requests": {
       "get": {
         "operationId": "FriendsController_getRequests",
         "parameters": [],
@@ -360,7 +360,7 @@
         ]
       }
     },
-    "/friends/{profileId}": {
+    "/api/friends/{profileId}": {
       "get": {
         "operationId": "FriendsController_getFriends",
         "parameters": [
@@ -393,7 +393,7 @@
         ]
       }
     },
-    "/friends/invite": {
+    "/api/friends/invite": {
       "post": {
         "operationId": "FriendsController_invite",
         "parameters": [],
@@ -417,7 +417,7 @@
         ]
       }
     },
-    "/friends/remove/{receiverId}": {
+    "/api/friends/remove/{receiverId}": {
       "delete": {
         "operationId": "FriendsController_remove",
         "parameters": [],
@@ -431,7 +431,7 @@
         ]
       }
     },
-    "/friends/accept/{requesterId}": {
+    "/api/friends/accept/{requesterId}": {
       "patch": {
         "operationId": "FriendsController_accept",
         "parameters": [],
@@ -445,7 +445,7 @@
         ]
       }
     },
-    "/accounts/register": {
+    "/api/accounts/register": {
       "post": {
         "operationId": "AccountsController_register",
         "parameters": [],
@@ -476,7 +476,7 @@
         ]
       }
     },
-    "/accounts/profiles/create": {
+    "/api/accounts/profiles/create": {
       "post": {
         "operationId": "AccountsController_createProfile",
         "parameters": [],
@@ -500,7 +500,7 @@
         ]
       }
     },
-    "/accounts/profiles/switch/{id}": {
+    "/api/accounts/profiles/switch/{id}": {
       "patch": {
         "operationId": "AccountsController_switchProfile",
         "parameters": [
@@ -530,7 +530,7 @@
         ]
       }
     },
-    "/posts/{profileId}": {
+    "/api/posts/{profileId}": {
       "get": {
         "operationId": "PostsController_getPostsByProfile",
         "parameters": [],
@@ -544,7 +544,7 @@
         ]
       }
     },
-    "/posts/create": {
+    "/api/posts/create": {
       "post": {
         "operationId": "PostsController_create",
         "parameters": [],
@@ -568,7 +568,7 @@
         ]
       }
     },
-    "/posts/{id}": {
+    "/api/posts/{id}": {
       "delete": {
         "operationId": "PostsController_remove",
         "parameters": [
@@ -622,7 +622,7 @@
         ]
       }
     },
-    "/feed": {
+    "/api/feed": {
       "get": {
         "operationId": "FeedController_getFeed",
         "parameters": [],
@@ -636,7 +636,7 @@
         ]
       }
     },
-    "/conversations": {
+    "/api/conversations": {
       "get": {
         "operationId": "ConversationsController_getInbox",
         "parameters": [],
@@ -660,7 +660,7 @@
         ]
       }
     },
-    "/conversations/{conversationId}/details": {
+    "/api/conversations/{conversationId}/details": {
       "get": {
         "operationId": "ConversationsController_getConversationDetails",
         "parameters": [],
@@ -681,7 +681,7 @@
         ]
       }
     },
-    "/conversations/{conversationId}/messages": {
+    "/api/conversations/{conversationId}/messages": {
       "get": {
         "operationId": "ConversationsController_getConversationMessages",
         "parameters": [],
@@ -705,7 +705,7 @@
         ]
       }
     },
-    "/conversations/{conversationId}/read": {
+    "/api/conversations/{conversationId}/read": {
       "patch": {
         "operationId": "ConversationsController_readConversation",
         "parameters": [
