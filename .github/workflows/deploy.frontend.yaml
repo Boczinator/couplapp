@@ -4,12 +4,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      # Only run if code changes inside your frontend app or shared workspace layers
-      - 'apps/frontend/**'
-      - 'packages/**'
-      - 'pnpm-lock.yaml'
-      - '.github/workflows/deploy-frontend.yml'
 
 jobs:
   deploy-ui:
