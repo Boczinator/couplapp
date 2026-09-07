@@ -1,9 +1,14 @@
 {
 	"$schema": "https://vercel.sh",
+	"cleanUrls": true,
 	"rewrites": [
 		{
 			"source": "/api/:path*",
 			"destination": "https://your-temporary-placeholder.com*"
+		},
+		{
+			"source": "/((?!api/).*)",
+			"destination": "/index.html"
 		}
 	]
 }
