@@ -49,22 +49,22 @@ RUN adduser --system --uid 1001 nestjs
 # CRITICAL: Run corepack setup as ROOT before dropping down to the nestjs user
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
-USER nestjs
-
 ENV NODE_ENV=production
 ENV APP_NAME="backend"
 ENV APP_PATH="apps/backend"
 
 # Copy package manifests and install production-only dependencies
-COPY --from=builder --chown=nestjs:nodejs /app/out/json/ .
-COPY --from=builder --chown=nestjs:nodejs /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+COPY --from=pruner --chown=nestjs:nodejs /app/out/json/ .
+COPY --from=pruner --chown=nestjs:nodejs /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 RUN pnpm install --prod --frozen-lockfile
+
+USER nestjs
 
 # Copy compiled JavaScript code from the builder stage matching your subfolder path
 COPY --from=builder --chown=nestjs:nodejs /app/${APP_PATH}/dist ./${APP_PATH}/dist
 
 # Copy your generated Drizzle SQL migration files and config into the runtime image
-COPY --from=builder --chown=nestjs:nodejs /app/${APP_PATH}/src/db/migrations ./${APP_PATH}/src/db/migrations
+COPY --from=builder --chown=nestjs:nodejs /app/${APP_PATH}/drizzle ./${APP_PATH}/drizzle
 COPY --from=builder --chown=nestjs:nodejs /app/${APP_PATH}/drizzle.config.ts ./${APP_PATH}/drizzle.config.ts
 
 # Expose your NestJS server port (used for both HTTP APIs and Socket.io)

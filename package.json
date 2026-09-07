@@ -5,10 +5,11 @@
 	"scripts": {
 		"dev": "turbo dev",
 		"build": "turbo build",
+		"preview": "",
 		"check-types": "turbo check-types"
 	},
 	"devDependencies": {
 		"turbo": "^2.0.0",
-		"typescript": "^7.0.2"
+		"typescript": "^5.9.3"
 	}
 }
