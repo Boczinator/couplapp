@@ -60,7 +60,10 @@ jobs:
     steps:
       - name: Ping Coolify Deploy Webhook
         env:
-          COOLIFY_WEBHOOK: ${{ secrets.COOLIFY_WEBHOOK_URL }}
+          COOLIFY_DEPLOY_URL: ${{ secrets.COOLIFY_DEPLOY_URL }}
+          COOLIFY_API_TOKEN: ${{ secrets.COOLIFY_API_TOKEN }}
         run: |
-          # Webhook URLs contain token signatures; headers are excluded to avoid rejection
-          curl -X POST "$COOLIFY_WEBHOOK"
+          curl --fail-with-body --show-error --silent \
+            --request POST \
+            --header "Authorization: Bearer ${COOLIFY_API_TOKEN}" \
+            "${COOLIFY_DEPLOY_URL}"
