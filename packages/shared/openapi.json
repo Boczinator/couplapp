@@ -58,8 +58,15 @@
         "operationId": "AuthController_verifyRegistrationToken",
         "parameters": [],
         "responses": {
-          "201": {
-            "description": ""
+          "200": {
+            "description": "Returns object with status and message for registration token verification",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrationTokenVerificationDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -769,6 +776,25 @@
           "message"
         ]
       },
+      "RegistrationTokenVerificationDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Indicates whether the token verification was successful",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "description": "A status message describing the outcome of the verification",
+            "example": "Token verified successfully."
+          }
+        },
+        "required": [
+          "success",
+          "message"
+        ]
+      },
       "AuthUserDto": {
         "type": "object",
         "properties": {
@@ -867,6 +893,45 @@
           "picture"
         ]
       },
+      "FriendshipStatusDto": {
+        "type": "object",
+        "properties": {
+          "profileId1": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The UUID of the first profile in the relationship",
+            "example": "a0eebc99-9c0b-4ef8-bb6d-6bb23280a11"
+          },
+          "profileId2": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The UUID of the second profile in the relationship",
+            "example": "b1fcfdfs99-934b-4ef8-bb3-6wb9dd80a22"
+          },
+          "status": {
+            "enum": [
+              "pending",
+              "accepted",
+              "blocked"
+            ],
+            "type": "string",
+            "description": "The current status of the friendship connection",
+            "example": "pending"
+          },
+          "actionProfileId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The UUID of the profile who performed the last state action",
+            "example": "a0eegfd9-9c0b-4ef8-dsd6d-6gffd380a11"
+          }
+        },
+        "required": [
+          "profileId1",
+          "profileId2",
+          "status",
+          "actionProfileId"
+        ]
+      },
       "ProfileDto": {
         "type": "object",
         "properties": {
@@ -961,8 +1026,13 @@
             "type": "boolean"
           },
           "friendship": {
+            "nullable": true,
             "type": "object",
-            "nullable": true
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FriendshipStatusDto"
+              }
+            ]
           },
           "friends": {
             "type": "array",

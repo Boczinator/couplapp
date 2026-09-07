@@ -490,6 +490,18 @@ export interface components {
             /** @example User logged in successfully */
             message: string;
         };
+        RegistrationTokenVerificationDto: {
+            /**
+             * @description Indicates whether the token verification was successful
+             * @example true
+             */
+            success: boolean;
+            /**
+             * @description A status message describing the outcome of the verification
+             * @example Token verified successfully.
+             */
+            message: string;
+        };
         AuthUserDto: {
             /** @example 8c91c9d0-6dfd-4ffe-a07d-sdad12312 */
             id: string;
@@ -522,6 +534,28 @@ export interface components {
             name: string;
             picture: string | null;
         };
+        FriendshipStatusDto: {
+            /**
+             * @description The UUID of the first profile in the relationship
+             * @example a0eebc99-9c0b-4ef8-bb6d-6bb23280a11
+             */
+            profileId1: string;
+            /**
+             * @description The UUID of the second profile in the relationship
+             * @example b1fcfdfs99-934b-4ef8-bb3-6wb9dd80a22
+             */
+            profileId2: string;
+            /**
+             * @description The current status of the friendship connection
+             * @example pending
+             */
+            status: string;
+            /**
+             * @description The UUID of the profile who performed the last state action
+             * @example a0eegfd9-9c0b-4ef8-dsd6d-6gffd380a11
+             */
+            actionProfileId: string;
+        };
         ProfileDto: {
             id: string;
             name: string;
@@ -550,7 +584,7 @@ export interface components {
             updatedAt?: string | null;
             isPrivate: boolean;
             isOwner: boolean;
-            friendship?: Record<string, never> | null;
+            friendship?: components["schemas"]["FriendshipStatusDto"] | null;
             friends?: components["schemas"]["ProfileDto"][];
         };
         UpdateProfileDto: Record<string, never>;
@@ -722,11 +756,14 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            201: {
+            /** @description Returns object with status and message for registration token verification */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["RegistrationTokenVerificationDto"];
+                };
             };
         };
     };
