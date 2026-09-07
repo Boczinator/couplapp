@@ -5,8 +5,8 @@ import { tanstackRouter } from '@tanstack/router-plugin/vite'
 import tailwindcss from '@tailwindcss/vite'
 import svgr from 'vite-plugin-svgr'
 import path from 'path'
+import { visualizer } from 'rollup-plugin-visualizer'
 
-// https://vite.dev/config/
 export default defineConfig({
 	plugins: [
 		tanstackRouter({
@@ -17,6 +17,10 @@ export default defineConfig({
 		react(),
 		babel({ presets: [reactCompilerPreset()] }),
 		tailwindcss(),
+		visualizer({
+			filename: 'stats.html',
+			gzipSize: true,
+		}),
 	],
 	resolve: {
 		alias: {
