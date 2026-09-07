@@ -5,7 +5,9 @@ WORKDIR /app
 
 # Enable Corepack to use your repository's native pnpm version
 RUN corepack enable && corepack prepare pnpm@latest --activate
-RUN pnpm add -g turbo
+
+# Fix for pnpm 12 global binary path restriction
+RUN pnpm config set global-bin-dir /usr/local/bin && pnpm add -g turbo
 
 ENV APP_NAME="backend"
 
@@ -44,7 +46,7 @@ WORKDIR /app
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nestjs
 
-# Enable Corepack for pnpm in runtime (required if running npx/pnpm commands in CMD)
+# CRITICAL: Run corepack setup as ROOT before dropping down to the nestjs user
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
 USER nestjs
@@ -70,4 +72,4 @@ EXPOSE 3000
 
 # Step 1: Run Drizzle Kit migration against Supabase
 # Step 2: Boot up the NestJS runtime server 
-CMD pnpm drizzle-kit migrate --config=apps/backend/drizzle.config.ts && node apps/backend/dist/main
+CMD ["sh", "-c", "pnpm drizzle-kit migrate --config=apps/backend/drizzle.config.ts && node apps/backend/dist/main"]
