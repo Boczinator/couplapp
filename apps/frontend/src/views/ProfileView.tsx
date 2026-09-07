@@ -5,7 +5,7 @@ import {
 	useInviteFriends,
 	useRemoveRelationship,
 } from '../hooks/useFriends'
-import { useActiveProfileId, useAuthUser } from '../hooks/useAuthUser'
+import { useActiveProfileId } from '../hooks/useAuthUser'
 import UserLogo from '../assets/icons/avatar.svg'
 import { useState } from 'react'
 import { DataImageTransferModal } from '../components/modal/DataImageTransferModal'
@@ -141,7 +141,7 @@ export const ProfileView = () => {
 						</div>
 					)}
 
-					<PostForm className="mb-5" receiverId={profile?.id} />
+					<PostForm className="mb-5 md:w-1/2" receiverId={profile?.id} />
 					<ProfilePosts profileId={profileId} />
 				</div>
 			</div>
