@@ -70,6 +70,4 @@ COPY --from=builder --chown=nestjs:nodejs /app/${APP_PATH}/drizzle.config.ts ./$
 # Expose your NestJS server port (used for both HTTP APIs and Socket.io)
 EXPOSE 3000
 
-# Step 1: Run Drizzle Kit migration against Supabase
-# Step 2: Boot up the NestJS runtime server 
-CMD ["sh", "-c", "pnpm drizzle-kit migrate --config=apps/backend/drizzle.config.ts && node apps/backend/dist/main"]
+CMD ["node", "apps/backend/dist/main.js"]
