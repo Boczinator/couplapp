@@ -6,22 +6,23 @@
 #     volumes:
 #       - ./frontend:/app # Allows hot-reloading during development
 
-#   backend:
-#     build: ./backend
-#     ports:
-#       - "3000:3000" # Exposes NestJS API (Use a different port if 3000 is taken, e.g., 8000)
-#     volumes:
-#       - ./backend:/app
-#     environment:
-#       - DB_HOST=db # Matches the service name below
 services:
+  backend:
+    build:
+      context: . # Keeps the entire monorepo as the sandbox
+      dockerfile: apps/backend/Dockerfile # ◄ Updated path to your Dockerfile
+    ports:
+      - '3000:3000'
+    environment:
+      - NODE_ENV=production
+    restart: always
   db:
     image: postgres:17
     restart: always
     ports:
       - '5432:5432'
     environment:
-      POSTGRES_PASSWORD: foobar1234
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
