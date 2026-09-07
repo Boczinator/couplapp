@@ -2,8 +2,9 @@ name: Deploy Frontend to Vercel
 
 on:
   push:
-    branches:
-      - main
+    branches: [release]
+    paths:
+      - 'apps/frontend/**'
 
 jobs:
   deploy-ui:
