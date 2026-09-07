@@ -13,20 +13,19 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # ─── SETUP PNPM NATIVELY ─────────────────────────────────
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9 # Matches your local pnpm version (e.g., 9 or 10)
+      # ─── NATIVE PNPM EMULATION (NO BUGGY PLUGINS) ─────────────
+      - name: Enable Corepack for pnpm
+        # Corepack is built into Node 22/24 and manages pnpm flawlessly
+        run: corepack enable
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'pnpm' # ◄ Swapped from npm to pnpm cache profiling
+          cache: 'pnpm'
 
       - name: Install Dependencies
-        run: pnpm install --frozen-lockfile # ◄ Clean pnpm deployment flag
+        run: pnpm install --frozen-lockfile
 
       - name: Pull Vercel Environment Information
         run: npx vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
@@ -35,7 +34,6 @@ jobs:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
       - name: Build Project Artifacts
-        # Uses your Turborepo filtering to build only the frontend using pnpm
         run: npx vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
