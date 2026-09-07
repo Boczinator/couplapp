@@ -21,7 +21,11 @@ export interface AuthenticatedSocket extends Socket {
 @UseGuards(WsJwtAuthGuard)
 @WebSocketGateway({
 	cors: {
-		origin: 'http://localhost:5173',
+		origin: [
+			'http://localhost:5173',
+			'http://localhost:4173',
+			process.env.FRONTEND_URL,
+		].filter(Boolean),
 		autoConnect: false,
 		credentials: true,
 	},
@@ -57,7 +61,7 @@ export class MessagesGateway {
 		},
 	) {
 		const message = await this.conversationsService.createMessage({
-			senderId: client?.user?.activeProfileId, // TODO: remove, is now being set by verified jwt 
+			senderId: client?.user?.activeProfileId, // TODO: remove, is now being set by verified jwt
 			receiverId: payload.receiverId,
 			conversationId: payload.conversationId,
 			content: payload.content,

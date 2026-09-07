@@ -7,16 +7,24 @@ import { AllExceptionsFilter } from './common/filters/all-exceptions.filter'
 import path from 'path'
 import * as fs from 'fs'
 
+const allowedOrigins = [
+	'http://localhost:5173',
+	'http://localhost:4173',
+	process.env.FRONTEND_URL,
+].filter(Boolean)
+
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule)
 
 	app.use(cookieParser())
 	app.enableCors({
-		origin: 'http://localhost:5173',
+		origin: allowedOrigins,
 		credentials: true,
 		methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
 		allowedHeaders: 'Content-Type, Accept, Authorization',
 	})
+
+	app.setGlobalPrefix('api')
 
 	app.useGlobalPipes(new ValidationPipe({ transform: true }))
 
