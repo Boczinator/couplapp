@@ -7,6 +7,7 @@ import { SearchBar } from '../search/SearchBar'
 import { useFriendRequests } from '../../hooks/useFriends'
 import { ProfileCard } from '../card/ProfileCard'
 import { useInbox } from '../../hooks/useInbox'
+import LogoutIcon from '../../assets/icons/logout.svg'
 import {
 	Sidebar,
 	SidebarContent,
@@ -23,7 +24,7 @@ import {
 } from '../ui/sidebar'
 import { useRouterState } from '@tanstack/react-router'
 import { useEffect } from 'react'
-//import { ReactComponent as SvgIcon } from '../../assets/icons/logout-svgrepo-com.svg?react'
+import { Button } from '../ui/button'
 
 export const AuthenticatedHeader = () => {
 	const { logout } = useLogout()
@@ -135,9 +136,14 @@ export const AuthenticatedHeader = () => {
 						image={profile?.picture}
 						to="/profiles-selection"
 					/>
-					<button className="cursor-pointer" onClick={handleLogoutClick}>
-						Logout
-					</button>
+					<Button
+						variant="ghost"
+						size="icon-sm"
+						className="cursor-pointer"
+						onClick={handleLogoutClick}
+					>
+						<img className="size-full" src={LogoutIcon} />
+					</Button>
 				</div>
 			</SidebarFooter>
 			<SidebarRail />
