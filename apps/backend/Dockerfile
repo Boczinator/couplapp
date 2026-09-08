@@ -61,6 +61,9 @@ RUN pnpm install --prod --frozen-lockfile
 # Copy compiled JavaScript code from the builder stage matching your subfolder path
 COPY --from=builder --chown=nestjs:nodejs /app/${APP_PATH}/dist ./${APP_PATH}/dist
 
+# Copy your raw template assets into the production image!
+COPY --from=builder --chown=nestjs:nodejs /app/${APP_PATH}/views ./${APP_PATH}/views
+
 # Copy Drizzle migrations and runtime config into the image
 COPY --from=builder --chown=nestjs:nodejs /app/${APP_PATH}/drizzle ./${APP_PATH}/drizzle
 COPY --from=builder --chown=nestjs:nodejs /app/${APP_PATH}/drizzle.config.ts ./${APP_PATH}/drizzle.config.ts

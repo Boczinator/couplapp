@@ -32,17 +32,23 @@ import { EventEmitterModule } from '@nestjs/event-emitter'
 		MailModule,
 		MailerModule.forRoot({
 			transport: {
-				host: 'localhost',
-				port: 1025,
-				ignoreTLS: true,
-				logger: true,
-				debug: true,
+				host: process.env.MAIL_HOST || 'localhost',
+				port: parseInt(process.env.MAIL_PORT || '1025', 10),
+				secure: process.env.MAIL_SECURE === 'true',
+				auth: process.env.MAIL_USER
+					? {
+							user: process.env.MAIL_USER,
+							pass: process.env.MAIL_PASS,
+						}
+					: undefined,
+				logger: process.env.NODE_ENV !== 'production',
+				debug: process.env.NODE_ENV !== 'production',
 			},
 			defaults: {
-				from: '"No Reply": <noreply@couplapp.com',
+				from: process.env.MAIL_FROM || '"No Reply" <noreply@couplapp.com>',
 			},
 			template: {
-				dir: join(process.cwd(), 'dist', 'views', 'mail'),
+				dir: join(process.cwd(), 'apps', 'backend', 'dist', 'views', 'mail'),
 				adapter: new PugAdapter(),
 				options: {
 					strict: true,
