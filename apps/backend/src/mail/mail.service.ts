@@ -1,4 +1,8 @@
-import { Inject, Injectable } from '@nestjs/common'
+import {
+	Inject,
+	Injectable,
+	InternalServerErrorException,
+} from '@nestjs/common'
 import { NodePgDatabase } from 'drizzle-orm/node-postgres'
 import { DRIZZLE_PROVIDER } from 'src/database/database.provider'
 import * as schema from '../db/schema'
@@ -39,7 +43,7 @@ export class MailService {
 			const response = await this.mailerService.sendMail({
 				to: user.email,
 				subject: 'Welcome! Please Confirm your Email',
-				template: './verify-email',
+				template: 'verify-email',
 				context: {
 					name: `${user.firstName} ${user.lastName}`,
 					verificationUrl,
@@ -52,9 +56,10 @@ export class MailService {
 				}
 			}
 		} catch (error) {
-			return {
-				success: false,
-			}
+			console.error('--- MAIL EXECUTOR CRASH DETAILS ---', error)
+			throw new InternalServerErrorException(
+				'Registration succeeded, but your verification email could not be sent. Please try again later.',
+			)
 		}
 	}
 }
