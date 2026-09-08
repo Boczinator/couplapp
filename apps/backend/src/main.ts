@@ -15,14 +15,14 @@ const allowedOrigins = [
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule)
-
-	app.use(cookieParser())
 	app.enableCors({
 		origin: allowedOrigins,
 		credentials: true,
 		methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
 		allowedHeaders: 'Content-Type, Accept, Authorization',
 	})
+
+	app.use(cookieParser())
 
 	app.setGlobalPrefix('api')
 
