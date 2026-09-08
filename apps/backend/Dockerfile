@@ -72,4 +72,4 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
 	CMD wget --no-verbose --tries=1 --spider http://127.0.0.1:3000/api || exit 1
 
-CMD ["sh", "-c", "pnpm --filter=$APP_NAME drizzle-kit migrate && node apps/backend/dist/src/main.js"]
+CMD ["sh", "-c", "npx drizzle-kit migrate --config=apps/backend/drizzle.config.ts && node apps/backend/dist/src/main.js"]
