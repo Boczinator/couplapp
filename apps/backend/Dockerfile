@@ -46,7 +46,7 @@ WORKDIR /app
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nestjs
 
-# Install the repository's pinned pnpm version for Coolify pre-deployment commands
+# Install the repository's pinned pnpm version
 RUN corepack disable && npm install --global pnpm@9.1.0
 
 ENV NODE_ENV=production
@@ -58,21 +58,25 @@ COPY --from=pruner --chown=nestjs:nodejs /app/out/json/ .
 COPY --from=pruner --chown=nestjs:nodejs /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 RUN pnpm install --prod --frozen-lockfile
 
-USER nestjs
-
 # Copy compiled JavaScript code from the builder stage matching your subfolder path
 COPY --from=builder --chown=nestjs:nodejs /app/${APP_PATH}/dist ./${APP_PATH}/dist
 
-# Copy Drizzle migrations and runtime config into the image for Coolify pre-deploy migrations
+# Copy Drizzle migrations and runtime config into the image
 COPY --from=builder --chown=nestjs:nodejs /app/${APP_PATH}/drizzle ./${APP_PATH}/drizzle
 COPY --from=builder --chown=nestjs:nodejs /app/${APP_PATH}/drizzle.config.ts ./${APP_PATH}/drizzle.config.ts
 
-# Drizzle Kit is a runtime dependency so Coolify can run migrations before startup
+# Drizzle Kit is a runtime dependency so migrations run before startup
 COPY --from=builder --chown=nestjs:nodejs /app/${APP_PATH}/src/db/schema.ts ./${APP_PATH}/src/db/schema.ts
+
+# Crucial Fix: Ensure the nestjs user owns the directory to run binaries and workspace scripts
+RUN chown -R nestjs:nodejs /app
+
+USER nestjs
 
 # Expose your NestJS server port
 EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
-	CMD wget --no-verbose --tries=1 --spider http://127.0.0.1:3000/api || exit 1
+	CMD wget --no-verbose --tries=1 --spider http://127.0.0 || exit 1
 
-CMD ["node", "apps/backend/dist/src/main.js"]
+# Execute runtime Drizzle migrations before launching NestJS
+CMD npx drizzle-kit migrate --config=apps/backend/drizzle.config.ts --migrations-folder=apps/backend/drizzle && node apps/backend/dist/src/main.js
