@@ -41,8 +41,8 @@ import { EventEmitterModule } from '@nestjs/event-emitter'
 							pass: process.env.MAIL_PASS,
 						}
 					: undefined,
-				logger: process.env.NODE_ENV !== 'production',
-				debug: process.env.NODE_ENV !== 'production',
+				logger: true,
+				debug: true,
 			},
 			defaults: {
 				from: process.env.MAIL_FROM || '"No Reply" <noreply@couplapp.com>',
