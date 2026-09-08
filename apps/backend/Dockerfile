@@ -4,7 +4,7 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Enable Corepack to use your repository's native pnpm version
-RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN corepack enable && corepack prepare pnpm@9.1.0 --activate
 
 # Fix for pnpm 12 global binary path restriction
 RUN pnpm config set global-bin-dir /usr/local/bin && pnpm add -g turbo
@@ -21,7 +21,7 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Enable Corepack for pnpm installation
-RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN corepack enable && corepack prepare pnpm@9.1.0 --activate
 
 # Copy pruned lockfiles and package manifests to cache installation layers
 COPY --from=pruner /app/out/json/ .
@@ -46,8 +46,7 @@ WORKDIR /app
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nestjs
 
-# CRITICAL: Run corepack setup as ROOT before dropping down to the nestjs user
-RUN corepack enable && corepack prepare pnpm@latest --activate
+# Install the repository's pinned pnpm version for Coolify pre-deployment commands
 RUN corepack disable && npm install --global pnpm@9.1.0
 
 ENV NODE_ENV=production
