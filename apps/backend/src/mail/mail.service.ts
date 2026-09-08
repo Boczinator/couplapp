@@ -43,7 +43,7 @@ export class MailService {
 			const response = await this.mailerService.sendMail({
 				to: user.email,
 				subject: 'Welcome! Please Confirm your Email',
-				template: 'verify-email',
+				template: 'mail/verify-email',
 				context: {
 					name: `${user.firstName} ${user.lastName}`,
 					verificationUrl,
