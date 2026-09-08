@@ -34,6 +34,8 @@ RUN pnpm install --frozen-lockfile
 COPY --from=pruner /app/out/full/ .
 COPY turbo.json turbo.json
 
+COPY apps/backend/views ./apps/backend/views
+
 # Build the NestJS app (and any dependent local packages automatically)
 ENV APP_NAME="backend"
 RUN pnpm turbo run build --filter=$APP_NAME...
@@ -60,9 +62,6 @@ RUN pnpm install --prod --frozen-lockfile
 
 # Copy compiled JavaScript code from the builder stage matching your subfolder path
 COPY --from=builder --chown=nestjs:nodejs /app/${APP_PATH}/dist ./${APP_PATH}/dist
-
-# Copy your raw template assets into the production image!
-COPY --from=builder --chown=nestjs:nodejs /app/${APP_PATH}/views ./${APP_PATH}/views
 
 # Copy Drizzle migrations and runtime config into the image
 COPY --from=builder --chown=nestjs:nodejs /app/${APP_PATH}/drizzle ./${APP_PATH}/drizzle
