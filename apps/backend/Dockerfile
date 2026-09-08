@@ -48,6 +48,7 @@ RUN adduser --system --uid 1001 nestjs
 
 # CRITICAL: Run corepack setup as ROOT before dropping down to the nestjs user
 RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN corepack disable && npm install --global pnpm@9.1.0
 
 ENV NODE_ENV=production
 ENV APP_NAME="backend"
