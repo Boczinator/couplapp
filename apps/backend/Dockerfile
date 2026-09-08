@@ -79,4 +79,4 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
 	CMD wget --no-verbose --tries=1 --spider http://127.0.0 || exit 1
 
 # Execute runtime Drizzle migrations before launching NestJS
-CMD npx drizzle-kit migrate --config=apps/backend/drizzle.config.ts --migrations-folder=apps/backend/drizzle && node apps/backend/dist/src/main.js
+CMD cd apps/backend && npx drizzle-kit migrate && node dist/src/main.js
