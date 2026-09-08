@@ -75,8 +75,6 @@ USER nestjs
 
 # Expose your NestJS server port
 EXPOSE 3000
-HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
-	CMD wget --no-verbose --tries=1 --spider http://127.0.0 || exit 1
 
 # Execute runtime Drizzle migrations before launching NestJS
 CMD cd apps/backend && npx drizzle-kit migrate && node dist/src/main.js
