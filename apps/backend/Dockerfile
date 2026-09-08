@@ -34,7 +34,7 @@ RUN pnpm install --frozen-lockfile
 COPY --from=pruner /app/out/full/ .
 COPY turbo.json turbo.json
 
-COPY apps/backend/views ./apps/backend/views
+COPY apps/backend/src/views ./apps/backend/src/views
 
 # Build the NestJS app (and any dependent local packages automatically)
 ENV APP_NAME="backend"
