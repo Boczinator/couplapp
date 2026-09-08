@@ -67,9 +67,11 @@ COPY --from=builder --chown=nestjs:nodejs /app/${APP_PATH}/dist ./${APP_PATH}/di
 COPY --from=builder --chown=nestjs:nodejs /app/${APP_PATH}/drizzle ./${APP_PATH}/drizzle
 COPY --from=builder --chown=nestjs:nodejs /app/${APP_PATH}/drizzle.config.ts ./${APP_PATH}/drizzle.config.ts
 
-# Expose your NestJS server port (used for both HTTP APIs and Socket.io)
+# 1. Temporarily fetch drizzle-kit and its TypeScript loader (tsx) into the runner layer
+# Expose your NestJS server port
 EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
 	CMD wget --no-verbose --tries=1 --spider http://127.0.0.1:3000/api || exit 1
 
-CMD ["sh", "-c", "npx drizzle-kit migrate --config=apps/backend/drizzle.config.ts && node apps/backend/dist/src/main.js"]
+# 2. Run the native migration globally, then boot the app
+CMD ["node", "apps/backend/dist/src/main.js"]
