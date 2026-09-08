@@ -63,15 +63,16 @@ USER nestjs
 # Copy compiled JavaScript code from the builder stage matching your subfolder path
 COPY --from=builder --chown=nestjs:nodejs /app/${APP_PATH}/dist ./${APP_PATH}/dist
 
-# Copy your generated Drizzle SQL migration files and config into the runtime image
+# Copy Drizzle migrations and runtime config into the image for Coolify pre-deploy migrations
 COPY --from=builder --chown=nestjs:nodejs /app/${APP_PATH}/drizzle ./${APP_PATH}/drizzle
 COPY --from=builder --chown=nestjs:nodejs /app/${APP_PATH}/drizzle.config.ts ./${APP_PATH}/drizzle.config.ts
 
-# 1. Temporarily fetch drizzle-kit and its TypeScript loader (tsx) into the runner layer
+# Drizzle Kit is a runtime dependency so Coolify can run migrations before startup
+COPY --from=builder --chown=nestjs:nodejs /app/${APP_PATH}/src/db/schema.ts ./${APP_PATH}/src/db/schema.ts
+
 # Expose your NestJS server port
 EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
 	CMD wget --no-verbose --tries=1 --spider http://127.0.0.1:3000/api || exit 1
 
-# 2. Run the native migration globally, then boot the app
 CMD ["node", "apps/backend/dist/src/main.js"]
