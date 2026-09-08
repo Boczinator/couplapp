@@ -48,7 +48,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter'
 				from: process.env.MAIL_FROM || '"No Reply" <noreply@couplapp.com>',
 			},
 			template: {
-				dir: join(process.cwd(), 'views', 'mail'),
+				dir: join(process.cwd(), 'views'),
 				adapter: new PugAdapter(),
 				options: {
 					strict: true,
