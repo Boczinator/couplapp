@@ -1,16 +1,8 @@
-#
-#   frontend:
-#     build: ./frontend
-#     ports:
-#       - "3000:3000" # Exposes React to your browser
-#     volumes:
-#       - ./frontend:/app # Allows hot-reloading during development
-
 services:
   backend:
     build:
-      context: . # Keeps the entire monorepo as the sandbox
-      dockerfile: apps/backend/Dockerfile # ◄ Updated path to your Dockerfile
+      context: .
+      dockerfile: apps/backend/Dockerfile
     ports:
       - '3000:3000'
     environment:
