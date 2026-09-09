@@ -3,6 +3,8 @@ name: Deploy Frontend to Vercel
 on:
   release:
     types: [published]
+    paths:
+      - 'apps/frontend/**'
 
 jobs:
   deploy-ui:
