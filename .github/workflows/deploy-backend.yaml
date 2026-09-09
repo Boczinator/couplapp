@@ -2,10 +2,7 @@ name: Build and Deploy Backend to Coolify
 
 on:
   release:
-    types: [published]
-    paths:
-      - 'apps/backend/**'
-      - 'packages/shared/**'
+    types: [published] # Triggers strictly when you publish a new GitHub Release
 
 env:
   REGISTRY: ghcr.io
@@ -16,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      packages: write
+      packages: write # Grants permission to upload packages to GHCR securely
 
     steps:
       - name: Checkout Code
@@ -27,7 +24,7 @@ jobs:
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.GITHUB_TOKEN }} # Handled automatically by GitHub
 
       - name: Downcase Repository Name
         run: |
@@ -49,11 +46,11 @@ jobs:
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v6
         with:
-          context: .
-          file: ./apps/backend/Dockerfile
+          context: . # Keeps the entire monorepo as the build context for Turbo
+          file: ./apps/backend/Dockerfile # Points to your clean subfolder path
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          cache-from: type=gha
+          tags: ${{ steps.meta.outputs.tags }} # Automatically applies tag format (e.g., :v1.0.0 and :latest)
+          cache-from: type=gha # Leverages fast GitHub caching layers
           cache-to: type=gha,mode=max
 
   deploy:
