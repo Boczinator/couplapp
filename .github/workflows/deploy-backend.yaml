@@ -3,9 +3,6 @@ name: Build and Deploy Backend to Coolify
 on:
   release:
     types: [published]
-    paths:
-      - 'apps/backend/**'
-      - 'packages/shared/**'
 
 env:
   REGISTRY: ghcr.io
