@@ -31,6 +31,7 @@ export const PostForm = ({ receiverId, className }: PostForm) => {
 						<Textarea
 							name="text"
 							placeholder="Schreibe etwas..."
+							value={formik.values.text}
 							onChange={(e) => formik.setFieldValue('text', e.target.value)}
 						/>
 					</div>
