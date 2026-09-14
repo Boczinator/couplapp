@@ -8,7 +8,7 @@ export const ProfileLayout = () => {
 	useSocketHandshake()
 
 	return (
-		<SidebarProvider className="h-screen overflow-hidden">
+		<SidebarProvider className="h-dvh overflow-hidden">
 			<AuthenticatedHeader />
 
 			<SidebarInset className="flex flex-col h-full overflow-hidden">
@@ -20,7 +20,7 @@ export const ProfileLayout = () => {
 					<SidebarTrigger />
 				</header>
 
-				<div className="flex-1 min-h-0 px-4 pt-7.5 md:px-10 md:py-10 flex flex-col overflow-y-auto">
+				<div className="flex-1 min-h-0 px-4 pt-7.5 md:px-10 md:py-10 flex flex-col overflow-y-auto mb-10">
 					<Outlet />
 				</div>
 			</SidebarInset>
