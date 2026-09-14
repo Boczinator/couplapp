@@ -20,7 +20,7 @@ export const ProfileLayout = () => {
 					<SidebarTrigger />
 				</header>
 
-				<div className="flex-1 min-h-0 px-4 pt-7.5 md:px-10 md:py-10 flex flex-col overflow-y-auto mb-10">
+				<div className="flex-1 min-h-0 px-4 pt-7.5 md:px-10 md:py-10 flex flex-col overflow-y-auto pb-10">
 					<Outlet />
 				</div>
 			</SidebarInset>
