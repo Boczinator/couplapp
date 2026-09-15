@@ -43,7 +43,7 @@ Live Demo: [couplapp.sebastianboczek.com](https://couplapp.sebastianboczek.com)
 ### Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com
+   git clone https://github.com/Boczinator/couplapp
    cd couplapp
    ```
 
