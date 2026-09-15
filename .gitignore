@@ -11,3 +11,8 @@ data/
 .turbo
 
 .vscode
+
+data/
+*.db
+*.db-wal
+*.db-shm
