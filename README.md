@@ -26,7 +26,7 @@ Live Demo: [couplapp.sebastianboczek.com](https://couplapp.sebastianboczek.com)
 ## Tech Stack
 
 * **Base:** Turborepo, pnpm
-* **Frontend:** React, Vite
+* **Frontend:** React, Vite, Tailwindcss
 * **Backend:** Node.js, NestJS, TypeScript
 * **Real-time:** NestJS WebSockets Gateways, Socket.io
 * **Storage & Infrastructure:** Cloudflare R2 (Object Storage), PostgresDB, Docker
