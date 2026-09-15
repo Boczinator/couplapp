@@ -1,13 +1,60 @@
-### My small Fullstack platform for family and friends :)
+# Couplapp 👥 :)
 
-Dipping my toe into NestJs I integrated key features like:
-- Auth with JWT and Refresh Tokens
-- Email verification,
-- Registration
-- Multi Profile Creation/Selection
-- Public Posts and Friend relations
-- Media Upload to Cloudflare R2
-- Realtime Chats with Websockets and Socket.io
-- Live notifications for events throughout the application
+A hobby full-stack networking platform designed for families and close friends to connect, share media, and communicate in real time. 
 
-Have fun checking out: https://couplapp.sebastianboczek.com
+Live Demo: [couplapp.sebastianboczek.com](https://couplapp.sebastianboczek.com)
+
+---
+
+## Key Features & Architecture
+
+* **Advanced Authentication & Security**
+  * Robust authentication flow using **JWT (JSON Web Tokens)** alongside secure **Refresh Tokens** for persistent, safe sessions.
+  * Secure email verification and registration guardrails.
+* **Dynamic Profile Management**
+  * Multi-profile creation and seamless account switching within a single user session.
+  * Granular friend relation management and public post timelines.
+* **Real-Time Capabilities**
+  * Instant messaging and direct peer chats powered by **WebSockets (Socket.io)**.
+  * System-wide live notifications for events, reactions, and interactions.
+* **Cloud Infrastructure & Media Handling**
+  * High-performance media uploads integrated directly with **Cloudflare R2** object storage.
+
+---
+
+## Tech Stack
+
+* **Base:** Turborepo, pnpm
+* **Frontend:** React, Vite
+* **Backend:** Node.js, NestJS, TypeScript
+* **Real-time:** NestJS WebSockets Gateways, Socket.io
+* **Storage & Infrastructure:** Cloudflare R2 (Object Storage), PostgresDB, Docker
+* **Deployment:** Automated Deployments to Vercel and a VPS over Github Workflows
+
+---
+
+## Getting Started
+
+### Prerequisites
+* Node.js (v18 or higher recommended)
+* pnpm
+
+### Installation
+1. Clone the repository:
+   ```bash
+   git clone https://github.com
+   cd couplapp
+   ```
+
+2. Install dependencies:
+   ```bash
+   pnpm install
+   ```
+
+3. Set up your environment variables:
+   Clone the `.env.example` file in the root directories of the apps and populate it.
+
+4. Start the development servers:
+   ```bash
+   pnpm run dev
+   ```
