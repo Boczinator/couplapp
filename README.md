@@ -14,7 +14,7 @@ Live Demo: [couplapp.sebastianboczek.com](https://couplapp.sebastianboczek.com)
   * Secure email verification and registration guardrails.
 * **Dynamic Profile Management**
   * Multi-profile creation and seamless account switching within a single user session.
-  * Granular friend relation management and public post timelines.
+  * Friend relation management and public post timelines.
 * **Real-Time Capabilities**
   * Instant messaging and direct peer chats powered by **WebSockets (Socket.io)**.
   * System-wide live notifications for events, reactions, and interactions.
