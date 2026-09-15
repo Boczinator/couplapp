@@ -1,6 +1,7 @@
 # Couplapp 👥 :)
 
-A hobby full-stack networking platform designed for families and close friends to connect, share media, and communicate in real time. 
+A small hobby full-stack networking platform designed for families and close friends to connect, share media, and communicate in real time,
+without overloading and unhealthy feed-algorithms.
 
 Live Demo: [couplapp.sebastianboczek.com](https://couplapp.sebastianboczek.com)
 
