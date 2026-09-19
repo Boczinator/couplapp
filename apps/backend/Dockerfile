@@ -60,6 +60,9 @@ COPY --from=pruner --chown=nestjs:nodejs /app/out/json/ .
 COPY --from=pruner --chown=nestjs:nodejs /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 RUN pnpm install --prod --frozen-lockfile
 
+# FIX: Force-inject drizzle-kit into the runtime image container layer so npx can find it immediately
+RUN pnpm add -F backend drizzle-kit
+
 # Copy compiled JavaScript code from the builder stage matching your subfolder path
 COPY --from=builder --chown=nestjs:nodejs /app/${APP_PATH}/dist ./${APP_PATH}/dist
 
@@ -79,4 +82,4 @@ USER nestjs
 EXPOSE 3000
 
 # Execute runtime Drizzle migrations before launching NestJS
-CMD cd apps/backend && npx drizzle-kit migrate && node dist/src/main.js
+CMD cd apps/backend && pnpm drizzle-kit migrate && node dist/src/main.js
