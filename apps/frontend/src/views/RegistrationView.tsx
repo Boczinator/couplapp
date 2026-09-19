@@ -2,19 +2,48 @@ import { useRegister } from '../hooks/useRegister'
 import { FormikProvider, useFormik } from 'formik'
 import { TextField } from '../components/input/TextField'
 import { Button } from '../components/button/Button'
+import z from 'zod'
+import { toFormikValidationSchema } from 'zod-formik-adapter'
 
-type RegistrationFormValues = {
-	email: string
-	firstName: string
-	lastName: string
-	password: string
-	passwordVerify: string
-}
+const registrationSchema = z
+	.object({
+		firstName: z.string({
+			error: (field) =>
+				field.input === undefined ? 'Field is required' : null,
+		}),
+		lastName: z.string({
+			error: (field) =>
+				field.input === undefined ? 'Field is required' : null,
+		}),
+		email: z.email('Invalid email address'),
+		password: z
+			.string({
+				error: (field) =>
+					field.input === undefined ? 'Field is required' : null,
+			})
+			.min(8, 'Password must be at least 8 characters')
+			.regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
+			.regex(/[0-9]/, 'Password must contain at least one number')
+			.regex(
+				/[^A-Za-z0-9]/,
+				'Password must contain at least one special character',
+			),
+		passwordVerify: z.string({
+			error: (field) =>
+				field.input === undefined ? 'Field is required' : null,
+		}),
+	})
+	.refine((data) => data.password === data.passwordVerify, {
+		message: "Passwords don't match",
+		path: ['passwordVerify'],
+	})
+
+type RegistrationFormValues = z.infer<typeof registrationSchema>
 
 export const RegistrationView = () => {
 	const { register, error, isError } = useRegister()
 
-	const formik = useFormik({
+	const formik = useFormik<RegistrationFormValues>({
 		initialValues: {
 			email: '',
 			firstName: '',
@@ -22,6 +51,7 @@ export const RegistrationView = () => {
 			password: '',
 			passwordVerify: '',
 		},
+		validationSchema: toFormikValidationSchema(registrationSchema),
 		onSubmit: async (
 			{ email, firstName, lastName, password },
 			{ setSubmitting },
@@ -37,41 +67,6 @@ export const RegistrationView = () => {
 					onSettled: () => setSubmitting(false),
 				},
 			)
-		},
-		validate: (values) => {
-			const errors: Partial<RegistrationFormValues> = {}
-
-			if (!values.password) {
-				errors.password = 'Required field'
-			}
-
-			if (!values.email) {
-				errors.email = 'Required field'
-			}
-
-			if (!values.firstName) {
-				errors.firstName = 'Required field'
-			}
-
-			if (!values.lastName) {
-				errors.lastName = 'Required field'
-			}
-
-			if (!values.passwordVerify) {
-				errors.passwordVerify = 'Required field'
-			}
-
-			if (values.password !== values.passwordVerify) {
-				errors.password = 'Passwords do not match'
-
-				/* addToast({
-					id: `${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-					message: 'Passwords do not match!',
-					type: ToastTypes.Error,
-				}) */
-			}
-
-			return errors
 		},
 	})
 
