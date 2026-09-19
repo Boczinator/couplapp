@@ -68,4 +68,4 @@ EXPOSE 3000
 
 # Execute compiled NestJS application
 # Adjust "main.js" path if your tsconfig outputs to dist/src/main.js
-CMD ["node", "apps/backend/dist/main.js"]
+CMD ["node", "apps/backend/dist/src/main.js"]
