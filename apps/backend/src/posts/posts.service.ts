@@ -30,7 +30,7 @@ export class PostsService {
 		profileId: string
 		activeProfileId: string
 	}) {
-		const posts = await this.db.query.posts.findMany({
+		const postsRaw = await this.db.query.posts.findMany({
 			where: or(
 				eq(schema.posts.profileId, profileId),
 				eq(schema.posts.receiverId, profileId),
@@ -39,24 +39,24 @@ export class PostsService {
 			with: {
 				author: true,
 				receiver: true,
-			},
-			extras: {
-				likesCount: sql<number>`(
-					SELECT count(*)::int 
-					FROM likes 
-					WHERE likes.post_id = posts.id
-				)`.as('likes_count'),
-
-				isLiked: sql<boolean>`(
-					SELECT EXISTS (
-						SELECT 1 
-						FROM likes 
-						WHERE likes.post_id = posts.id 
-						AND likes.profile_id = ${activeProfileId}
-					)
-				)`.as('is_liked'),
+				likes: true,
 			},
 		})
+
+		const posts = postsRaw
+			.map((postItem) => {
+				const post = postItem
+				if (!post) return null
+
+				const { likes, ...postData } = post
+
+				return {
+					...postData,
+					likesCount: likes.length,
+					isLiked: likes.some((like) => like.profileId === activeProfileId),
+				}
+			})
+			.filter(Boolean)
 
 		return {
 			posts,

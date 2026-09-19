@@ -33,28 +33,26 @@ export class FeedService {
 					with: {
 						author: true,
 						receiver: true,
-					},
-					extras: {
-						likesCount: sql<number>`(
-							SELECT count(*)::int 
-							FROM likes 
-							WHERE likes.post_id = "feedActivities_post".id
-						)`.as('likes_count'),
-
-						isLiked: sql<boolean>`(
-							SELECT EXISTS (
-								SELECT 1 
-								FROM likes 
-								WHERE likes.post_id = "feedActivities_post".id 
-								AND likes.profile_id = ${currentProfileId}
-							)
-						)`.as('is_liked'),
+						likes: true,
 					},
 				},
 			},
 		})
 
-		const posts = feed.map((feedItem) => feedItem.post)
+		const posts = feed
+			.map((feedItem) => {
+				const post = feedItem.post
+				if (!post) return null
+
+				const { likes, ...postData } = post
+
+				return {
+					...postData,
+					likesCount: likes.length,
+					isLiked: likes.some((like) => like.profileId === currentProfileId),
+				}
+			})
+			.filter(Boolean)
 
 		return {
 			posts,
