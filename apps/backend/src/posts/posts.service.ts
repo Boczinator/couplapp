@@ -8,10 +8,11 @@ import {
 import { NodePgDatabase } from 'drizzle-orm/node-postgres'
 import { DRIZZLE_PROVIDER } from 'src/database/database.provider'
 import * as schema from '../db/schema'
-import { and, desc, eq, or } from 'drizzle-orm'
+import { and, desc, eq, or, sql } from 'drizzle-orm'
 import { CreatePostDto } from './dto/create-post.dto'
 import { UpdatePostDto } from './dto/update-post.dto'
 import { FeedService } from 'src/feed/feed.service'
+import { LikesService } from 'src/likes/likes.service'
 
 @Injectable()
 export class PostsService {
@@ -19,6 +20,7 @@ export class PostsService {
 		@Inject(DRIZZLE_PROVIDER)
 		private readonly db: NodePgDatabase<typeof schema>,
 		private readonly feedService: FeedService,
+		private readonly likesService: LikesService,
 	) {}
 
 	async getPostsByProfile({
@@ -37,6 +39,22 @@ export class PostsService {
 			with: {
 				author: true,
 				receiver: true,
+			},
+			extras: {
+				likesCount: sql<number>`(
+					SELECT count(*)::int 
+					FROM likes 
+					WHERE likes.post_id = posts.id
+				)`.as('likes_count'),
+
+				isLiked: sql<boolean>`(
+					SELECT EXISTS (
+						SELECT 1 
+						FROM likes 
+						WHERE likes.post_id = posts.id 
+						AND likes.profile_id = ${activeProfileId}
+					)
+				)`.as('is_liked'),
 			},
 		})
 
@@ -134,5 +152,38 @@ export class PostsService {
 		}
 
 		return updatedPost
+	}
+
+	async handlePostLikeToggle({
+		activeProfileId,
+		postId,
+	}: {
+		activeProfileId: string
+		postId: string
+	}) {
+		const postExists = await this.db.query.posts.findFirst({
+			where: eq(schema.posts.id, postId),
+		})
+
+		if (!postExists)
+			throw new NotFoundException(`Post with id ${postId} not found`)
+
+		const { isLiked, likesCountDelta } =
+			await this.likesService.toggleLikeOnPost({
+				activeProfileId,
+				postId,
+			})
+
+		return {
+			postId,
+			isLiked,
+			likesCountDelta,
+		}
+	}
+
+	async getProfilesByLikes(postId: string) {
+		{
+			return await this.likesService.getProfilesByLikes(postId)
+		}
 	}
 }

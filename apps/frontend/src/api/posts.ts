@@ -1,3 +1,4 @@
+import { components } from '@couplapp/shared'
 import { client } from './client'
 
 export type PostPayload = {
@@ -76,6 +77,30 @@ export const updatePost = async (postId: string, post: PostPayload) => {
 		const result = await client.patch(`posts/${postId}`, {
 			json: post,
 		})
+
+		return result.json()
+	} catch (error) {
+		throw error
+	}
+}
+
+export const toggleLikePost = async (
+	postId: string,
+): Promise<components['schemas']['LikeToggleResponseDto']> => {
+	try {
+		const result = await client.post(`posts/${postId}/like`)
+
+		return result.json()
+	} catch (error) {
+		throw error
+	}
+}
+
+export const getProfilesByPostLikes = async (
+	postId: string,
+): Promise<components['schemas']['LikersProfilesResponseDto']> => {
+	try {
+		const result = await client.get(`posts/${postId}/likers`)
 
 		return result.json()
 	} catch (error) {

@@ -122,7 +122,7 @@ export const posts = pgTable('posts', {
 	createdAt: timestamp('created_at').defaultNow().notNull(),
 })
 
-export const postsRelations = relations(posts, ({ one }) => ({
+export const postsRelations = relations(posts, ({ one, many }) => ({
 	author: one(profiles, {
 		fields: [posts.profileId],
 		references: [profiles.id],
@@ -131,6 +131,7 @@ export const postsRelations = relations(posts, ({ one }) => ({
 		fields: [posts.receiverId],
 		references: [profiles.id],
 	}),
+	likes: many(likes),
 }))
 
 export const feedActivities = pgTable('feed_activities', {
@@ -188,6 +189,30 @@ export const participants = pgTable(
 	},
 	(table) => [primaryKey({ columns: [table.conversationId, table.profileId] })],
 )
+
+export const likes = pgTable(
+	'likes',
+	{
+		profileId: uuid('profile_id')
+			.notNull()
+			.references(() => profiles.id, { onDelete: 'cascade' }),
+		postId: uuid('post_id')
+			.notNull()
+			.references(() => posts.id, { onDelete: 'cascade' }),
+	},
+	(table) => [primaryKey({ columns: [table.profileId, table.postId] })],
+)
+
+export const likesRelations = relations(likes, ({ one }) => ({
+	profile: one(profiles, {
+		fields: [likes.profileId],
+		references: [profiles.id],
+	}),
+	post: one(posts, {
+		fields: [likes.postId],
+		references: [posts.id],
+	}),
+}))
 
 export const conversationsRelations = relations(conversations, ({ many }) => ({
 	participants: many(participants),

@@ -19,6 +19,8 @@ export const PostsList = ({ posts }: PostListProps) => {
 						receiver={post?.receiver}
 						createdAt={post?.createdAt}
 						updatedAt={post?.updatedAt}
+						likesCount={post?.likesCount}
+						isLiked={post?.isLiked}
 					/>
 				))}
 		</div>

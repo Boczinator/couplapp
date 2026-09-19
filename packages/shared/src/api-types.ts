@@ -356,6 +356,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/posts/{id}/likers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["PostsController_getPostLikers"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/posts/create": {
         parameters: {
             query?: never;
@@ -366,6 +382,22 @@ export interface paths {
         get?: never;
         put?: never;
         post: operations["PostsController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/posts/{id}/like": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["PostsController_likePost"];
         delete?: never;
         options?: never;
         head?: never;
@@ -610,7 +642,31 @@ export interface components {
             bio?: string | null;
             isPrivate: boolean;
         };
+        LikersProfilesResponseDto: {
+            id: string;
+            name: string;
+            picture: string | null;
+        };
         CreatePostDto: Record<string, never>;
+        LikeToggleResponseDto: {
+            /**
+             * Format: uuid
+             * @description The unique UUID identifier of the targeted post
+             * @example a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d
+             */
+            postId: string;
+            /**
+             * @description Indicates the final interaction state. Returns true if the post is now liked by the user, and false if unliked.
+             * @example true
+             */
+            isLiked: boolean;
+            /**
+             * @description The numeric delta value to apply to your local client UI counter. Returns 1 for an added like, and -1 for a removed like.
+             * @example 1
+             * @enum {number}
+             */
+            likesCountDelta: 1 | -1;
+        };
         UpdatePostDto: Record<string, never>;
         ConversationParticipantDto: {
             /** @example prof_8c91c9d0-6dfd-4ffe-a07d-b26d1024f883 */
@@ -1169,6 +1225,28 @@ export interface operations {
             };
         };
     };
+    PostsController_getPostLikers: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A list of profiles containing IDs, names, and profile pictures was successfully retrieved. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LikersProfilesResponseDto"][];
+                };
+            };
+        };
+    };
     PostsController_create: {
         parameters: {
             query?: never;
@@ -1187,6 +1265,28 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    PostsController_likePost: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Returns liked status of current profile for post and likesCountDelta. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LikeToggleResponseDto"];
+                };
             };
         };
     };

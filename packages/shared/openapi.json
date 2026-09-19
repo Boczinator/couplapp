@@ -544,6 +544,39 @@
         ]
       }
     },
+    "/api/posts/{id}/likers": {
+      "get": {
+        "operationId": "PostsController_getPostLikers",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of profiles containing IDs, names, and profile pictures was successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LikersProfilesResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Posts"
+        ]
+      }
+    },
     "/api/posts/create": {
       "post": {
         "operationId": "PostsController_create",
@@ -561,6 +594,36 @@
         "responses": {
           "201": {
             "description": ""
+          }
+        },
+        "tags": [
+          "Posts"
+        ]
+      }
+    },
+    "/api/posts/{id}/like": {
+      "post": {
+        "operationId": "PostsController_likePost",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns liked status of current profile for post and likesCountDelta.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LikeToggleResponseDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -1124,6 +1187,26 @@
           "isPrivate"
         ]
       },
+      "LikersProfilesResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "picture": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "picture"
+        ]
+      },
       "CreatePostDto": {
         "type": "object",
         "properties": {
@@ -1137,6 +1220,36 @@
         "required": [
           "text",
           "receiverId"
+        ]
+      },
+      "LikeToggleResponseDto": {
+        "type": "object",
+        "properties": {
+          "postId": {
+            "type": "string",
+            "description": "The unique UUID identifier of the targeted post",
+            "example": "a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d",
+            "format": "uuid"
+          },
+          "isLiked": {
+            "type": "boolean",
+            "description": "Indicates the final interaction state. Returns true if the post is now liked by the user, and false if unliked.",
+            "example": true
+          },
+          "likesCountDelta": {
+            "type": "number",
+            "description": "The numeric delta value to apply to your local client UI counter. Returns 1 for an added like, and -1 for a removed like.",
+            "example": 1,
+            "enum": [
+              1,
+              -1
+            ]
+          }
+        },
+        "required": [
+          "postId",
+          "isLiked",
+          "likesCountDelta"
         ]
       },
       "UpdatePostDto": {

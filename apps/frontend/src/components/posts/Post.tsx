@@ -2,11 +2,14 @@ import { twMerge } from 'tailwind-merge'
 import { ProfileCard } from '../card/ProfileCard'
 import { formatDate } from '../../helpers/date'
 import { useState } from 'react'
-import type { Author, Receiver } from '../../api/posts'
+import { type Author, type Receiver } from '../../api/posts'
 import { useActiveProfileId } from '../../hooks/useAuthUser'
 import { useParams } from '@tanstack/react-router'
 import { PostEditDropdown } from './PostEditDropdown'
 import { EditPostForm } from '../form/EditPostForm'
+import ThumbUp from '../../assets/icons/thumb-up.svg'
+import ThumbUpWhite from '../../assets/icons/thumb-up-white.svg'
+
 import {
 	Card,
 	CardContent,
@@ -15,6 +18,9 @@ import {
 	CardHeader,
 	CardTitle,
 } from '../ui/card'
+import { useLikeTogglePost } from '@/hooks/usePosts'
+import { Button } from '../ui/button'
+import { PostLikersModal } from '../modal/LikersModal'
 
 type PostProps = {
 	id: string
@@ -23,6 +29,8 @@ type PostProps = {
 	updatedAt: Date
 	author: Author
 	receiver: Receiver
+	isLiked: boolean
+	likesCount: number
 } & React.ComponentPropsWithoutRef<'div'>
 
 export const Post = ({
@@ -33,10 +41,14 @@ export const Post = ({
 	updatedAt,
 	createdAt,
 	className,
+	isLiked,
+	likesCount,
 }: PostProps) => {
 	const [isEditFormOpen, setIsEditFormOpen] = useState(false)
 
 	const activeProfileId = useActiveProfileId()
+
+	const { mutate: likeTogglePost } = useLikeTogglePost()
 
 	const { profileId } = useParams({
 		from: '/_authenticated/profile/$profileId',
@@ -95,6 +107,27 @@ export const Post = ({
 						initialPostText={text}
 					/>
 				)}
+
+				<div className="pt-2.5 flex text-sm items-center gap-2">
+					<Button
+						onClick={() => likeTogglePost(id)}
+						className="p-1.25"
+						variant={isLiked ? 'default' : 'ghost'}
+						size="icon-sm"
+					>
+						<img src={isLiked ? ThumbUpWhite : ThumbUp} />
+					</Button>
+					<PostLikersModal
+						postId={id}
+						trigger={
+							<Button variant="ghost" className="p-0 hover:bg-transparent">
+								{likesCount > 0
+									? `${likesCount} ${likesCount > 1 ? 'people' : 'person'} like${likesCount === 1 ? 's' : ''} this`
+									: likesCount}
+							</Button>
+						}
+					></PostLikersModal>
+				</div>
 			</CardContent>
 			{author.id === activeProfileId && (
 				<CardFooter>

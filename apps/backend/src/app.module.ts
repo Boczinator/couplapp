@@ -21,6 +21,7 @@ import { MessagesModule } from './messages/messages.module'
 import { ConversationsService } from './conversations/conversations.service'
 import { ConversationsModule } from './conversations/conversations.module'
 import { EventEmitterModule } from '@nestjs/event-emitter'
+import { LikesModule } from './likes/likes.module'
 
 @Module({
 	imports: [
@@ -64,6 +65,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter'
 		FeedModule,
 		MessagesModule,
 		ConversationsModule,
+		LikesModule,
 		//RedisModule,
 	],
 	controllers: [AppController],
