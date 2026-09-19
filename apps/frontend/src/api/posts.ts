@@ -36,6 +36,8 @@ export type Post = {
 	text: string
 	createdAt: Date
 	updatedAt: Date
+	isLiked: boolean
+	likesCount: number
 }
 
 export const createPost = async (post: PostPayload, receiverId: string) => {
