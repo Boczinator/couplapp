@@ -3,6 +3,7 @@ import {
 	createPost,
 	getPostsByProfileId,
 	removePost,
+	toggleLikePost,
 	updatePost,
 	type PostPayload,
 } from '../api/posts'
@@ -92,6 +93,38 @@ export const useEditPost = (currentProfileId: string) => {
 				type: 'success',
 				message: 'Post successfully updated',
 			})
+		},
+	})
+}
+
+export const useLikeTogglePost = () => {
+	const queryClient = useQueryClient()
+
+	return useMutation({
+		mutationFn: (postId: string) => toggleLikePost(postId),
+		onSuccess: (data) => {
+			const updatePostList = (oldData: any) => {
+				if (!oldData) return oldData
+				return {
+					...oldData,
+					posts: oldData.posts.map((post: any) =>
+						post.id === data.postId
+							? {
+									...post,
+									isLiked: data.isLiked,
+									likesCount: post.likesCount + data.likesCountDelta,
+								}
+							: post,
+					),
+				}
+			}
+
+			queryClient.setQueryData(['feed'], updatePostList)
+
+			queryClient.setQueriesData(
+				{ queryKey: ['profiles', 'posts'] },
+				updatePostList,
+			)
 		},
 	})
 }

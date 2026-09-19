@@ -42,19 +42,19 @@ export class PostsService {
 			},
 			extras: {
 				likesCount: sql<number>`(
-				SELECT count(*)::int 
-				FROM ${schema.likes} 
-				WHERE ${schema.likes.postId} = ${schema.posts.id}
-			)`.as('likes_count'),
+					SELECT count(*)::int 
+					FROM likes 
+					WHERE likes.post_id = posts.id
+				)`.as('likes_count'),
 
 				isLiked: sql<boolean>`(
-				SELECT EXISTS (
-					SELECT 1 
-					FROM ${schema.likes} 
-					WHERE ${schema.likes.postId} = ${schema.posts.id} 
-					  AND ${schema.likes.profileId} = ${activeProfileId}
-				)
-			)`.as('is_liked'),
+					SELECT EXISTS (
+						SELECT 1 
+						FROM likes 
+						WHERE likes.post_id = posts.id 
+						AND likes.profile_id = ${activeProfileId}
+					)
+				)`.as('is_liked'),
 			},
 		})
 
@@ -168,9 +168,16 @@ export class PostsService {
 		if (!postExists)
 			throw new NotFoundException(`Post with id ${postId} not found`)
 
-		return await this.likesService.toggleLikeOnPost({
-			activeProfileId,
+		const { isLiked, likesCountDelta } =
+			await this.likesService.toggleLikeOnPost({
+				activeProfileId,
+				postId,
+			})
+
+		return {
 			postId,
-		})
+			isLiked,
+			likesCountDelta,
+		}
 	}
 }

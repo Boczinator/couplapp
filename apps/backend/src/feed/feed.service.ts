@@ -3,7 +3,7 @@ import { NodePgDatabase } from 'drizzle-orm/node-postgres'
 import * as schema from '../db/schema'
 import { DRIZZLE_PROVIDER } from 'src/database/database.provider'
 import { FriendsService } from 'src/friends/friends.service'
-import { desc, eq } from 'drizzle-orm'
+import { desc, eq, sql } from 'drizzle-orm'
 
 @Injectable()
 export class FeedService {
@@ -33,6 +33,22 @@ export class FeedService {
 					with: {
 						author: true,
 						receiver: true,
+					},
+					extras: {
+						likesCount: sql<number>`(
+							SELECT count(*)::int 
+							FROM likes 
+							WHERE likes.post_id = "feedActivities_post".id
+						)`.as('likes_count'),
+
+						isLiked: sql<boolean>`(
+							SELECT EXISTS (
+								SELECT 1 
+								FROM likes 
+								WHERE likes.post_id = "feedActivities_post".id 
+								AND likes.profile_id = ${currentProfileId}
+							)
+						)`.as('is_liked'),
 					},
 				},
 			},

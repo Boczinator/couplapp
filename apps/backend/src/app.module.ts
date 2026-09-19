@@ -21,8 +21,7 @@ import { MessagesModule } from './messages/messages.module'
 import { ConversationsService } from './conversations/conversations.service'
 import { ConversationsModule } from './conversations/conversations.module'
 import { EventEmitterModule } from '@nestjs/event-emitter'
-import { LikesController } from './likes/likes.controller';
-import { LikesModule } from './likes/likes.module';
+import { LikesModule } from './likes/likes.module'
 
 @Module({
 	imports: [
@@ -69,7 +68,7 @@ import { LikesModule } from './likes/likes.module';
 		LikesModule,
 		//RedisModule,
 	],
-	controllers: [AppController, LikesController],
+	controllers: [AppController],
 	providers: [AppService, ConversationsService],
 })
 export class AppModule {}

@@ -14,6 +14,8 @@ import { CreatePostDto } from './dto/create-post.dto'
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth-guard'
 import { RemovePostDto } from './dto/remove-post.dto'
 import { UpdatePostDto } from './dto/update-post.dto'
+import { ApiOkResponse } from '@nestjs/swagger'
+import { LikeToggleResponseDto } from './dto/like-post.dto'
 
 @UseGuards(JwtAuthGuard)
 @Controller('posts')
@@ -41,8 +43,16 @@ export class PostsController {
 		})
 	}
 
+	@ApiOkResponse({
+		type: LikeToggleResponseDto,
+		description:
+			'Returns liked status of current profile for post and likesCountDelta.',
+	})
 	@Post(':id/like')
-	async likePost(@Req() req: any, @Param('id') id: string) {
+	async likePost(
+		@Req() req: any,
+		@Param('id') id: string,
+	): Promise<LikeToggleResponseDto> {
 		return await this.postsService.handlePostLikeToggle({
 			activeProfileId: req.user.activeProfileId,
 			postId: id,
