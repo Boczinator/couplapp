@@ -20,6 +20,7 @@ import {
 } from '../ui/card'
 import { useLikeTogglePost } from '@/hooks/usePosts'
 import { Button } from '../ui/button'
+import { PostLikersModal } from '../modal/LikersModal'
 
 type PostProps = {
 	id: string
@@ -116,11 +117,16 @@ export const Post = ({
 					>
 						<img src={isLiked ? ThumbUpWhite : ThumbUp} />
 					</Button>
-					<Button variant="ghost" className="p-0 hover:bg-transparent">
-						{likesCount > 0
-							? `${likesCount} ${likesCount > 1 ? 'people' : 'person'} like${likesCount === 1 ? 's' : ''} this`
-							: likesCount}
-					</Button>
+					<PostLikersModal
+						postId={id}
+						trigger={
+							<Button variant="ghost" className="p-0 hover:bg-transparent">
+								{likesCount > 0
+									? `${likesCount} ${likesCount > 1 ? 'people' : 'person'} like${likesCount === 1 ? 's' : ''} this`
+									: likesCount}
+							</Button>
+						}
+					></PostLikersModal>
 				</div>
 			</CardContent>
 			{author.id === activeProfileId && (

@@ -51,7 +51,7 @@ export class LikesService {
 
 	async getProfilesByLikes(postId: string) {
 		const likes = await this.db.query.likes.findMany({
-			where: eq(schema.posts.id, postId),
+			where: eq(schema.likes.postId, postId),
 			with: {
 				profile: {
 					columns: {

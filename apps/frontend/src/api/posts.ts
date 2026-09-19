@@ -100,7 +100,7 @@ export const getProfilesByPostLikes = async (
 	postId: string,
 ): Promise<components['schemas']['LikersProfilesResponseDto']> => {
 	try {
-		const result = await client.post(`posts/${postId}/likers`)
+		const result = await client.get(`posts/${postId}/likers`)
 
 		return result.json()
 	} catch (error) {
