@@ -98,7 +98,7 @@ export const toggleLikePost = async (
 
 export const getProfilesByPostLikes = async (
 	postId: string,
-): Promise<components['schemas']['LikersProfilesResponseDto']> => {
+): Promise<components['schemas']['LikersProfilesResponseDto'][]> => {
 	try {
 		const result = await client.get(`posts/${postId}/likers`)
 
