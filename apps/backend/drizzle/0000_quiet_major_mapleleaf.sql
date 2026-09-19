@@ -1,6 +1,14 @@
-CREATE TYPE "public"."friendship_status" AS ENUM('pending', 'accepted', 'blocked');--> statement-breakpoint
-CREATE TYPE "public"."user_role" AS ENUM('admin', 'user');--> statement-breakpoint
-CREATE TABLE "conversations" (
+DO $$ BEGIN
+    CREATE TYPE "public"."friendship_status" AS ENUM('pending', 'accepted', 'blocked');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;--> statement-breakpoint
+DO $$ BEGIN
+    CREATE TYPE "public"."user_role" AS ENUM('admin', 'user');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "conversations" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"title" text,
 	"is_group_chat" boolean DEFAULT false NOT NULL,
@@ -8,7 +16,7 @@ CREATE TABLE "conversations" (
 	"updated_at" timestamp DEFAULT now()
 );
 --> statement-breakpoint
-CREATE TABLE "feed_activities" (
+CREATE TABLE IF NOT EXISTS "feed_activities" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"profile_id" uuid,
 	"post_id" uuid,
@@ -16,7 +24,7 @@ CREATE TABLE "feed_activities" (
 	CONSTRAINT "feed_activities_id_unique" UNIQUE("id")
 );
 --> statement-breakpoint
-CREATE TABLE "friendships" (
+CREATE TABLE IF NOT EXISTS "friendships" (
 	"profile_id_1" uuid NOT NULL,
 	"profile_id_2" uuid NOT NULL,
 	"status" "friendship_status" NOT NULL,
@@ -25,7 +33,7 @@ CREATE TABLE "friendships" (
 	CONSTRAINT "profile_order_check" CHECK ("friendships"."profile_id_1" < "friendships"."profile_id_2")
 );
 --> statement-breakpoint
-CREATE TABLE "messages" (
+CREATE TABLE IF NOT EXISTS "messages" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"sender_id" uuid NOT NULL,
 	"conversation_id" uuid,
@@ -35,14 +43,14 @@ CREATE TABLE "messages" (
 	"created_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "participants" (
+CREATE TABLE IF NOT EXISTS "participants" (
 	"conversation_id" uuid NOT NULL,
 	"profile_id" uuid NOT NULL,
 	"joinedAt" timestamp DEFAULT now(),
 	CONSTRAINT "participants_conversation_id_profile_id_pk" PRIMARY KEY("conversation_id","profile_id")
 );
 --> statement-breakpoint
-CREATE TABLE "posts" (
+CREATE TABLE IF NOT EXISTS "posts" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"profile_id" uuid,
 	"receiver_id" uuid,
@@ -51,7 +59,7 @@ CREATE TABLE "posts" (
 	"created_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "profiles" (
+CREATE TABLE IF NOT EXISTS "profiles" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"user_id" uuid NOT NULL,
 	"name" text NOT NULL,
@@ -64,7 +72,7 @@ CREATE TABLE "profiles" (
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "users" (
+CREATE TABLE IF NOT EXISTS "users" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"first_name" varchar(255) NOT NULL,
 	"last_name" varchar(255) NOT NULL,

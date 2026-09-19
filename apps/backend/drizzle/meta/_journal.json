@@ -8,6 +8,13 @@
       "when": 1788876683306,
       "tag": "0000_quiet_major_mapleleaf",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1789859984996,
+      "tag": "0001_wakeful_boom_boom",
+      "breakpoints": true
     }
   ]
 }

@@ -31,9 +31,6 @@ RUN pnpm install --frozen-lockfile
 COPY --from=pruner /app/out/full/ .
 COPY turbo.json turbo.json
 
-# Copy views directory if used by template engines
-COPY apps/backend/src/views ./apps/backend/src/views
-
 # Build the NestJS app (and dependent local packages)
 ENV APP_NAME="backend"
 RUN pnpm turbo run build --filter=$APP_NAME...
@@ -59,16 +56,16 @@ COPY --from=pruner --chown=nestjs:nodejs /app/out/pnpm-workspace.yaml ./pnpm-wor
 # Install production-only dependencies
 RUN pnpm install --prod --frozen-lockfile
 
-# Copy compiled JavaScript output and views from builder
+# Copy compiled JavaScript output from builder
 COPY --from=builder --chown=nestjs:nodejs /app/${APP_PATH}/dist ./${APP_PATH}/dist
-COPY --from=builder --chown=nestjs:nodejs /app/${APP_PATH}/src/views ./${APP_PATH}/src/views
 
-# Copy raw Drizzle SQL migration files directly from source context
-COPY --chown=nestjs:nodejs apps/backend/drizzle ./${APP_PATH}/drizzle
+# Copy Drizzle migrations folder directly from pruner stage
+COPY --from=pruner --chown=nestjs:nodejs /app/out/full/${APP_PATH}/drizzle ./${APP_PATH}/drizzle
 
 USER nestjs
 
 EXPOSE 3000
 
-# Execute compiled NestJS application directly
-CMD ["node", "apps/backend/dist/src/main.js"]
+# Execute compiled NestJS application
+# Adjust "main.js" path if your tsconfig outputs to dist/src/main.js
+CMD ["node", "apps/backend/dist/main.js"]
