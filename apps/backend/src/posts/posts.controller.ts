@@ -41,6 +41,14 @@ export class PostsController {
 		})
 	}
 
+	@Post(':id/like')
+	async likePost(@Req() req: any, @Param('id') id: string) {
+		return await this.postsService.handlePostLikeToggle({
+			activeProfileId: req.user.activeProfileId,
+			postId: id,
+		})
+	}
+
 	@Delete(':id')
 	async remove(@Req() req: any, @Param() params: RemovePostDto) {
 		return await this.postsService.removePost({
