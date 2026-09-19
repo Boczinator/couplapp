@@ -3,7 +3,7 @@
 	"tasks": {
 		"build": {
 			"dependsOn": ["^build"],
-			"outputs": ["dist/**", "build/**", "src/api-types.ts"]
+			"outputs": ["dist/**", "build/**", "src/api-types.ts", "drizzle/**"]
 		},
 		"@repo/shared#generate": {
 			"inputs": ["openapi.json"],
