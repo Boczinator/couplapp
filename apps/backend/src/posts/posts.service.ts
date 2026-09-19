@@ -180,4 +180,10 @@ export class PostsService {
 			likesCountDelta,
 		}
 	}
+
+	async getProfilesByLikes(postId: string) {
+		{
+			return await this.likesService.getProfilesByLikes(postId)
+		}
+	}
 }

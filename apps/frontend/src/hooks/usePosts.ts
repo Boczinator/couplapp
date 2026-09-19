@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
 	createPost,
 	getPostsByProfileId,
+	getProfilesByPostLikes,
 	removePost,
 	toggleLikePost,
 	updatePost,
@@ -126,5 +127,13 @@ export const useLikeTogglePost = () => {
 				updatePostList,
 			)
 		},
+	})
+}
+
+export const useProfilesByPostLikes = (postId: string, enabled: boolean) => {
+	return useQuery({
+		queryKey: ['posts', postId, 'likers'],
+		queryFn: () => getProfilesByPostLikes(postId),
+		enabled: !!postId && enabled,
 	})
 }

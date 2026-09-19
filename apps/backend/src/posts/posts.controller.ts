@@ -15,7 +15,10 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth-guard'
 import { RemovePostDto } from './dto/remove-post.dto'
 import { UpdatePostDto } from './dto/update-post.dto'
 import { ApiOkResponse } from '@nestjs/swagger'
-import { LikeToggleResponseDto } from './dto/like-post.dto'
+import {
+	LikersProfilesResponseDto,
+	LikeToggleResponseDto,
+} from './dto/like-post.dto'
 
 @UseGuards(JwtAuthGuard)
 @Controller('posts')
@@ -33,6 +36,19 @@ export class PostsController {
 			profileId,
 			activeProfileId: req.user.activeProfileId,
 		})
+	}
+
+	@Get(':id/likers')
+	@ApiOkResponse({
+		description:
+			'A list of profiles containing IDs, names, and profile pictures was successfully retrieved.',
+		isArray: true,
+		type: LikersProfilesResponseDto,
+	})
+	async getPostLikers(
+		@Param('id') postId: string,
+	): Promise<LikersProfilesResponseDto[]> {
+		return await this.postsService.getProfilesByLikes(postId)
 	}
 
 	@Post('create')

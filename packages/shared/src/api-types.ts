@@ -356,6 +356,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/posts/{id}/likers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["PostsController_getPostLikers"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/posts/create": {
         parameters: {
             query?: never;
@@ -625,6 +641,11 @@ export interface components {
             location?: string | null;
             bio?: string | null;
             isPrivate: boolean;
+        };
+        LikersProfilesResponseDto: {
+            id: string;
+            name: string;
+            picture: string | null;
         };
         CreatePostDto: Record<string, never>;
         LikeToggleResponseDto: {
@@ -1201,6 +1222,28 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    PostsController_getPostLikers: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A list of profiles containing IDs, names, and profile pictures was successfully retrieved. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LikersProfilesResponseDto"][];
+                };
             };
         };
     };

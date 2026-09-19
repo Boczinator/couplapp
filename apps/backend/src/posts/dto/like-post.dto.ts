@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
+import { LightProfileResponseDto } from 'src/profiles/dtos/response-profile.dto'
 
 export class LikeToggleResponseDto {
 	@ApiProperty({
@@ -26,3 +27,5 @@ export class LikeToggleResponseDto {
 	})
 	likesCountDelta!: number
 }
+
+export class LikersProfilesResponseDto extends LightProfileResponseDto {}

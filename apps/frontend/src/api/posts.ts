@@ -95,3 +95,15 @@ export const toggleLikePost = async (
 		throw error
 	}
 }
+
+export const getProfilesByPostLikes = async (
+	postId: string,
+): Promise<components['schemas']['LikersProfilesResponseDto']> => {
+	try {
+		const result = await client.post(`posts/${postId}/likers`)
+
+		return result.json()
+	} catch (error) {
+		throw error
+	}
+}

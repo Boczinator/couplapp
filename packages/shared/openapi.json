@@ -1,20 +1,13 @@
 {
   "openapi": "3.0.0",
   "paths": {
-    "/api": {
+    "/": {
       "get": {
         "operationId": "AppController_getHello",
         "parameters": [],
         "responses": {
           "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
+            "description": ""
           }
         },
         "tags": [
@@ -22,7 +15,7 @@
         ]
       }
     },
-    "/api/auth/login": {
+    "/auth/login": {
       "post": {
         "operationId": "AuthController_login",
         "parameters": [],
@@ -53,7 +46,7 @@
         ]
       }
     },
-    "/api/auth/verify-registration-token": {
+    "/auth/verify-registration-token": {
       "post": {
         "operationId": "AuthController_verifyRegistrationToken",
         "parameters": [],
@@ -74,7 +67,7 @@
         ]
       }
     },
-    "/api/auth/refresh": {
+    "/auth/refresh": {
       "post": {
         "operationId": "AuthController_refresh",
         "parameters": [],
@@ -88,7 +81,7 @@
         ]
       }
     },
-    "/api/auth/logout": {
+    "/auth/logout": {
       "post": {
         "operationId": "AuthController_logout",
         "parameters": [],
@@ -102,7 +95,7 @@
         ]
       }
     },
-    "/api/auth/me": {
+    "/auth/me": {
       "get": {
         "operationId": "AuthController_getProfile",
         "parameters": [],
@@ -123,7 +116,7 @@
         ]
       }
     },
-    "/api/users": {
+    "/users": {
       "get": {
         "operationId": "UsersController_findAll",
         "parameters": [],
@@ -149,7 +142,7 @@
         ]
       }
     },
-    "/api/users/{id}": {
+    "/users/{id}": {
       "get": {
         "operationId": "UsersController_findUser",
         "parameters": [],
@@ -163,7 +156,7 @@
         ]
       }
     },
-    "/api/users/create": {
+    "/users/create": {
       "post": {
         "operationId": "UsersController_createUser",
         "parameters": [],
@@ -179,14 +172,7 @@
         },
         "responses": {
           "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
+            "description": ""
           }
         },
         "tags": [
@@ -194,7 +180,7 @@
         ]
       }
     },
-    "/api/profiles/search": {
+    "/profiles/search": {
       "get": {
         "operationId": "ProfilesController_search",
         "parameters": [
@@ -217,7 +203,7 @@
         ]
       }
     },
-    "/api/profiles/overview": {
+    "/profiles/overview": {
       "get": {
         "operationId": "ProfilesController_getLight",
         "parameters": [],
@@ -241,25 +227,10 @@
         ]
       }
     },
-    "/api/profiles/{id}": {
+    "/profiles/{id}": {
       "get": {
         "operationId": "ProfilesController_getById",
-        "parameters": [
-          {
-            "name": "includes",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "enum": [
-                  "friends"
-                ]
-              }
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "",
@@ -300,14 +271,7 @@
         },
         "responses": {
           "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
+            "description": ""
           }
         },
         "tags": [
@@ -315,20 +279,13 @@
         ]
       }
     },
-    "/api/profiles/avatar": {
+    "/profiles/avatar": {
       "patch": {
         "operationId": "ProfilesController_updateAvatar",
         "parameters": [],
         "responses": {
           "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
+            "description": ""
           }
         },
         "tags": [
@@ -336,7 +293,7 @@
         ]
       }
     },
-    "/api/friends/requests": {
+    "/friends/requests": {
       "get": {
         "operationId": "FriendsController_getRequests",
         "parameters": [],
@@ -360,7 +317,7 @@
         ]
       }
     },
-    "/api/friends/{profileId}": {
+    "/friends/{profileId}": {
       "get": {
         "operationId": "FriendsController_getFriends",
         "parameters": [
@@ -393,7 +350,7 @@
         ]
       }
     },
-    "/api/friends/invite": {
+    "/friends/invite": {
       "post": {
         "operationId": "FriendsController_invite",
         "parameters": [],
@@ -417,7 +374,7 @@
         ]
       }
     },
-    "/api/friends/remove/{receiverId}": {
+    "/friends/remove/{receiverId}": {
       "delete": {
         "operationId": "FriendsController_remove",
         "parameters": [],
@@ -431,7 +388,7 @@
         ]
       }
     },
-    "/api/friends/accept/{requesterId}": {
+    "/friends/accept/{requesterId}": {
       "patch": {
         "operationId": "FriendsController_accept",
         "parameters": [],
@@ -445,7 +402,7 @@
         ]
       }
     },
-    "/api/accounts/register": {
+    "/accounts/register": {
       "post": {
         "operationId": "AccountsController_register",
         "parameters": [],
@@ -461,14 +418,7 @@
         },
         "responses": {
           "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
+            "description": ""
           }
         },
         "tags": [
@@ -476,7 +426,7 @@
         ]
       }
     },
-    "/api/accounts/profiles/create": {
+    "/accounts/profiles/create": {
       "post": {
         "operationId": "AccountsController_createProfile",
         "parameters": [],
@@ -500,7 +450,7 @@
         ]
       }
     },
-    "/api/accounts/profiles/switch/{id}": {
+    "/accounts/profiles/switch/{id}": {
       "patch": {
         "operationId": "AccountsController_switchProfile",
         "parameters": [
@@ -530,7 +480,7 @@
         ]
       }
     },
-    "/api/posts/{profileId}": {
+    "/posts/{profileId}": {
       "get": {
         "operationId": "PostsController_getPostsByProfile",
         "parameters": [],
@@ -544,7 +494,40 @@
         ]
       }
     },
-    "/api/posts/create": {
+    "/posts/{id}/likers": {
+      "get": {
+        "operationId": "PostsController_getPostLikers",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of profiles containing IDs, names, and profile pictures was successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LikersProfilesResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Posts"
+        ]
+      }
+    },
+    "/posts/create": {
       "post": {
         "operationId": "PostsController_create",
         "parameters": [],
@@ -568,7 +551,7 @@
         ]
       }
     },
-    "/api/posts/{id}/like": {
+    "/posts/{id}/like": {
       "post": {
         "operationId": "PostsController_likePost",
         "parameters": [
@@ -598,19 +581,10 @@
         ]
       }
     },
-    "/api/posts/{id}": {
+    "/posts/{id}": {
       "delete": {
         "operationId": "PostsController_remove",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": ""
@@ -652,7 +626,7 @@
         ]
       }
     },
-    "/api/feed": {
+    "/feed": {
       "get": {
         "operationId": "FeedController_getFeed",
         "parameters": [],
@@ -666,7 +640,7 @@
         ]
       }
     },
-    "/api/conversations": {
+    "/conversations": {
       "get": {
         "operationId": "ConversationsController_getInbox",
         "parameters": [],
@@ -690,7 +664,7 @@
         ]
       }
     },
-    "/api/conversations/{conversationId}/details": {
+    "/conversations/{conversationId}/details": {
       "get": {
         "operationId": "ConversationsController_getConversationDetails",
         "parameters": [],
@@ -711,7 +685,7 @@
         ]
       }
     },
-    "/api/conversations/{conversationId}/messages": {
+    "/conversations/{conversationId}/messages": {
       "get": {
         "operationId": "ConversationsController_getConversationMessages",
         "parameters": [],
@@ -735,7 +709,7 @@
         ]
       }
     },
-    "/api/conversations/{conversationId}/read": {
+    "/conversations/{conversationId}/read": {
       "patch": {
         "operationId": "ConversationsController_readConversation",
         "parameters": [
@@ -774,7 +748,6 @@
         "properties": {
           "email": {
             "type": "string",
-            "format": "email",
             "example": "seb.boczek@gmail.com",
             "description": "The registered email address of the account"
           },
@@ -881,27 +854,7 @@
       },
       "CreateUserDto": {
         "type": "object",
-        "properties": {
-          "firstName": {
-            "type": "string"
-          },
-          "lastName": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string",
-            "format": "email"
-          },
-          "password": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "firstName",
-          "lastName",
-          "email",
-          "password"
-        ]
+        "properties": {}
       },
       "LightProfileResponseDto": {
         "type": "object",
@@ -928,29 +881,21 @@
         "properties": {
           "profileId1": {
             "type": "string",
-            "format": "uuid",
             "description": "The UUID of the first profile in the relationship",
             "example": "a0eebc99-9c0b-4ef8-bb6d-6bb23280a11"
           },
           "profileId2": {
             "type": "string",
-            "format": "uuid",
             "description": "The UUID of the second profile in the relationship",
             "example": "b1fcfdfs99-934b-4ef8-bb3-6wb9dd80a22"
           },
           "status": {
-            "enum": [
-              "pending",
-              "accepted",
-              "blocked"
-            ],
             "type": "string",
             "description": "The current status of the friendship connection",
             "example": "pending"
           },
           "actionProfileId": {
             "type": "string",
-            "format": "uuid",
             "description": "The UUID of the profile who performed the last state action",
             "example": "a0eegfd9-9c0b-4ef8-dsd6d-6gffd380a11"
           }
@@ -1000,14 +945,14 @@
             "nullable": true
           },
           "isPrivate": {
-            "type": "boolean",
-            "nullable": true
+            "type": "boolean"
           }
         },
         "required": [
           "id",
           "name",
           "picture",
+          "bannerPicture",
           "isPrivate"
         ]
       },
@@ -1049,8 +994,7 @@
             "nullable": true
           },
           "isPrivate": {
-            "type": "boolean",
-            "nullable": true
+            "type": "boolean"
           },
           "isOwner": {
             "type": "boolean"
@@ -1075,6 +1019,7 @@
           "id",
           "name",
           "picture",
+          "bannerPicture",
           "isPrivate",
           "isOwner"
         ]
@@ -1087,12 +1032,12 @@
         "type": "object",
         "properties": {
           "status": {
+            "type": "string",
             "enum": [
               "pending",
               "accepted",
               "blocked"
             ],
-            "type": "string",
             "example": "pending"
           },
           "direction": {
@@ -1112,14 +1057,7 @@
       },
       "InviteFriendDto": {
         "type": "object",
-        "properties": {
-          "receiverId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "receiverId"
-        ]
+        "properties": {}
       },
       "CreateProfileDto": {
         "type": "object",
@@ -1144,30 +1082,39 @@
             "nullable": true
           },
           "isPrivate": {
-            "type": "boolean",
-            "nullable": true
+            "type": "boolean"
           }
         },
         "required": [
           "name",
           "picture",
+          "bannerPicture",
           "isPrivate"
+        ]
+      },
+      "LikersProfilesResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "picture": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "picture"
         ]
       },
       "CreatePostDto": {
         "type": "object",
-        "properties": {
-          "text": {
-            "type": "string"
-          },
-          "receiverId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "text",
-          "receiverId"
-        ]
+        "properties": {}
       },
       "LikeToggleResponseDto": {
         "type": "object",
@@ -1201,14 +1148,7 @@
       },
       "UpdatePostDto": {
         "type": "object",
-        "properties": {
-          "text": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "text"
-        ]
+        "properties": {}
       },
       "ConversationParticipantDto": {
         "type": "object",
@@ -1222,10 +1162,9 @@
             "example": "conv_12345-6dfd-4ffe-a07d-b26d1024f883"
           },
           "joinedAt": {
-            "format": "date-time",
-            "type": "string",
-            "nullable": true,
-            "example": "2026-08-06T06:52:20.204Z"
+            "type": "object",
+            "example": "2026-08-06T06:52:20.204Z",
+            "nullable": true
           },
           "profile": {
             "$ref": "#/components/schemas/ProfileDto"
@@ -1256,24 +1195,24 @@
           },
           "conversationId": {
             "type": "string",
-            "nullable": true,
-            "example": "conv_12345"
+            "example": "conv_12345",
+            "nullable": true
           },
           "content": {
             "type": "string",
-            "nullable": true,
-            "example": "Hey there!"
+            "example": "Hey there!",
+            "nullable": true
           },
           "isRead": {
             "type": "boolean",
-            "nullable": true,
-            "example": false
+            "example": false,
+            "nullable": true
           },
           "readAt": {
             "format": "date-time",
             "type": "string",
-            "nullable": true,
-            "example": "2026-08-06T06:55:00.000Z"
+            "example": "2026-08-06T06:55:00.000Z",
+            "nullable": true
           }
         },
         "required": [
@@ -1294,25 +1233,23 @@
             "example": "conv_12345-6dfd-4ffe-a07d-b26d1024f883"
           },
           "title": {
-            "type": "string",
-            "nullable": true,
-            "example": "Project Group Chat"
+            "type": "object",
+            "example": "Project Group Chat",
+            "nullable": true
           },
           "isGroupChat": {
             "type": "boolean",
             "example": false
           },
           "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "nullable": true,
-            "example": "2026-08-06T06:52:20.204Z"
+            "type": "object",
+            "example": "2026-08-06T06:52:20.204Z",
+            "nullable": true
           },
           "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "nullable": true,
-            "example": "2026-08-06T06:52:20.204Z"
+            "type": "object",
+            "example": "2026-08-06T06:52:20.204Z",
+            "nullable": true
           },
           "participants": {
             "type": "array",
@@ -1345,25 +1282,23 @@
             "example": "conv_12345-6dfd-4ffe-a07d-b26d1024f883"
           },
           "title": {
-            "type": "string",
-            "nullable": true,
-            "example": "Project Group Chat"
+            "type": "object",
+            "example": "Project Group Chat",
+            "nullable": true
           },
           "isGroupChat": {
             "type": "boolean",
             "example": false
           },
           "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "nullable": true,
-            "example": "2026-08-06T06:52:20.204Z"
+            "type": "object",
+            "example": "2026-08-06T06:52:20.204Z",
+            "nullable": true
           },
           "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "nullable": true,
-            "example": "2026-08-06T06:52:20.204Z"
+            "type": "object",
+            "example": "2026-08-06T06:52:20.204Z",
+            "nullable": true
           },
           "participants": {
             "type": "array",
@@ -1415,24 +1350,24 @@
           },
           "conversationId": {
             "type": "string",
-            "nullable": true,
-            "example": "conv_12345"
+            "example": "conv_12345",
+            "nullable": true
           },
           "content": {
             "type": "string",
-            "nullable": true,
-            "example": "Hey there!"
+            "example": "Hey there!",
+            "nullable": true
           },
           "isRead": {
             "type": "boolean",
-            "nullable": true,
-            "example": false
+            "example": false,
+            "nullable": true
           },
           "readAt": {
             "format": "date-time",
             "type": "string",
-            "nullable": true,
-            "example": "2026-08-06T06:55:00.000Z"
+            "example": "2026-08-06T06:55:00.000Z",
+            "nullable": true
           },
           "sender": {
             "$ref": "#/components/schemas/MessageSenderDto"

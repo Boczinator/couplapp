@@ -116,9 +116,9 @@ export const Post = ({
 					>
 						<img src={isLiked ? ThumbUpWhite : ThumbUp} />
 					</Button>
-					<Button variant="ghost" className="p-0">
+					<Button variant="ghost" className="p-0 hover:bg-transparent">
 						{likesCount > 0
-							? `${likesCount} ${likesCount > 1 ? 'people' : 'person'} like${likesCount === 1 && 's'} this`
+							? `${likesCount} ${likesCount > 1 ? 'people' : 'person'} like${likesCount === 1 ? 's' : ''} this`
 							: likesCount}
 					</Button>
 				</div>
