@@ -3,10 +3,8 @@ FROM node:22-alpine AS pruner
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Enable Corepack to use your repository's native pnpm version
+# Enable Corepack for pnpm
 RUN corepack enable && corepack prepare pnpm@9.1.0 --activate
-
-# Fix for pnpm 12 global binary path restriction
 RUN pnpm config set global-bin-dir /usr/local/bin && pnpm add -g turbo
 
 ENV APP_NAME="backend"
@@ -20,23 +18,23 @@ FROM node:22-alpine AS builder
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Enable Corepack for pnpm installation
 RUN corepack enable && corepack prepare pnpm@9.1.0 --activate
 
-# Copy pruned lockfiles and package manifests to cache installation layers
+# Copy pruned manifests, lockfile, AND pnpm workspace configuration
 COPY --from=pruner /app/out/json/ .
 COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+COPY --from=pruner /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
 
-# Install dependencies using pnpm
 RUN pnpm install --frozen-lockfile
 
-# Copy the actual pruned source files and configurations
+# Copy source files and configs
 COPY --from=pruner /app/out/full/ .
 COPY turbo.json turbo.json
 
+# Copy views directory if used by template engines
 COPY apps/backend/src/views ./apps/backend/src/views
 
-# Build the NestJS app (and any dependent local packages automatically)
+# Build the NestJS app (and dependent local packages)
 ENV APP_NAME="backend"
 RUN pnpm turbo run build --filter=$APP_NAME...
 
@@ -44,40 +42,33 @@ RUN pnpm turbo run build --filter=$APP_NAME...
 FROM node:22-alpine AS runner
 WORKDIR /app
 
-# Create a secure, non-root system user for safety
+# Create unprivileged system user
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nestjs
 
-# Install the repository's pinned pnpm version
-RUN corepack disable && npm install --global pnpm@9.1.0
+RUN corepack enable && corepack prepare pnpm@9.1.0 --activate
 
 ENV NODE_ENV=production
-ENV APP_NAME="backend"
 ENV APP_PATH="apps/backend"
 
-# Copy package manifests and install production-only dependencies
+# Copy package manifests and workspace definition for prod dependency installation
 COPY --from=pruner --chown=nestjs:nodejs /app/out/json/ .
 COPY --from=pruner --chown=nestjs:nodejs /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+COPY --from=pruner --chown=nestjs:nodejs /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
+
+# Install production-only dependencies
 RUN pnpm install --prod --frozen-lockfile
 
-# Copy compiled JavaScript code from the builder stage matching your subfolder path
+# Copy compiled JavaScript output and views from builder
 COPY --from=builder --chown=nestjs:nodejs /app/${APP_PATH}/dist ./${APP_PATH}/dist
+COPY --from=builder --chown=nestjs:nodejs /app/${APP_PATH}/src/views ./${APP_PATH}/src/views
 
-# 🟢 THE DEFINITIVE FIX: Copy the local drizzle migrations directory directly from your repository context!
-# This bypasses the turbo prune filter entirely and injects the raw SQL snapshots straight to the runner layer.
-COPY apps/backend/drizzle ./${APP_PATH}/drizzle
-
-# Copy necessary Drizzle runtime routing configurations
-COPY --from=builder --chown=nestjs:nodejs /app/${APP_PATH}/drizzle.config.ts ./${APP_PATH}/drizzle.config.ts
-COPY --from=builder --chown=nestjs:nodejs /app/${APP_PATH}/src/db/schema.ts ./${APP_PATH}/src/db/schema.ts
-
-# Ensure the nestjs user owns the directory to run binaries and workspace scripts
-RUN chown -R nestjs:nodejs /app
+# Copy raw Drizzle SQL migration files directly from source context
+COPY --chown=nestjs:nodejs apps/backend/drizzle ./${APP_PATH}/drizzle
 
 USER nestjs
 
-# Expose your NestJS server port
 EXPOSE 3000
 
-# Execute runtime Drizzle migrations before launching NestJS
-CMD cd apps/backend && pnpm exec drizzle-kit migrate && node dist/src/main.js
+# Execute compiled NestJS application directly
+CMD ["node", "apps/backend/dist/src/main.js"]
