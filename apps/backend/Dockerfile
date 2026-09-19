@@ -12,7 +12,7 @@ RUN pnpm config set global-bin-dir /usr/local/bin && pnpm add -g turbo
 ENV APP_NAME="backend"
 
 COPY . .
-# Isolates the backend app and its direct shared workspace packages into /app/out
+# Isolates only the backend app and its direct shared workspace packages into /app/out
 RUN turbo prune --scope=$APP_NAME --docker
 
 # --- Stage 2: Install and Build Workspace ---
@@ -30,7 +30,7 @@ COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 # Install dependencies using pnpm
 RUN pnpm install --frozen-lockfile
 
-# Copy the actual pruned source files and configurations (now includes drizzle folder thanks to turbo.json!)
+# Copy the actual pruned source files and configurations
 COPY --from=pruner /app/out/full/ .
 COPY turbo.json turbo.json
 
@@ -63,14 +63,15 @@ RUN pnpm install --prod --frozen-lockfile
 # Copy compiled JavaScript code from the builder stage matching your subfolder path
 COPY --from=builder --chown=nestjs:nodejs /app/${APP_PATH}/dist ./${APP_PATH}/dist
 
-# Copy Drizzle migrations and runtime config into the image
-COPY --from=builder --chown=nestjs:nodejs /app/${APP_PATH}/drizzle ./${APP_PATH}/drizzle
-COPY --from=builder --chown=nestjs:nodejs /app/${APP_PATH}/drizzle.config.ts ./${APP_PATH}/drizzle.config.ts
+# 🟢 THE DEFINITIVE FIX: Copy the local drizzle migrations directory directly from your repository context!
+# This bypasses the turbo prune filter entirely and injects the raw SQL snapshots straight to the runner layer.
+COPY apps/backend/drizzle ./${APP_PATH}/drizzle
 
-# Drizzle Kit is a runtime dependency so migrations run before startup
+# Copy necessary Drizzle runtime routing configurations
+COPY --from=builder --chown=nestjs:nodejs /app/${APP_PATH}/drizzle.config.ts ./${APP_PATH}/drizzle.config.ts
 COPY --from=builder --chown=nestjs:nodejs /app/${APP_PATH}/src/db/schema.ts ./${APP_PATH}/src/db/schema.ts
 
-# Crucial Fix: Ensure the nestjs user owns the directory to run binaries and workspace scripts
+# Ensure the nestjs user owns the directory to run binaries and workspace scripts
 RUN chown -R nestjs:nodejs /app
 
 USER nestjs
