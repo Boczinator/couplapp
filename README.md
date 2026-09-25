@@ -3,6 +3,8 @@
 A small hobby full-stack networking platform designed for families and close friends to connect, share media, and communicate in real time,
 without overloading and unhealthy feed-algorithms.
 
+Important: This project was built as a functional full-stack prototype with the primary goal of deepening and exploring NestJS.
+
 Live Demo: [couplapp.sebastianboczek.com](https://couplapp.sebastianboczek.com)
 
 ---
